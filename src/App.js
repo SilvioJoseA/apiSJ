@@ -9,7 +9,6 @@ const app = express();
 
     app.use(express.json());
     app.use(cors());   
-    app.options('/users/login', cors()); // Preflight request 
     app.use(userRouter);
     app.use(preinscriptosRouter);
     app.use(amdRouter);

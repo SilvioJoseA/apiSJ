@@ -15,7 +15,6 @@ const controller = {};
         } catch (error) {
             console.error("Error creating Users Table :",error.message);
             throw new Error("Error creating Users Table!");
-            
         }
     }
 

@@ -64,5 +64,21 @@ const controller = {};
                        
         }
     }
+    /**
+     * Function to get alumno by id from alumnos table
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    controller.getAlunoById = async ( req , res ) => {
+        try {
+            const { id } = req.params;
+            const row = await alumnosModel.getAlumnoById(id);
+            res.status(201).json(row);
+        } catch (error) {
+            console.error("Error fetching alumno by id :", error.message);
+            throw new Error("Error fetching aluno by id!");
+            
+        }
+    } 
 
     export default controller;
