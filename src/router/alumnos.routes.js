@@ -7,5 +7,6 @@ const router = Router();
     router.get('/alumnos', controller.getAllAlumnos);
     router.post('/alumnos', controller.addAlumno);
     router.delete('/alumnos/:id', controller.deleteAlumnoById);
+    router.get('/alumnos/:id', controller.getAlunoById);
 
 export default router;

@@ -83,9 +83,8 @@ alumnosModel.deleteAlumnoById = async (id) => {
  */
 alumnosModel.getAlumnoById = async ( id ) => {
     try {
-        const { id } = req.params;
-        const [row] = pool.query("SELECT * FROM alumnos WHERE id = ?", [ id ]);
-        return row[0];
+        const [row] = await pool.query("SELECT * FROM alumnos WHERE id = ?", [ id ]);
+        return row;
     } catch (error) {
         console.error("Error fetching alumno by id :", error.message);
         throw new Error("Error fetching alumno by id!");   

@@ -4,6 +4,7 @@ import preinscriptosRouter from "./router/preinscripto.routes.js";
 import amdRouter from "./router/amd.routes.js";
 import cors from "cors";
 import alumnoRouter from "./router/alumnos.routes.js";
+import notaRouter from "./router/notas.routes.js";
 
 const app = express();
 
@@ -13,6 +14,7 @@ const app = express();
     app.use(preinscriptosRouter);
     app.use(amdRouter);
     app.use(alumnoRouter);
+    app.use(notaRouter);
     app.listen(4008, ()=>{
         console.log("Listening on port 4008");
     });

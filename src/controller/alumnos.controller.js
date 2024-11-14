@@ -73,11 +73,10 @@ const controller = {};
         try {
             const { id } = req.params;
             const row = await alumnosModel.getAlumnoById(id);
-            res.status(201).json(row);
+            res.status(201).json(row[0]);
         } catch (error) {
             console.error("Error fetching alumno by id :", error.message);
-            throw new Error("Error fetching aluno by id!");
-            
+            throw new Error("Error fetching aluno by id!");     
         }
     } 
 
