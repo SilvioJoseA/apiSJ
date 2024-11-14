@@ -45,7 +45,6 @@ const controller = {};
     controller.getAllUsers = async ( req , res ) => {
         try {
             const [ rows ] = await userModel.getAllUsers();
-                console.log( rows );
                 res.status(201).json(rows);
         } catch (error) {
             console.error(error);
