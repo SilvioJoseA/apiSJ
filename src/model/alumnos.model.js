@@ -40,10 +40,10 @@ alumnosModel.createTableAlumnos = async () => {
  */
 alumnosModel.insertAlumno = async (alumnoData) => {
     try {
-        const { firstName, lastName, dni, birthDate, address, phone, email, guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor } = alumnoData;
+        const { firstName, lastName, dni, gender , birthDate, address, phone, email, guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor } = alumnoData;
         await pool.query(`INSERT INTO alumnos (firstName, lastName, dni, birthDate, address, phone, email, guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor) VALUES 
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, 
-            [firstName, lastName, dni, birthDate, address, phone, email, guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor]);
+            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?)`, 
+            [firstName, lastName, dni, gender, birthDate, address, phone, email, guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor]);
     } catch (error) {
         console.error("Error inserting alumno:", error.message);
         throw new Error("Error inserting alumno!");
