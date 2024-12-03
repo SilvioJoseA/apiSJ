@@ -13,8 +13,6 @@ const controller = {};
             res.status(201).json({ message: "Alumnos table created successfully!"});
         } catch (error) {
             console.error(`Error createng alumnos table :`, error.message);
-            throw new Error("Error creartibng alumnos table!");
-            
         }
     }
     /**
@@ -28,8 +26,6 @@ const controller = {};
             res.status(201).json(rows);
         } catch (error) {
             console.error("Error fetching all Alumnos from alumnos table :", error.message);
-            throw new Error("Error fetching all alumnos from alumnos table!");
-            
         }
     }
     controller.verifyDni = async ( req , res ) => {
@@ -45,7 +41,6 @@ const controller = {};
             
         } catch (error) {
             console.error("Error verifing dni : ",error.message);
-            throw new Error("Error varifing dni!");
         }
     }
     controller.updateStatusById = async ( req , res ) => {
@@ -56,7 +51,6 @@ const controller = {};
             res.status(201).json("Status updated successfully!");
         } catch (error) {
             console.error("Error updating status by id : ",error.message);
-            throw new Error("Error updating status by id!");
         }
     }
     controller.updateInscriptionById = async ( req , res ) => {
@@ -67,7 +61,6 @@ const controller = {};
             res.status(201).json({message:"Inscription updated successfully!"})
         } catch (error) {
             console.error("Error updating inscription by id : ",error.message);
-            throw new Error("Error updating inscription by id!");
         }
     }
     controller.updateCursoByCursoId= async ( req , res ) => {
@@ -78,7 +71,6 @@ const controller = {};
             res.status(201).json({message:"curso updated successfully!"})
         } catch (error) {
             console.error("Error updating curso by id : ",error.message);
-            throw new Error("Error updating curso by id!");
         }
     }
     controller.getAllAlumnosByIdProfesor = async ( req , res ) => {
@@ -88,7 +80,6 @@ const controller = {};
             res.status(201).json(rows);
         } catch (error) {
             console.error("Error fetching all alumnos by id_profesor : ",error.message);
-            throw new Error("Error fetching all alumnos by id_profesor!");
         }
     }
     /**
@@ -103,8 +94,6 @@ const controller = {};
                 res.status(201).json({ message: "Alumno created successfully!"});
         } catch (error) {
             console.error("Error adding alumno into alumnos table : ", error.message);
-            throw new Error("Error adding alumno into alumnos table!");
-            
         }
     }
     /**
@@ -119,8 +108,6 @@ const controller = {};
                 res.status(201).json({ message: "Alumno deleted successfully!"});
         } catch (error) {
             console.error("Error deleting alumno by id from alumnos table :", error.message);
-            throw new Error("Error deleting alumno by id from alumnos table!");
-                       
         }
     }
     /**
@@ -135,7 +122,6 @@ const controller = {};
             res.status(201).json(row[0]);
         } catch (error) {
             console.error("Error fetching alumno by id :", error.message);
-            throw new Error("Error fetching aluno by id!");     
         }
     } 
 
@@ -153,7 +139,6 @@ controller.insertAlumnosMassiveData = async ( req , res ) => {
             res.status(200).json({message:"Alumnos inserted successfully!"});
     } catch (error) {
         console.error("Error inserting data : " , error.message);
-        throw new Error("Error insertin data!");
     }
 }
 export default controller;

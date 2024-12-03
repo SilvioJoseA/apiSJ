@@ -21,7 +21,6 @@ notasModel.createTableNotas = async () => {
         `);
     } catch (error) {
         console.error("Error creating notas table:", error.message);
-        throw new Error("Error creating notas table!");
     }
 };
 
@@ -36,7 +35,6 @@ notasModel.getNotasByAlumnoId = async (alumno_id) => {
         return rows;
     } catch (error) {
         console.error("Error fetching notas by alumno_id:", error.message);
-        throw new Error("Error fetching notas by alumno_id!");
     }
 };
 
@@ -58,7 +56,6 @@ notasModel.insertNotaByAlumnoId = async (alumno_id, subject, grade, observations
         return { id: result.insertId, alumno_id, subject, grade, observations };
     } catch (error) {
         console.error("Error inserting nota by alumno_id:", error.message);
-        throw new Error("Error inserting nota by alumno_id!");
     }
 };
 
@@ -79,7 +76,6 @@ notasModel.updateNotaById = async (id, subject, grade, observations) => {
         return { id, subject, grade, observations };
     } catch (error) {
         console.error("Error updating nota by id:", error.message);
-        throw new Error("Error updating nota by id!");
     }
 };
 
@@ -94,7 +90,6 @@ notasModel.deleteNotaById = async (id) => {
         return result.affectedRows > 0;
     } catch (error) {
         console.error("Error deleting nota by id:", error.message);
-        throw new Error("Error deleting nota by id!");
     }
 };
 

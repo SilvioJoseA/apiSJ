@@ -14,7 +14,6 @@ const controller = {};
             res.status(201).json({ message: "User table created successfully!" });
         } catch (error) {
             console.error("Error creating Users Table :",error.message);
-            throw new Error("Error creating Users Table!");
         }
     }
 
@@ -31,7 +30,6 @@ const controller = {};
             res.status(201).json({message:"User was adding successfully!"});
         } catch (error) {
             console.error("Error adding user in users table : ", error.message);
-            throw new Error("Error adding user in users table!");  
         }
     }
 
@@ -64,9 +62,7 @@ const controller = {};
             const [ row ] = await userModel.getUserByUserNameAndPassword(email,password);
             res.status(201).json(row);
         } catch (error) {
-            console.error("Error fetching user by username and password: ", error.message);
-            throw new Error("Error fetching user by username and password!");
-            
+            console.error("Error fetching user by username and password: ", error.message);     
         }
     }
     controller.deleteUser = async ( req , res ) => {
@@ -75,9 +71,7 @@ const controller = {};
             await userModel.deleteUserById(id);
                 res.status(201).json({message:"User was deleting successfully!"});
         } catch (error) {
-            console.error("Error deleting user by id : ",error.message);
-            throw new Error("Error deleting user by id!");
-            
+            console.error("Error deleting user by id : ",error.message);     
         }
     }
 

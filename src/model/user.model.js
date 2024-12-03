@@ -18,8 +18,6 @@ userModel.createTableUsers = async () => {
             `);
     } catch (error) {
         console.error("Error creating user table: ", error.message);
-        throw new Error("Error creating user table!");
-        
     }
 }
 
@@ -34,7 +32,6 @@ userModel.getAllUsers = async () => {
         return rows;
     } catch (error) {
         console.error("Error fetching all users: ", error.message);
-        throw new Error("Error fetching all users!");
     }
 }
 
@@ -50,8 +47,6 @@ userModel.getUserByUserNameAndPassword = async ( email , password ) => {
         return rows; // Assuming username is unique, return the first user found
     } catch (error) {
         console.error("Error fetching user by username and password : ", error.message);
-        throw new Error("Error fetching user by username and password!");
-        
     }
 }
 
@@ -67,7 +62,6 @@ userModel.addUser = async ( username , password , email , profesor_id , role ) =
         await pool.query("INSERT INTO users ( username , password , email , profesor_id , role ) VALUES ( ? , ? , ? , ? , ? )", [ username , password , email , profesor_id , role ]);
     } catch (error) {
         console.error("Error adding user: ", error.message);
-        throw new Error("Error adding user!");
     }
 }
 
@@ -81,8 +75,6 @@ userModel.deleteUserById = async ( id ) => {
         await pool.query("DELETE FROM users WHERE id = ?", [id]);
     } catch (error) {
         console.error("Error deleting user by id: ",error.message);
-        throw new Error("Error deleting user by id!");
-        
     }
 }
 

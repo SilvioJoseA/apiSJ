@@ -28,7 +28,6 @@ cursosModel.createTableCursos = async () => {
         `);
     } catch (error) {
         console.error('Error creating cursos table:', error.message);
-        throw new Error("Error creating cursos table!");
     }
 };
 
@@ -45,7 +44,6 @@ cursosModel.insertCurso = async (dataCurso) => {
         );
     } catch (error) {
         console.error("Error inserting course:", error.message);
-        throw new Error("Error inserting course!");
     }
 };
 /**
@@ -57,7 +55,6 @@ cursosModel.inserCursosMassive = async ( values ) => {
         await pool.query(`INSERT INTO cursos ( id , curso , aula , nivel , horario , profesor_id ) VALUES ?`,[values]);
     } catch (error) {
         console.error("Error inserting cursos :", error.message);   
-        throw new Error("Error inserting cursos!");
     }
 }
 
@@ -72,7 +69,6 @@ cursosModel.getAllCursos = async () => {
         return rows;
     } catch (error) {
         console.error("Error fetching all courses:", error.message);
-        throw new Error("Error fetching all courses!");
     }
 };
 /**
@@ -85,7 +81,6 @@ cursosModel.getAllNiveles = async () => {
         return rows;
     } catch (error) {
         console.error("Error fetching all niveles:", error.message);
-        throw new Error("Error fetching all niveles!");
     }
 };
 /**
@@ -98,7 +93,6 @@ cursosModel.getAllHorarios = async () => {
         return rows;
     } catch (error) {
         console.error("Error fetching all horarios:", error.message);
-        throw new Error("Error fetching all horarios!");
     }
 };
 
@@ -114,7 +108,6 @@ cursosModel.delteCursoById = async (id) => {
         return result.affectedRows > 0;
     } catch (error) {
         console.error("Error deleting course by ID:", error.message);
-        throw new Error("Error deleting course by ID!");
     }
 };
 
@@ -129,7 +122,6 @@ cursosModel.getCursoById = async (id) => {
         return row;
     } catch (error) {
         console.error("Error fetching course by ID:", error.message);
-        throw new Error("Error fetching course by ID!");
     }
 };
 

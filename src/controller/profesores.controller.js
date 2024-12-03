@@ -13,7 +13,6 @@ controller.createTableProfesores = async (req, res) => {
         res.status(200).json({ message: "Profesores Table created successfully!" });
     } catch (error) {
         console.error("Error creating profesores table:", error.message);
-        throw new Error("Error creating profesores table!");
     }
 };
 
@@ -33,7 +32,6 @@ controller.insertProfesor = async (req, res) => {
         res.status(200).json({ message: "Profesor inserted successfully!" });
     } catch (error) {
         console.error("Error inserting profesor into profesores table:", error.message);
-        throw new Error("Error inserting profesor into profesores table!");
     }
 };
 /**
@@ -47,7 +45,6 @@ controller.insertProfesorMassivedData = async ( req , res ) => {
         res.status(200).json({message:"Profesores inserted successfully!"})
     } catch (error) {
         console.error("Error inserting data : ",error.message);
-        throw new Error("Error inserting data!");
     }
 }
 
@@ -62,7 +59,6 @@ controller.getAllProfesores = async (req, res) => {
         res.status(200).json(rows);
     } catch (error) {
         console.error("Error fetching all profesores:", error.message);
-        throw new Error("Error fetching all profesores!");
     }
 };
 
@@ -86,7 +82,6 @@ controller.getProfesoresById = async (req, res) => {
         res.status(200).json(row);
     } catch (error) {
         console.error("Error fetching profesor by id:", error.message);
-        throw new Error("Error fetching profesor by id!");
     }
 };
 
@@ -106,7 +101,6 @@ controller.deleteProfesorById = async (req, res) => {
         res.status(200).json({ message: "Profesor deleted successfully!" });
     } catch (error) {
         console.error("Error deleting profesor:", error.message);
-        throw new Error("Error deleting profesor!");
     }
 };
 

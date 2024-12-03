@@ -1,22 +1,5 @@
-import { pool } from "../db.js";
 import preinscriptosModel from "../model/preinscriptos.model.js";
 
-/*
-{
-    fullName: "",
-    dni: "",
-    gender: "",
-    birthDate: "",
-    address: "",
-    phone: "",
-    email: "",
-    isMinor: false,
-    guardianFullName: "",
-    guardianDni: "",
-    guardianPhone: "",
-    guardianEmail: ""
-  }
-*/
 const controller = {};
  
  /**
@@ -30,8 +13,6 @@ const controller = {};
         res.status(201).json({ message: "Preinscriptos table created successfully!" });
     } catch (error) {
         console.error("Error creating preinscriptos table : ", error.message);
-        throw new Error("Error creating preinscriptos table!");
-        
     }
  }
   

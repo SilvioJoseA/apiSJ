@@ -32,7 +32,6 @@ alumnosModel.createTableAlumnos = async () => {
         `);
     } catch (error) {
         console.error("Error creating alumnos table:", error.message);
-        throw new Error("Error creating alumnos table!");
     }
 };
 
@@ -49,7 +48,6 @@ alumnosModel.insertAlumno = async (alumnoData) => {
             [firstName, lastName, dni, gender, birthDate, address, phone, email, guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor]);
     } catch (error) {
         console.error("Error inserting alumno:", error.message);
-        throw new Error("Error inserting alumno!");
     }
 };
 
@@ -63,7 +61,6 @@ alumnosModel.getAllAlumnos = async () => {
         return rows;
     } catch (error) {
         console.error("Error fetching alumnos:", error.message);
-        throw new Error("Error fetching alumnos!");
     }
 };
 /**
@@ -77,7 +74,6 @@ alumnosModel.verifyDni = async ( dni ) => {
         return row;
     } catch (error) {
         console.error("Error verifing dni :", error.message);
-        throw new Error("Error verifing dni!");
     }
 }
 /**
@@ -89,7 +85,6 @@ alumnosModel.updatedInscriptionById = async ( alumno_id , inscripcion ) => {
         await pool.query(`UPDATE alumnos SET inscripcion = ? WHERE id = ? AND status = 'apto' AND promedio >= 6`, [ inscripcion , alumno_id ]);
     } catch (error) {
         console.error('Error in inscription : ',error.message);
-        throw new Error("Error in inscription!");
     }
 }
 /**
@@ -102,7 +97,6 @@ alumnosModel.updateStatusById = async ( alumno_id , status ) => {
         await pool.query(`UPDATE alumnos SET status = ? WHERE id = ?`, [status,alumno_id])
     } catch (error) {
         console.error('Error updating status : ',error.message);
-        throw new Error("Error updating status!");
     }
 }
 /**
@@ -115,7 +109,6 @@ alumnosModel.updateCursoByCursoId = async ( curso_id , alumno_id ) => {
         await pool.query(`UPDATE alumnos SET curso_id = ? WHERE id = ?`, [curso_id,alumno_id])
     } catch (error) {
         console.error('Error updating curso : ',error.message);
-        throw new Error("Error updating curso!");
     }
 }
 /**
@@ -127,7 +120,6 @@ alumnosModel.toCalculateAverageById = async ( alumno_id ) => {
         await pool.query (`UPDATE alumnos SET promedio = ( SELECT AVG(grade) FROM notas WHERE alumno_id = ? ) WHERE id = ? `,[alumno_id,alumno_id]);
     } catch (error) {
         console.error('Error calculating average by id : ',error.message);
-        throw new Error("Error calculating avarage by id!");
     }
 }
 /**
@@ -142,7 +134,6 @@ alumnosModel.getAllAlumnosByIdProfesor = async ( profesor_id ) => {
         return rows;
     } catch (error) {
         console.error('Error fetching alumnos by id_profesor ',error.message);
-        throw new Error("Error fetching alumnos by id_profesor!");
     }
 }
 /**
@@ -155,7 +146,6 @@ alumnosModel.deleteAlumnoById = async (id) => {
         await pool.query(`DELETE FROM alumnos WHERE id = ?`, [id]);
     } catch (error) {
         console.error(`Error deleting alumno:`, error.message);
-        throw new Error("Error deleting alumno!");
     }
 };
 /**
@@ -167,8 +157,7 @@ alumnosModel.getAlumnoById = async ( id ) => {
         const [row] = await pool.query("SELECT * FROM alumnos WHERE id = ?", [ id ]);
         return row;
     } catch (error) {
-        console.error("Error fetching alumno by id :", error.message);
-        throw new Error("Error fetching alumno by id!");   
+        console.error("Error fetching alumno by id :", error.message);  
     }
 }
 /**
@@ -180,7 +169,6 @@ alumnosModel.inserAlumnosMassive = async ( values ) => {
         await pool.query(`INSERT INTO alumnos ( firstName,lastName,dni,gender,birthDate,address,phone,email,curso_id) VALUES ?`,[values]);
     } catch (error) {
         console.error("Error inserting alumnos :", error.message);   
-        throw new Error("Error inserting alumnos!");
     }
 }
 

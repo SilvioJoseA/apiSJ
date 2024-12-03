@@ -136,7 +136,6 @@ controller.insertCursoMassiveData = async ( req , res ) => {
         res.status(200).json({message:"Cursos inserted successfully!"});
     } catch (error) {
         console.error("Error inserting data : " , error.message);
-        throw new Error("Error insertin data!");
     }
 }
 

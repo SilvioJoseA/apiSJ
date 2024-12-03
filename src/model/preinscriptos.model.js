@@ -23,7 +23,6 @@ preinscriptosModel.createTablePreinscriptos = async () => {
             `);
     } catch (error) {
         console.error("Error creating preinscriptos table : ",error.message);
-        throw new Error("Error creating preinscriptos table!");   
     }
 }
 
@@ -37,7 +36,6 @@ preinscriptosModel.getAllPreinscriptos = async () => {
         return rows;
     } catch (error) {
         console.error("Error fetching all preinscriaptos :",error.message);
-        throw new Error("Error fetching all preinscriptos");
     }
 }
 
@@ -58,8 +56,6 @@ preinscriptosModel.addPreinscripto = async (name , lastname , dni , sexo ,birthd
         await pool.query("INSERT INTO preinscriptos ( id , name , lastname , dni , sexo ,birthday , direction , phone , email ) VALUES (NULL , ? , ? , ? , ? , ? , ? , ? , ? )", [name , lastname , dni , sexo ,birthday , direction , phone , email]);
     } catch (error) {
         console.error("Error adding preinscripto: ", error.message);
-        throw new Error("Error adding preinscripto: ");
-        
     }
 }
 
@@ -73,8 +69,6 @@ preinscriptosModel.deletePrinscriptosById = async ( id ) => {
         await pool.query("DELETE FROM preinscriptos WHERE id = ? ", [id]);
     } catch (error) {
         console.error("Error deleting preinscripto by id : ", error.message);
-        throw new Error("Error deleting preinscripto by id!");
-        
     }
 }
 

@@ -25,7 +25,6 @@ profesoresModel.createTableProfesores = async () => {
         `);
     } catch (error) {
         console.error("Error creating `profesores` table:", error.message);
-        throw new Error("Error creating `profesores` table!");
     }
 };
 
@@ -43,7 +42,6 @@ profesoresModel.insertProfesor = async (profesorData) => {
         );
     } catch (error) {
         console.error("Error inserting profesor into `profesores` table:", error.message);
-        throw new Error("Error inserting profesor into `profesores` table!");
     }
 };
 /**
@@ -56,7 +54,6 @@ profesoresModel.insertProfesoresMassive = async ( values ) => {
         await pool.query(`INSERT INTO profesores ( id , firstName , lastName , dni , sexo , birthDate , address , phone , email ) VALUES ?`, [values]);
     } catch (error) {
         console.error("Error inserting profesores : ",error.message);
-        throw new Error("Error inserting profesores!");
     }
 }
 
@@ -70,7 +67,6 @@ profesoresModel.getAllProfesores = async () => {
         return rows;
     } catch (error) {
         console.error("Error fetching profesores:", error.message);
-        throw new Error("Error fetching profesores!");
     }
 };
 
@@ -85,7 +81,6 @@ profesoresModel.getProfesorById = async (id) => {
         return rows[0] || null;
     } catch (error) {
         console.error("Error fetching profesor by ID:", error.message);
-        throw new Error("Error fetching profesor by ID!");
     }
 };
 
@@ -99,7 +94,6 @@ profesoresModel.deleteProfesorById = async (id) => {
         await pool.query(`DELETE FROM profesores WHERE id = ?`, [id]);
     } catch (error) {
         console.error("Error deleting profesor by ID:", error.message);
-        throw new Error("Error deleting profesor by ID!");
     }
 };
 
