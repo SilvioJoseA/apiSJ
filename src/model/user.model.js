@@ -62,13 +62,12 @@ userModel.getUserByUserNameAndPassword = async ( email , password ) => {
  * @param {string} email
  * @returns {Promise<void>} 
  */
-userModel.addUser = async ( username , password , email ) => {
+userModel.addUser = async ( username , password , email , profesor_id , role ) => {
     try {
-        await pool.query("INSERT INTO users ( username , password , email ) VALUES ( ? , ? , ? )", [ username , password , email ]);
+        await pool.query("INSERT INTO users ( username , password , email , profesor_id , role ) VALUES ( ? , ? , ? , ? , ? )", [ username , password , email , profesor_id , role ]);
     } catch (error) {
         console.error("Error adding user: ", error.message);
         throw new Error("Error adding user!");
-        
     }
 }
 

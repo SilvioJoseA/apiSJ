@@ -81,7 +81,7 @@ const controller = {};
                 };
             });
             
-            res.json(rowsStagesWichQuestionsAndOptions);
+            res.json({stages:[rowsStagesWichQuestionsAndOptions]});
             
         } catch (error) {
             console.error(error.message);

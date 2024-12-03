@@ -26,13 +26,12 @@ const controller = {};
      */
     controller.addUser = async ( req , res ) => {
         try {
-            const { username , password , email } = req.body;
-            await userModel.addUser( username , password , email );
+            const { username , password , email , profesor_id , role } = req.body;
+            await userModel.addUser( username , password , email , profesor_id , role );
             res.status(201).json({message:"User was adding successfully!"});
         } catch (error) {
             console.error("Error adding user in users table : ", error.message);
-            throw new Error("Error adding user in users table!");
-            
+            throw new Error("Error adding user in users table!");  
         }
     }
 

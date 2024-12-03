@@ -50,6 +50,7 @@ notasModel.getNotasByAlumnoId = async (alumno_id) => {
  */
 notasModel.insertNotaByAlumnoId = async (alumno_id, subject, grade, observations) => {
     try {
+        console.table({alumno_id, subject, grade, observations});
         const [result] = await pool.query(
             "INSERT INTO notas (alumno_id, subject, grade, observations) VALUES (?, ?, ?, ?)",
             [alumno_id, subject, grade, observations]

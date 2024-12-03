@@ -1,7 +1,5 @@
 import { config } from 'dotenv';
 
-
-
     export const PORT = process.env.PORT || 4004;
     export const DB_USER = process.env.DB_USER || 'u202166280_appsj';
     export const DB_PASSWORD = process.env.DB_PASSWORD || 'Software123*';
