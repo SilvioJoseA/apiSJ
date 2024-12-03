@@ -11,14 +11,12 @@ import profesoresRouter from "./router/profesores.routes.js";
 const app = express();
 
     app.use(express.json());
-    app.use(cors(
-        {
-            methods:['GET','POST','PUT','DELETE'],
-            origin: ['backend.acsaintjohns.org', 'http://127.0.0.1:3000'],
-            allowedHeaders: ['Content-Type','Authorization'],
-            credentials: true,
-        }
-    )); 
+    app.use(cors({
+        methods: ['GET', 'POST', 'PUT', 'DELETE'],
+        origin: ['https://appsj.acsaintjohns.org', 'http://127.0.0.1:3000'],
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true,
+    }));
     app.use(userRouter);
     app.use(preinscriptosRouter);
     app.use(amdRouter);
