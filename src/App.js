@@ -13,7 +13,7 @@ const app = express();
     app.use(express.json());
     app.use(cors({
         methods: ['GET', 'POST', 'PUT', 'DELETE'],
-        origin: ['https://appsj.acsaintjohns.org'],
+        origin: ['*'],
         allowedHeaders: ['Content-Type', 'Authorization'],
         credentials: true,
     }));
