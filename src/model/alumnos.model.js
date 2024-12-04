@@ -68,14 +68,50 @@ alumnosModel.getAllAlumnos = async () => {
  * @param {string} dni 
  * @returns 
  */
-alumnosModel.verifyDni = async ( dni ) => {
+alumnosModel.verifyDni = async (dni) => {
     try {
-        const [ row ] = await pool.query(`SELECT * FROM alumnos WHERE dni = ? AND status = 'apto' AND promedio >= 6 `,[dni]);
-        return row;
+        const query = `
+            SELECT * 
+            FROM alumnos 
+            WHERE dni = ? 
+        `;
+        const [rows] = await pool.query(query, [dni]);
+        return rows.length > 0 ? rows[0] : null;
     } catch (error) {
-        console.error("Error verifing dni :", error.message);
+        console.error("Error verifying DNI:", error.message);
     }
-}
+};
+/**
+ * Query to find alumno by dni from alumnos table
+ * @param {string} dni 
+ * @returns 
+ */
+alumnosModel.verifyStatusInscription = async (dni) => {
+    try {
+        const query = `
+            SELECT id 
+            FROM alumnos 
+            WHERE dni = ? 
+              AND status = 'apto' 
+              AND promedio >= 6
+        `;
+        const [rows] = await pool.query(query, [dni]);
+        return rows.length > 0 ? rows[0] : {message:"No Apto"};
+    } catch (error) {
+        console.error("Error verifying DNI:", error.message);
+    }
+};
+/* 
+        const query = `
+            SELECT * 
+            FROM alumnos 
+            WHERE dni = ? 
+              AND status = 'apto' 
+              AND promedio >= 6
+        `;
+*
+/
+
 /**
  * Query to inscribir alumno
  * @param {number} alumno_id 

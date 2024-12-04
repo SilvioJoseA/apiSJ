@@ -13,6 +13,6 @@ const router = Router();
     router.put('/alumnos/update/status/:id', controller.updateStatusById);
     router.put('/alumnos/update/inscription/:id', controller.updateInscriptionById);
     router.put('/alumnos/update/curso/:id', controller.updateCursoByCursoId);
-    router.get('/alumnos/verify', controller.verifyDni);
+    router.post('/alumnos/verify', controller.verifyDni);
 
 export default router;

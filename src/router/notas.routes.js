@@ -4,7 +4,7 @@ import controller from "../controller/notas.controller.js";
 const router = Router();
 
 router.get('/notas/create', controller.createNotasTable);
-router.get('/notas/:alumno_id', controller.getNotasByAlumnoId); // Se corrigió la sintaxis aquí
+router.get('/notas/:alumno_id', controller.getNotasByAlumnoId); 
 router.post('/notas/:alumno_id', controller.insertNotaByAlumnoId);
 router.delete('/notas/:id', controller.deleteNotaById);
 

@@ -28,21 +28,28 @@ const controller = {};
             console.error("Error fetching all Alumnos from alumnos table :", error.message);
         }
     }
-    controller.verifyDni = async ( req , res ) => {
+    controller.verifyDni = async (req, res) => {
         try {
             const { dni } = req.body;
-                console.log('Hola');
-            const row = await alumnosModel.verifyDni(dni);
-            if ( row ){
-                res.status(201).json(row);
-            } else {
-                res.status(500);
+            if (!dni) {
+                return res.status(400).json({ message: "El campo DNI es obligatorio." });
             }
-            
+    
+            var row = await alumnosModel.verifyDni(dni);
+    
+            if (row) {
+                row = await alumnosModel.verifyStatusInscription(dni);
+                res.status(200).json(row); 
+            } else {
+                res.status(200).json({ message: "Apto" }); 
+            }
+    
         } catch (error) {
-            console.error("Error verifing dni : ",error.message);
+            console.error("Error verifying DNI:", error.message);
+            res.status(500).json({ message: "Error interno del servidor al verificar el DNI." }); // Código 500 para errores del servidor
         }
-    }
+    };
+    
     controller.updateStatusById = async ( req , res ) => {
         try {
             const { id } = req.params;
