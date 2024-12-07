@@ -148,4 +148,34 @@ controller.insertAlumnosMassiveData = async ( req , res ) => {
         console.error("Error inserting data : " , error.message);
     }
 }
+
+controller.calculateAverageEscritoById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id || isNaN(id)) {
+            return res.status(400).json({ message: "ID inválido. Debe ser un número válido." });
+        }
+        await alumnosModel.toCalculateAverageEscritoById(id);
+        res.status(200).json({ message: "Promedio escrito calculado y actualizado con éxito." });
+    } catch (error) {
+        console.error("Error calculating average escrito:", error.message);
+        res.status(500).json({ message: "Error al calcular el promedio escrito.", error: error.message });
+    }
+};
+
+controller.calculateAverageOralById = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id || isNaN(id)) {
+            return res.status(400).json({ message: "ID inválido. Debe ser un número válido." });
+        }
+        await alumnosModel.toCalculateAverageOralById(id);
+        res.status(200).json({ message: "Promedio oral calculado y actualizado con éxito." });
+    } catch (error) {
+        console.error("Error calculating average oral:", error.message);
+        res.status(500).json({ message: "Error al calcular el promedio oral.", error: error.message });
+    }
+};
+
+
 export default controller;

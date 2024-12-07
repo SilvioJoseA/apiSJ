@@ -14,5 +14,7 @@ const router = Router();
     router.put('/alumnos/update/inscription/:id', controller.updateInscriptionById);
     router.put('/alumnos/update/curso/:id', controller.updateCursoByCursoId);
     router.post('/alumnos/verify', controller.verifyDni);
+    router.get('/alumnos/tomakeaverageoral/:id', controller.calculateAverageOralById);
+    router.get('/alumnos/tomakeaverageescrito/:id', controller.calculateAverageEscritoById);
 
 export default router;

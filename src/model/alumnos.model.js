@@ -148,16 +148,57 @@ alumnosModel.updateCursoByCursoId = async ( curso_id , alumno_id ) => {
     }
 }
 /**
- * Query to update promedio by alumnos_id
+ * Query to update promedio_escrito by alumno_id
  * @param {number} alumno_id 
  */
-alumnosModel.toCalculateAverageById = async ( alumno_id ) => {
+alumnosModel.toCalculateAverageEscritoById = async (alumno_id) => {
     try {
-        await pool.query (`UPDATE alumnos SET promedio = ( SELECT AVG(grade) FROM notas WHERE alumno_id = ? ) WHERE id = ? `,[alumno_id,alumno_id]);
+        await pool.query(
+            `UPDATE alumnos 
+             SET promedio_escrito = COALESCE((
+                 SELECT AVG(grade) 
+                 FROM notas 
+                 WHERE alumno_id = ? 
+                   AND (
+                       subject = 'reading' 
+                       OR subject = 'use of english' 
+                       OR subject = 'writing' 
+                       OR subject = 'reading and writing'
+                   )
+             ), 0) 
+             WHERE id = ?`,
+            [alumno_id, alumno_id]
+        );
     } catch (error) {
-        console.error('Error calculating average by id : ',error.message);
+        console.error('Error calculating average (escrito) by id:', error.message);
     }
-}
+};
+
+/**
+ * Query to update promedio_oral by alumno_id
+ * @param {number} alumno_id 
+ */
+alumnosModel.toCalculateAverageOralById = async (alumno_id) => {
+    try {
+        await pool.query(
+            `UPDATE alumnos 
+             SET promedio_oral = COALESCE((
+                 SELECT AVG(grade) 
+                 FROM notas 
+                 WHERE alumno_id = ? 
+                   AND (
+                       subject = 'listening' 
+                       OR subject = 'speaking'
+                   )
+             ), 0) 
+             WHERE id = ?`,
+            [alumno_id, alumno_id]
+        );
+    } catch (error) {
+        console.error('Error calculating average (oral) by id:', error.message);
+    }
+};
+
 /**
  * Query to get all alumnos from a relationship profesor_id;
  * @param {number} profesor_id 
@@ -165,7 +206,7 @@ alumnosModel.toCalculateAverageById = async ( alumno_id ) => {
  */
 alumnosModel.getAllAlumnosByIdProfesor = async ( profesor_id ) => {
     try {
-        const [rows] = await pool.query(`SELECT alumnos.id, alumnos.firstName, alumnos.lastName, alumnos.dni, alumnos.gender, alumnos.birthDate, alumnos.address, alumnos.phone, alumnos.email,alumnos.guardianName,alumnos.guardianDNI, alumnos.guardianEmail, alumnos.guardianPhone, alumnos.isMinor, alumnos.created_at, alumnos.updated_at, alumnos.curso_id, alumnos.status, alumnos.inscripcion
+        const [rows] = await pool.query(`SELECT alumnos.id, alumnos.firstName, alumnos.lastName, alumnos.dni, alumnos.gender, alumnos.birthDate, alumnos.address, alumnos.phone, alumnos.email,alumnos.guardianName,alumnos.guardianDNI, alumnos.guardianEmail, alumnos.guardianPhone, alumnos.isMinor, alumnos.created_at, alumnos.updated_at, alumnos.curso_id, alumnos.status, alumnos.inscripcion, alumnos.promedio_escrito,alumnos.promedio_oral
  FROM alumnos INNER JOIN cursos ON alumnos.curso_id = cursos.id WHERE cursos.profesor_id = ?`, [profesor_id]);
         return rows;
     } catch (error) {
