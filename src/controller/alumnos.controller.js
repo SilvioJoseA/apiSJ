@@ -176,6 +176,25 @@ controller.calculateAverageOralById = async (req, res) => {
         res.status(500).json({ message: "Error al calcular el promedio oral.", error: error.message });
     }
 };
+controller.calculateAverageOralByAll = async (req, res) => {
+    try {
+        await alumnosModel.toCalculateAverageOralForAll(); // Sin `id`
+        res.status(200).json({ message: "Promedio oral calculado y actualizado con éxito para todos los alumnos." });
+    } catch (error) {
+        console.error("Error calculating average oral for all:", error.message);
+        res.status(500).json({ message: "Error al calcular el promedio oral para todos los alumnos.", error: error.message });
+    }
+};
+
+controller.calculateAverageEscritoByAll = async (req, res) => {
+    try {
+        await alumnosModel.toCalculateAverageEscritoForAll(); // Sin `id`
+        res.status(200).json({ message: "Promedio escrito calculado y actualizado con éxito para todos los alumnos." });
+    } catch (error) {
+        console.error("Error calculating average escrito for all:", error.message);
+        res.status(500).json({ message: "Error al calcular el promedio escrito para todos los alumnos.", error: error.message });
+    }
+};
 
 
 export default controller;
