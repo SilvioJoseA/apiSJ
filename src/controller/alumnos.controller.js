@@ -178,7 +178,7 @@ controller.calculateAverageOralById = async (req, res) => {
 };
 controller.calculateAverageOralByAll = async (req, res) => {
     try {
-        await alumnosModel.toCalculateAverageOralForAll(); // Sin `id`
+        await alumnosModel.toCalculateAverageOralForAll(); 
         res.status(200).json({ message: "Promedio oral calculado y actualizado con éxito para todos los alumnos." });
     } catch (error) {
         console.error("Error calculating average oral for all:", error.message);
@@ -188,7 +188,7 @@ controller.calculateAverageOralByAll = async (req, res) => {
 
 controller.calculateAverageEscritoByAll = async (req, res) => {
     try {
-        await alumnosModel.toCalculateAverageEscritoForAll(); // Sin `id`
+        await alumnosModel.toCalculateAverageEscritoForAll(); 
         res.status(200).json({ message: "Promedio escrito calculado y actualizado con éxito para todos los alumnos." });
     } catch (error) {
         console.error("Error calculating average escrito for all:", error.message);
@@ -196,5 +196,13 @@ controller.calculateAverageEscritoByAll = async (req, res) => {
     }
 };
 
+controller.calculateAverageGeneral = async ( req , res ) => {
+    try {
+        await alumnosModel.toCalculateGeneralAverage();
+        res.status(200).json({message:"Average General calculated successfully!"});
+    } catch (error) {
+        console.error("Error calculating average general : ",error.message);
+    }
+}
 
 export default controller;

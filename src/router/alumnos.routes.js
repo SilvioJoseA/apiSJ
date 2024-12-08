@@ -16,7 +16,8 @@ const router = Router();
     router.post('/alumnos/verify', controller.verifyDni);
     router.get('/alumnos/tomakeaverageoral/:id', controller.calculateAverageOralById);
     router.get('/alumnos/tomakeaverageescrito/:id', controller.calculateAverageEscritoById);
-    router.get('/alumnos/tomakeaverageoralall', controller.calculateAverageOralByAll);
-    router.get('/alumnos/tomakeaverageescritoall', controller.calculateAverageEscritoByAll);
+    router.put('/alumnos/tomakeaverageoralall', controller.calculateAverageOralByAll);
+    router.put('/alumnos/tomakeaverageescritoall', controller.calculateAverageEscritoByAll);
+    router.put('/alumnos/tomakeaveragegeneral', controller.calculateAverageGeneral);
 
 export default router;

@@ -245,7 +245,20 @@ alumnosModel.toCalculateAverageEscritoForAll = async () => {
         console.error('Error calculating average oral for all alumnos:', error.message);
     }
 };
-
+/**
+ * Query to update average general
+ */
+alumnosModel.toCalculateGeneralAverage = async () => {
+   try {
+    await pool.query(`UPDATE 
+                            alumnos 
+                        SET 
+                            promedio = (COALESCE(promedio_escrito, 0) + COALESCE(promedio_oral, 0)) / 2;
+                    `);
+   } catch (error) {
+    console.error("Error calculating average general :",error.message);
+   } 
+} 
 
 /**
  * Query to get all alumnos from a relationship profesor_id;
