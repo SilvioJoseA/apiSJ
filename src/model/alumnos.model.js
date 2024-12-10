@@ -291,18 +291,24 @@ alumnosModel.getAllAlumnosByIdProfesor = async (profesor_id) => {
                 alumnos.promedio_escrito,
                 alumnos.promedio_oral,
                 alumnos.promedio,
-                notas.subject,
-                notas.grade
+                JSON_ARRAYAGG(
+                    JSON_OBJECT(
+                        'subject', notas.subject,
+                        'grade', notas.grade
+                    )
+                ) AS notas
             FROM alumnos
             INNER JOIN cursos ON alumnos.curso_id = cursos.id
             LEFT JOIN notas ON alumnos.id = notas.alumno_id
             WHERE cursos.profesor_id = ?
+            GROUP BY alumnos.id
         `, [profesor_id]);
         return rows;
     } catch (error) {
         console.error('Error fetching alumnos with notas by id_profesor ', error.message);
     }
-}
+};
+
 
 /**
  * Query to delete a alumno by id from alumnos table
