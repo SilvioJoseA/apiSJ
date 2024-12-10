@@ -265,14 +265,45 @@ alumnosModel.toCalculateGeneralAverage = async () => {
  * @param {number} profesor_id 
  * @returns 
  */
-alumnosModel.getAllAlumnosByIdProfesor = async ( profesor_id ) => {
+alumnosModel.getAllAlumnosByIdProfesor = async (profesor_id) => {
     try {
-        const [rows] = await pool.query(`SELECT alumnos.id, alumnos.firstName, alumnos.lastName, alumnos.dni, alumnos.gender, alumnos.birthDate, alumnos.address, alumnos.phone, alumnos.email,alumnos.guardianName,alumnos.guardianDNI, alumnos.guardianEmail, alumnos.guardianPhone, alumnos.isMinor, alumnos.created_at, alumnos.updated_at, alumnos.curso_id, alumnos.status, alumnos.inscripcion, alumnos.promedio_escrito,alumnos.promedio_oral,alumnos.promedio FROM alumnos INNER JOIN cursos ON alumnos.curso_id = cursos.id WHERE cursos.profesor_id = ?`, [profesor_id]);
+        const [rows] = await pool.query(`
+            SELECT 
+                alumnos.id,
+                alumnos.firstName,
+                alumnos.lastName,
+                alumnos.dni,
+                alumnos.gender,
+                alumnos.birthDate,
+                alumnos.address,
+                alumnos.phone,
+                alumnos.email,
+                alumnos.guardianName,
+                alumnos.guardianDNI,
+                alumnos.guardianEmail,
+                alumnos.guardianPhone,
+                alumnos.isMinor,
+                alumnos.created_at,
+                alumnos.updated_at,
+                alumnos.curso_id,
+                alumnos.status,
+                alumnos.inscripcion,
+                alumnos.promedio_escrito,
+                alumnos.promedio_oral,
+                alumnos.promedio,
+                notas.subject,
+                notas.grade
+            FROM alumnos
+            INNER JOIN cursos ON alumnos.curso_id = cursos.id
+            LEFT JOIN notas ON alumnos.id = notas.alumno_id
+            WHERE cursos.profesor_id = ?
+        `, [profesor_id]);
         return rows;
     } catch (error) {
-        console.error('Error fetching alumnos by id_profesor ',error.message);
+        console.error('Error fetching alumnos with notas by id_profesor ', error.message);
     }
 }
+
 /**
  * Query to delete a alumno by id from alumnos table
  * @param {number} id 
