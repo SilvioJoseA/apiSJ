@@ -287,6 +287,7 @@ alumnosModel.getAllAlumnosByIdProfesor = async (profesor_id) => {
                 alumnos.updated_at,
                 alumnos.curso_id,
                 alumnos.status,
+                alumnos.gender,
                 alumnos.inscripcion,
                 alumnos.promedio_escrito,
                 alumnos.promedio_oral,
@@ -302,12 +303,20 @@ alumnosModel.getAllAlumnosByIdProfesor = async (profesor_id) => {
             LEFT JOIN notas ON alumnos.id = notas.alumno_id
             WHERE cursos.profesor_id = ?
             GROUP BY alumnos.id
+            ORDER BY 
+                CASE 
+                    WHEN alumnos.gender = 'male' THEN 1 
+                    WHEN alumnos.gender = 'Mascul.' THEN 1
+                    ELSE 2
+                END,
+                alumnos.firstName ASC
         `, [profesor_id]);
         return rows;
     } catch (error) {
         console.error('Error fetching alumnos with notas by id_profesor ', error.message);
     }
 };
+
 
 
 /**
