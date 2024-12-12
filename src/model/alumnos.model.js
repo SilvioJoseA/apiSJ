@@ -249,16 +249,18 @@ alumnosModel.toCalculateAverageEscritoForAll = async () => {
  * Query to update average general
  */
 alumnosModel.toCalculateGeneralAverage = async () => {
-   try {
-    await pool.query(`UPDATE 
-                            alumnos 
-                        SET 
-                            promedio = (COALESCE(promedio_escrito, 0) + COALESCE(promedio_oral, 0)) / 2;
-                    `);
-   } catch (error) {
-    console.error("Error calculating average general :",error.message);
-   } 
-} 
+    try {
+       await pool.query(
+          `UPDATE 
+               alumnos 
+           SET 
+               promedio = CAST((COALESCE(promedio_escrito, 0) + COALESCE(promedio_oral, 0)) / 2 AS DECIMAL(10, 2));`
+       );
+    } catch (error) {
+       console.error("Error calculating general average:", error.message);
+    }
+ };
+ 
 
 /**
  * Query to get all alumnos from a relationship profesor_id;
