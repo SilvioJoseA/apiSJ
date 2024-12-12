@@ -250,16 +250,17 @@ alumnosModel.toCalculateAverageEscritoForAll = async () => {
  */
 alumnosModel.toCalculateGeneralAverage = async () => {
     try {
-       await pool.query(
-          `UPDATE 
-               alumnos 
-           SET 
-               promedio = CAST((COALESCE(promedio_escrito, 0) + COALESCE(promedio_oral, 0)) / 2 AS DECIMAL(10, 2));`
-       );
+        await pool.query(
+            `UPDATE 
+                 alumnos 
+             SET 
+                 promedio = TRUNCATE((COALESCE(promedio_escrito, 0) + COALESCE(promedio_oral, 0)) / 2, 2);`
+        );
     } catch (error) {
-       console.error("Error calculating general average:", error.message);
+        console.error("Error calculating general average:", error.message);
     }
- };
+};
+ 
  
 
 /**
