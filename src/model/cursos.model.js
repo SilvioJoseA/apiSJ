@@ -65,7 +65,7 @@ cursosModel.inserCursosMassive = async ( values ) => {
  */
 cursosModel.getAllCursos = async () => {
     try {
-        const [rows] = await pool.query(`SELECT * FROM cursos`);
+        const [rows] = await pool.query(` SELECT * FROM cursos ORDER BY nivel ASC`);
         return rows;
     } catch (error) {
         console.error("Error fetching all courses:", error.message);
