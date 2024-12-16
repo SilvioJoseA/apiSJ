@@ -206,15 +206,16 @@ alumnosModel.toCalculateAverageOralForAll = async () => {
     try {
         const response = await pool.query(
             `UPDATE alumnos 
-             SET promedio_oral = COALESCE((
-                 SELECT AVG(grade) 
-                 FROM notas 
-                 WHERE notas.alumno_id = alumnos.id 
-                   AND (
-                       subject = 'listening' 
-                       OR subject = 'speaking'
-                   )
-             ), 0)`
+                SET promedio_oral = COALESCE((
+                    SELECT TRUNCATE(AVG(grade), 2)
+                    FROM notas 
+                WHERE notas.alumno_id = alumnos.id 
+                AND (
+                    subject = 'listening' 
+                    OR subject = 'speaking'
+                    )
+                ), 0);
+            `
         );
         console.log(response);
     } catch (error) {
@@ -229,17 +230,17 @@ alumnosModel.toCalculateAverageEscritoForAll = async () => {
     try {
         await pool.query(
             `UPDATE alumnos 
-             SET promedio_escrito = COALESCE((
-                 SELECT AVG(grade) 
-                 FROM notas 
-                 WHERE notas.alumno_id = alumnos.id 
-                   AND (
-                       subject = 'reading' 
-                       OR subject = 'use of english' 
-                       OR subject = 'writing' 
-                       OR subject = 'reading and writing'
-                   )
-             ), 0)`
+            SET promedio_escrito = COALESCE((
+                SELECT TRUNCATE(AVG(grade), 2) 
+                FROM notas 
+                WHERE notas.alumno_id = alumnos.id 
+                  AND (
+                      subject = 'reading' 
+                      OR subject = 'use of english' 
+                      OR subject = 'writing' 
+                      OR subject = 'reading and writing'
+                  )
+            ), 0)`
         );
     } catch (error) {
         console.error('Error calculating average oral for all alumnos:', error.message);
