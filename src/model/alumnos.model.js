@@ -34,14 +34,57 @@ alumnosModel.createTableAlumnos = async () => {
         console.error("Error creating alumnos table:", error.message);
     }
 };
+/**
+ * Function that creates the alumnos table dynamically based on the ciclo lectivo (e.g., "2024" or "2025")
+ * @param {string} cicloLectivo - The ciclo lectivo to include in the table name (e.g., "2024" or "2025")
+ * @returns {Promise<void>}
+ */
+alumnosModel.createTableAlumnosByClicloLectivo = async (cicloLectivo) => {
+    try {
+        const tableName = `alumnos_${cicloLectivo}`;
+        await pool.query(`
+           CREATE TABLE IF NOT EXISTS \`${tableName}\` (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                firstName VARCHAR(100) NULL,
+                lastName VARCHAR(100) NULL,
+                dni VARCHAR(100) NULL,
+                gender VARCHAR(100) NULL,
+                birthDate VARCHAR(200) NULL,
+                address VARCHAR(100) NULL,
+                phone VARCHAR(100) NULL,
+                email VARCHAR(100) NULL,
+                guardianName VARCHAR(100) NULL,
+                guardianDNI VARCHAR(100) NULL,
+                guardianEmail VARCHAR(100) NULL,
+                guardianPhone VARCHAR(100) NULL,
+                isMinor TINYINT(1) NULL,
+                created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+                curso_id INT NULL,
+                status ENUM('apto', 'deuda', 'verificando', '') NULL,
+                nivel VARCHAR(200) NOT NULL,
+                horario VARCHAR(200) NOT NULL,
+                inscripcion ENUM('inscripto', 'reinscribir', '', '') NOT NULL DEFAULT 'inscripto',
+                promedio DECIMAL(10,2) NOT NULL,
+                promedio_escrito DECIMAL(10,2) NOT NULL,
+                promedio_oral DECIMAL(10,2) NOT NULL,
+                cicloLectivo VARCHAR(20) NOT NULL,
+                FOREIGN KEY (curso_id) REFERENCES cursos(id) ON DELETE CASCADE
+            )
+        `);
+    } catch (error) {
+        console.error("Error creating alumnos table:", error.message);
+    }
+};
 
 /**
  * Query to insert a new alumno into alumnos table
  * @param {Object} alumnoData 
  * @returns {Promise<void>}
  */
-alumnosModel.insertAlumno = async (alumnoData) => {
+alumnosModel.insertAlumno = async (alumnoData,cicloLectivo) => {
     try {
+        const tableName = `alumnos_${cicloLectivo}`;
         const {
             firstName, lastName, dni, gender, birthDate, address, phone, email,
             guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor,
@@ -53,7 +96,7 @@ alumnosModel.insertAlumno = async (alumnoData) => {
 
         // Consulta SQL para insertar todos los campos
         const query = `
-            INSERT INTO alumnos (
+            INSERT INTO  \`${tableName}\` (
                 firstName, lastName, dni, gender, birthDate, address, phone, email, 
                 guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor,
                 nivel, horario

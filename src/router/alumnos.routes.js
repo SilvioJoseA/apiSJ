@@ -6,7 +6,7 @@ const router = Router();
     router.get('/alumnos/create', controller.createTableAlumnos);
     router.get('/alumnos', controller.getAllAlumnos);
     router.get('/alumnos-teacher/:id_profesor',controller.getAllAlumnosByIdProfesor)
-    router.post('/alumnos', controller.addAlumno);
+    router.post('/alumnos/:cicloLectivo', controller.addAlumno);
     router.delete('/alumnos/:id', controller.deleteAlumnoById);
     router.get('/alumnos/:id', controller.getAlunoById);
     router.get('/alumnos/insert/massive', controller.insertAlumnosMassiveData);
@@ -19,5 +19,7 @@ const router = Router();
     router.put('/alumnos/tomakeaverageoralall', controller.calculateAverageOralByAll);
     router.put('/alumnos/tomakeaverageescritoall', controller.calculateAverageEscritoByAll);
     router.put('/alumnos/tomakeaveragegeneral', controller.calculateAverageGeneral);
+    //Routes by ciclo lectivo
+    router.get('/alumnos/create/:cicloLectivo', controller.createTableAlumnosByCicloLectivo);
 
 export default router;

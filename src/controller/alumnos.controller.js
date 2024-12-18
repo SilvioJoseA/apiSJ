@@ -16,6 +16,20 @@ const controller = {};
         }
     }
     /**
+     * Function to create alumnos table by ciclo lectivo
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    controller.createTableAlumnosByCicloLectivo = async ( req , res ) => {
+        try {
+            const {cicloLectivo} = req.params;
+            await alumnosModel.createTableAlumnosByClicloLectivo(cicloLectivo);
+            res.status(201).json({message:"Alumnos table created successfully!"});
+        } catch (error) {
+            console.error(`Error creating alumnos table by cicloLectivo : `, error.message);
+        }
+    }
+    /**
      * Function to fetch all alumnos from alumnos table
      * @param {Object} req 
      * @param {Object} res 
@@ -96,8 +110,9 @@ const controller = {};
      */
     controller.addAlumno = async ( req , res ) => {
         try {
+            const { cicloLectivo } = req.params;
             const alumnosData = req.body;
-                const row = await alumnosModel.insertAlumno(alumnosData);
+                const row = await alumnosModel.insertAlumno(alumnosData,cicloLectivo);
                 res.status(201).json(row);
         } catch (error) {
             console.error("Error adding alumno into alumnos table : ", error.message);
