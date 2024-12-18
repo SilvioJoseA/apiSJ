@@ -226,7 +226,7 @@ alumnosModel.verifyDni = async (dni) => {
 alumnosModel.verifyStatusInscription = async (dni) => {
     try {
         const query = `
-            SELECT id 
+            SELECT * 
             FROM alumnos 
             WHERE dni = ? 
               AND status = 'apto' 
