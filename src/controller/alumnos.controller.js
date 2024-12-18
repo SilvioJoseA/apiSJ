@@ -36,7 +36,7 @@ const controller = {};
             }
     
             var row = await alumnosModel.verifyDni(dni);
-    
+            row.messgae=='Apto' && res.status(200).json(row);
             if (row) {
                 row = await alumnosModel.verifyStatusInscription(dni);
                 res.status(200).json(row); 
