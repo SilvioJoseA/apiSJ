@@ -50,6 +50,70 @@ alumnosModel.insertAlumno = async (alumnoData) => {
         console.error("Error inserting alumno:", error.message);
     }
 };
+/**
+ * Query to update an existing alumno in the alumnos table by id
+ * @param {number} id - The ID of the alumno to update
+ * @param {Object} alumnoData - The new data for the alumno
+ * @returns {Promise<void>}
+ */
+alumnosModel.updateAlumnoById = async (id, alumnoData) => {
+    try {
+        const {
+            firstName,
+            lastName,
+            dni,
+            gender,
+            birthDate,
+            address,
+            phone,
+            email,
+            guardianName,
+            guardianDNI,
+            guardianEmail,
+            guardianPhone,
+            isMinor
+        } = alumnoData;
+
+        const query = `
+            UPDATE alumnos 
+            SET firstName = ?,
+                lastName = ?,
+                dni = ?,
+                gender = ?,
+                birthDate = ?,
+                address = ?,
+                phone = ?,
+                email = ?,
+                guardianName = ?,
+                guardianDNI = ?,
+                guardianEmail = ?,
+                guardianPhone = ?,
+                isMinor = ?
+            WHERE id = ?`;
+
+        const values = [
+            firstName,
+            lastName,
+            dni,
+            gender,
+            birthDate,
+            address,
+            phone,
+            email,
+            guardianName,
+            guardianDNI,
+            guardianEmail,
+            guardianPhone,
+            isMinor,
+            id
+        ];
+
+        await pool.query(query, values);
+    } catch (error) {
+        console.error("Error updating alumno:", error.message);
+    }
+};
+
 
 /**
  * Query to fetch all alumnos from alumnos table

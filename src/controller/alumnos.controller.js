@@ -41,7 +41,7 @@ const controller = {};
                 row = await alumnosModel.verifyStatusInscription(dni);
                 res.status(200).json(row); 
             } else {
-                res.status(200).json({ message: "Apto" }); 
+                res.status(200).json(row); 
             }
     
         } catch (error) {
@@ -101,6 +101,21 @@ const controller = {};
                 res.status(201).json({ message: "Alumno created successfully!"});
         } catch (error) {
             console.error("Error adding alumno into alumnos table : ", error.message);
+        }
+    }
+    /**
+     * Function to update alumno by id
+     * @param {Object} req 
+     * @param {Object} res 
+     */
+    controller.updateAlumnoById = async ( req , res ) => {
+        try {
+            const id = req.params;
+            const alumnoData = req.body;
+            await alumnosModel.updateAlumnoById(id,alumnoData);
+            res.status(201).json({ message: "Alumno updated successfully!"});
+        } catch (error) {
+            console.error("Error updating alumno by id : ", error.message);
         }
     }
     /**
