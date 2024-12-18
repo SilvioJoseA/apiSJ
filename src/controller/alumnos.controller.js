@@ -97,8 +97,8 @@ const controller = {};
     controller.addAlumno = async ( req , res ) => {
         try {
             const alumnosData = req.body;
-                await alumnosModel.insertAlumno(alumnosData);
-                res.status(201).json({ message: "Alumno created successfully!"});
+                const row = await alumnosModel.insertAlumno(alumnosData);
+                res.status(201).json(row);
         } catch (error) {
             console.error("Error adding alumno into alumnos table : ", error.message);
         }
