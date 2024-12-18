@@ -203,17 +203,21 @@ alumnosModel.getAllAlumnos = async () => {
  */
 alumnosModel.verifyDni = async (dni) => {
     try {
+        const tableName = 'alumnos';
+        console.log("Consultando tabla:", tableName); // <-- LOG para verificar la tabla
         const query = `
             SELECT * 
-            FROM alumnos 
+            FROM ${tableName} 
             WHERE dni = ? 
         `;
         const [rows] = await pool.query(query, [dni]);
         return rows.length > 0 ? rows[0] : null;
     } catch (error) {
         console.error("Error verifying DNI:", error.message);
+        throw error; // Re-lanzar el error para ver más detalles
     }
 };
+
 /**
  * Query to find alumno by dni from alumnos table
  * @param {string} dni 
