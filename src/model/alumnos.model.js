@@ -42,15 +42,40 @@ alumnosModel.createTableAlumnos = async () => {
  */
 alumnosModel.insertAlumno = async (alumnoData) => {
     try {
-        const { firstName, lastName, dni, gender , birthDate, address, phone, email, guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor } = alumnoData;
-        const row = await pool.query(`INSERT INTO alumnos (firstName, lastName, dni, birthDate, address, phone, email, guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor) VALUES 
-            (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,?)`, 
-            [firstName, lastName, dni, gender, birthDate, address, phone, email, guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor]);
-            return row;
+        const {
+            firstName, lastName, dni, gender, birthDate, address, phone, email,
+            guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor,
+            nivel, horario
+        } = alumnoData;
+
+        // Convertir "on" en `isMinor` a un valor booleano/int
+        const isMinorValue = isMinor === "on" ? 1 : 0;
+
+        // Consulta SQL para insertar todos los campos
+        const query = `
+            INSERT INTO alumnos (
+                firstName, lastName, dni, gender, birthDate, address, phone, email, 
+                guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor,
+                nivel, horario
+            ) 
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+
+        const values = [
+            firstName, lastName, dni, gender, birthDate, address, phone, email,
+            guardianName, guardianDNI, guardianEmail, guardianPhone, isMinorValue,
+            nivel, horario
+        ];
+
+        // Ejecutar la consulta con pool.query
+        const [row] = await pool.query(query, values);
+        return row;
     } catch (error) {
         console.error("Error inserting alumno:", error.message);
+        throw new Error("Failed to insert alumno into the database.");
     }
 };
+
 /**
  * Query to update an existing alumno in the alumnos table by id
  * @param {number} id - The ID of the alumno to update
