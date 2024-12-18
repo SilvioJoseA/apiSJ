@@ -140,7 +140,7 @@ alumnosModel.verifyDni = async (dni) => {
             WHERE dni = ? 
         `;
         const [rows] = await pool.query(query, [dni]);
-        return rows.length > 0 ? rows[0] : null;
+        return rows.length > 0 ? rows[0] : {message:'Apto'};
     } catch (error) {
         console.error("Error verifying DNI:", error.message);
     }
