@@ -215,9 +215,17 @@ alumnosModel.verifyDni = async (dni) => {
         return rows.length > 0 ? rows[0] : null;
     } catch (error) {
         console.error("Error verifying DNI:", error.message);
-        throw error; // Re-lanzar el error para ver más detalles
     }
 };
+alumnosModel.dniRegistred = async (ciclolectivo,dni) => {
+    try {
+        const query = !ciclolectivo?`SELECT * FROM alumnos WHERE dni = ?`:`SELECT * FROM alumnos_${ciclolectivo} WHERE dni=?`;
+        const [ row ] = await pool.query(query,[dni]);
+        return row;
+    } catch (error) {
+        console.error("Error searching dni registred : ", error.message);
+    }
+}
 
 /**
  * Query to find alumno by dni from alumnos table

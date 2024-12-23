@@ -21,5 +21,6 @@ const router = Router();
     router.put('/alumnos/tomakeaveragegeneral', controller.calculateAverageGeneral);
     //Routes by ciclo lectivo
     router.get('/alumnos/create/:cicloLectivo', controller.createTableAlumnosByCicloLectivo);
+    router.post('/alumnos/dni-registred', controller.dniRegistred);
 
 export default router;

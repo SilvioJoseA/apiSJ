@@ -43,6 +43,17 @@ const controller = {};
             console.error("Error fetching all Alumnos from alumnos table :", error.message);
         }
     }
+    controller.dniRegistred = async ( req , res ) => {
+        try {
+            const { dni , ciclolectivo } = req.body;
+            if(!ciclolectivo=='2025' || !ciclolectivo=='2026' || !ciclolectivo=='2027') res.status(201).json({message:"ciclolective format bad structured!"});
+            if(!dni) res.status(201).json({message:"El campo DNI es obligatorio!"});
+            const row = await alumnosModel.dniRegistred(ciclolectivo,dni);
+            res.status(201).json(row[0]);
+        } catch (error) {
+            console.error("Error fetching dni registred : ",error.message);
+        }
+    }
     controller.verifyDni = async (req, res) => {
         try {
             const { dni } = req.body;
@@ -58,7 +69,6 @@ const controller = {};
             } else {
                 res.status(200).json({message:'Apto'}); 
             }
-    
         } catch (error) {
             console.error("Error verifying DNI:", error.message);
             res.status(500).json({ message: "Error interno del servidor al verificar el DNI." }); // Código 500 para errores del servidor
