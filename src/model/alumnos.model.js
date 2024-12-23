@@ -188,9 +188,10 @@ alumnosModel.updateAlumnoById = async (id, alumnoData) => {
  * Query to fetch all alumnos from alumnos table
  * @returns {Promise<Object[]>}
  */
-alumnosModel.getAllAlumnos = async () => {
+alumnosModel.getAllAlumnos = async (proximociclo='') => {
     try {
-        const [rows] = await pool.query(`SELECT * FROM alumnos`);
+        const query = !proximociclo? `SELECT * FROM alumnos`:`SELECT * FROM alumnos_${proximociclo}`;
+        const [rows] = await pool.query(query);
         return rows;
     } catch (error) {
         console.error("Error fetching alumnos:", error.message);

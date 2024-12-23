@@ -36,7 +36,8 @@ const controller = {};
      */
     controller.getAllAlumnos = async ( req , res ) => {
         try {
-            const rows = await alumnosModel.getAllAlumnos();
+            const { proximociclo } = req.params;
+            const rows = await alumnosModel.getAllAlumnos(proximociclo);
             res.status(201).json(rows);
         } catch (error) {
             console.error("Error fetching all Alumnos from alumnos table :", error.message);
