@@ -15,5 +15,10 @@ const router = Router();
    // router.delete('/amd/talent_languages', controller.deleteTalentLanguage);
     router.delete('/amd/talent_lenguages/:lenguage_id', controller.deleteTalentLanguageByIdLanguage);
     router.get('/amd/quiz_stages_questions_options', controller.getStagesAndQuestionsAndOrders);
+    //Users Routes
+    router.delete('/amd/users/:id', controller.deleteUserById);
+    // Positions 
+    router.get('/amd/positions/alter',controller.alterTablePositions);
+    router.post('/amd/positions/insert', controller.insertPositions);
 
 export default router;

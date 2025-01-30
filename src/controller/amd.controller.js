@@ -140,5 +140,40 @@ controller.deleteTalentLanguage = async (req, res) => {
     }
 }
 // stages
+// Users
+controller.deleteUserById = async ( req , res ) => {
+    try {
+        const id = req.params;
+        await pool1.query(`DELETE FROM users WHERE id=2`,[id]);
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({message:error.message});
+    }
+}
+// Positions 
+controller.alterTablePositions = async (req, res) => {
+    try {
+        await pool1.query(`
+            ALTER TABLE positions
+            ADD COLUMN expertise_area_id INT
+        `);
+        res.status(200).json({ message: 'Columns added successfully' });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: error.message });
+    }
+};
+controller.insertPositions = async ( req , res ) => {
+    try {
+        await pool1.query(`INSERT INTO positions (work_areas_id, name_es) VALUES
+(18, 'Desarrollador iOS Junior')`);
+            res.status(201).json({message:"Positions aded successfully!"});
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+
+
 
 export default controller;

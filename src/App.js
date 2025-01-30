@@ -7,6 +7,7 @@ import alumnoRouter from "./router/alumnos.routes.js";
 import notaRouter from "./router/notas.routes.js";
 import cursoRouter from "./router/cursos.routes.js";
 import profesoresRouter from "./router/profesores.routes.js";
+import authRouter from "./router/auth.router.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ const app = express();
     app.use(notaRouter);
     app.use(cursoRouter);
     app.use(profesoresRouter);
+    app.use(authRouter)
     app.listen(4008, ()=>{
         console.log("Listening on port 4008");
     });
