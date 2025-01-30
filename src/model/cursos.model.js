@@ -77,7 +77,7 @@ cursosModel.getAllCursos = async () => {
  */
 cursosModel.getAllNiveles = async () => {
     try {
-        const [rows] = await pool.query(`SELECT DISTINCT nivel , horario FROM cursos ORDER BY nivel ASC`);
+        const [rows] = await pool.query(`SELECT DISTINCT nivel , horario, price FROM cursos ORDER BY nivel ASC`);
         return rows;
     } catch (error) {
         console.error("Error fetching all niveles:", error.message);
@@ -124,5 +124,14 @@ cursosModel.getCursoById = async (id) => {
         console.error("Error fetching course by ID:", error.message);
     }
 };
+
+cursosModel.insertPrices = async (value, id) => {
+    try {
+        await pool.query("UPDATE cursos SET price = ? WHERE id = ?", [value, id]);
+    } catch (error) {
+        console.error("Error al insertar precios en cursos:", error.message);
+    }
+};
+
 
 export default cursosModel;

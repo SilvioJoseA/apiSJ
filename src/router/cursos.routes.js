@@ -13,5 +13,6 @@ const router = Router();
     router.delete('/cursos/:id', controller.deleteCursoById);
     router.get('/upload/files', filesController.readFile);
     router.get('/cursos/insert/massive', controller.insertCursoMassiveData);
+    router.get('/cursos/insert/prices', controller.insertPrices);
 
 export default router;

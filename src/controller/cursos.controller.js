@@ -138,6 +138,50 @@ controller.insertCursoMassiveData = async ( req , res ) => {
         console.error("Error inserting data : " , error.message);
     }
 }
+/**
+ * Function to insert the prices into cursos per level 
+ * @param {Object} req 
+ * @param {Object} res 
+ */
+controller.insertPrices = async (req, res) => {
+    try {
+        const pricesCursos = [
+            { nivel: "KINDER", price: 35500 },
+            { nivel: "PREPARATORIO 1", price: 35500 },
+            { nivel: "PREPARATORIO 2", price: 35500 },
+            { nivel: "KIDS 1", price: 37800 },
+            { nivel: "KIDS 2", price: 39400 },
+            { nivel: "KIDS 3", price: 39300 },
+            { nivel: "KIDS 4", price: 42600 },
+            { nivel: "TEENS", price: 47200 },
+            { nivel: "1° AÑO", price: 47200 },
+            { nivel: "2° AÑO", price: 52000 },
+            { nivel: "3° AÑO", price: 57500 },
+            { nivel: "4° AÑO", price: 61500 },
+            { nivel: "5° AÑO", price: 67800 },
+            { nivel: "6° AÑO", price: 74700 },
+            { nivel: "INTENSIVO 1", price: 36250 },
+            { nivel: "INTENSIVO 2", price: 36250 },
+            { nivel: "INTENSIVO 3", price: 36250 },
+            { nivel: "INTENSIVO 4", price: 36250 },
+            { nivel: "INTENSIVO 5", price: 36250 },
+            { nivel: "B2", price: 74700 }, // (F.I.R.S.T), 
+            { nivel: "C1", price: 76300 }, // (C.A.E),
+            { nivel: "C2", price: 76300 }  // (C.P.E.)
+        ];
+        const cursos = await cursosModel.getAllCursos();
+        for (const curso of cursos) {
+            const objPrice = pricesCursos.find(pCurso => pCurso.nivel === curso.nivel);
+            if (objPrice) {
+                await cursosModel.insertPrices(objPrice.price, curso.id);
+            }
+        }
+        res.status(200).json({ message: "Prices inserted successfully!" });
+    } catch (error) {
+        console.error("Error inserting prices into cursos:", error.message);
+        res.status(500).json({ message: "Internal server error", error: error.message });
+    }
+};
 
 export default controller;
 
