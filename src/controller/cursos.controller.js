@@ -154,20 +154,20 @@ controller.insertPrices = async (req, res) => {
             { nivel: "KIDS 3", price: 39300 },
             { nivel: "KIDS 4", price: 42600 },
             { nivel: "TEENS", price: 47200 },
-            { nivel: "1° AÑO", price: 47200 },
-            { nivel: "2° AÑO", price: 52000 },
-            { nivel: "3° AÑO", price: 57500 },
-            { nivel: "4° AÑO", price: 61500 },
-            { nivel: "5° AÑO", price: 67800 },
-            { nivel: "6° AÑO", price: 74700 },
+            { nivel: "1º AÑO", price: 47200 },
+            { nivel: "2º AÑO", price: 52000 },
+            { nivel: "3º AÑO", price: 57500 },
+            { nivel: "4º AÑO", price: 61500 },
+            { nivel: "5º AÑO", price: 67800 },
+            { nivel: "6º AÑO", price: 74700 },
             { nivel: "INTENSIVO 1", price: 36250 },
             { nivel: "INTENSIVO 2", price: 36250 },
             { nivel: "INTENSIVO 3", price: 36250 },
             { nivel: "INTENSIVO 4", price: 36250 },
             { nivel: "INTENSIVO 5", price: 36250 },
-            { nivel: "B2", price: 74700 }, // (F.I.R.S.T), 
-            { nivel: "C1", price: 76300 }, // (C.A.E),
-            { nivel: "C2", price: 76300 }  // (C.P.E.)
+            { nivel: "F.I.R.S.T", price: 74700 }, // (F.I.R.S.T), 
+            { nivel: "C.A.E", price: 76300 }, // (C.A.E),
+            { nivel: "C.P.E", price: 76300 }  // (C.P.E.)
         ];
         const cursos = await cursosModel.getAllCursos();
         for (const curso of cursos) {
