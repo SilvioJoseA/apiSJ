@@ -5,6 +5,7 @@ const router = Router();
 
     router.get('/alumnos/create', controller.createTableAlumnos);
    // router.get('/alumnos/:proximociclo?', controller.getAllAlumnos);
+    router.get('/alumnos/all/:proximociclo?', controller.getAllAlumnos);
     router.get('/alumnos-teacher/:id_profesor',controller.getAllAlumnosByIdProfesor)
     router.post('/alumnos/insert/:cicloLectivo', controller.addAlumno);
     router.delete('/alumnos/:id', controller.deleteAlumnoById);
