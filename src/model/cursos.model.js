@@ -118,8 +118,8 @@ cursosModel.delteCursoById = async (id) => {
  */
 cursosModel.getCursoById = async (id) => {
     try {
-        const [row] = await pool.query(`SELECT * FROM cursos WHERE id = ?`, [id]);
-        return row;
+        const row = await pool.query(`SELECT * FROM cursos WHERE id = ?`, [id]);
+        return row[0][0];
     } catch (error) {
         console.error("Error fetching course by ID:", error.message);
     }
