@@ -146,39 +146,43 @@ controller.insertCursoMassiveData = async ( req , res ) => {
 controller.insertPrices = async (req, res) => {
     try {
         const pricesCursos = [
-            { nivel: "KINDER", price: 35500 },
-            { nivel: "PREPARATORIO 1", price: 35500 },
-            { nivel: "PREPARATORIO 2", price: 35500 },
-            { nivel: "KIDS 1", price: 37800 },
-            { nivel: "KIDS 2", price: 39400 },
-            { nivel: "KIDS 3", price: 39300 },
-            { nivel: "KIDS 4", price: 42600 },
-            { nivel: "TEENS", price: 47200 },
-            { nivel: "1º AÑO", price: 47200 },
+            { nivel: "KINDER", price: 36300 },
+            { nivel: "PREPARATORIO 1", price: 36300 },
+            { nivel: "PREPARATORIO 2", price: 36300 },
+            { nivel: "KIDS 1", price: 38300 },
+            { nivel: "KIDS 2", price: 40500 },
+            { nivel: "KIDS 3", price: 40500 },
+            { nivel: "KIDS 4", price: 42700 },
+            { nivel: "TEENS", price: 48500 },
+            { nivel: "1º AÑO", price: 48500 },
             { nivel: "2º AÑO", price: 52000 },
-            { nivel: "3º AÑO", price: 57500 },
-            { nivel: "4º AÑO", price: 61500 },
-            { nivel: "5º AÑO", price: 67800 },
-            { nivel: "6º AÑO", price: 74700 },
-            { nivel: "INTENSIVO 1", price: 36250 },
-            { nivel: "INTENSIVO 2", price: 36250 },
-            { nivel: "INTENSIVO 3", price: 36250 },
-            { nivel: "INTENSIVO 4", price: 36250 },
-            { nivel: "INTENSIVO 5", price: 36250 },
-            { nivel: "F.I.R.S.T", price: 74700 }, // (F.I.R.S.T), 
-            { nivel: "C.A.E", price: 76300 }, // (C.A.E),
-            { nivel: "C.P.E", price: 76300 }  // (C.P.E.)
+            { nivel: "3º AÑO", price: 58000 },
+            { nivel: "4º AÑO", price: 61600 },
+            { nivel: "5º AÑO", price: 68500 },
+            { nivel: "6º AÑO", price: 75300 },
+            { nivel: "INTENSIVO 1", price: 42000 },
+            { nivel: "INTENSIVO 2", price: 42000 },
+            { nivel: "INTENSIVO 3", price: 42000 },
+            { nivel: "INTENSIVO 4", price: 42000 },
+            { nivel: "INTENSIVO 5", price: 68500 },
+            { nivel: "Pre FCE.", price: 68200 }, // Nuevo nivel agregado
+            { nivel: "F.I.R.S.T.", price: 75300 }, // B2 (F.I.R.S.T)
+            { nivel: "C.A.E.", price: 78100 }, // C1 (C.A.E)
+            { nivel: "C.P.E.", price: 78100 }  // C2 (C.P.E.)
         ];
+
         const cursos = await cursosModel.getAllCursos();
+
         for (const curso of cursos) {
             const objPrice = pricesCursos.find(pCurso => pCurso.nivel === curso.nivel);
             if (objPrice) {
                 await cursosModel.insertPrices(objPrice.price, curso.id);
             }
         }
-        res.status(200).json({ message: "Prices inserted successfully!" });
+
+        res.status(200).json({ message: "Prices updated successfully!" });
     } catch (error) {
-        console.error("Error inserting prices into cursos:", error.message);
+        console.error("Error updating prices in cursos:", error.message);
         res.status(500).json({ message: "Internal server error", error: error.message });
     }
 };
