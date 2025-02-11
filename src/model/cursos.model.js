@@ -13,7 +13,7 @@ const cursosModel = {};
 /**
  * Creates the `cursos` table if it does not exist.
  */
-cursosModel.createTableCursos = async () => {
+cursosModel.createTableCursos = async (cicloLectivo) => {
     try {
         await pool.query(`
             CREATE TABLE IF NOT EXISTS cursos (
@@ -77,7 +77,7 @@ cursosModel.getAllCursos = async () => {
  */
 cursosModel.getAllNiveles = async () => {
     try {
-        const [rows] = await pool.query(`SELECT DISTINCT nivel , horario, price FROM cursos ORDER BY nivel ASC`);
+        const [rows] = await pool.query(`SELECT DISTINCT id,nivel , horario, price FROM cursos ORDER BY nivel ASC`);
         return rows;
     } catch (error) {
         console.error("Error fetching all niveles:", error.message);
