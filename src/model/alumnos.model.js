@@ -231,7 +231,6 @@ alumnosModel.getAllAlumnos = async (proximociclo='') => {
 alumnosModel.verifyDni = async (dni) => {
     try {
         const tableName = 'alumnos';
-        console.log("Consultando tabla:", tableName); // <-- LOG para verificar la tabla
         const query = `
             SELECT * 
             FROM ${tableName} 
@@ -268,6 +267,28 @@ alumnosModel.verifyStatusInscription = async (dni) => {
               AND promedio >= 6
         `;
         const [rows] = await pool.query(query, [dni]);
+        console.log(rows);
+        return rows.length > 0 ? rows[0] : {message:"No Apto"};
+    } catch (error) {
+        console.error("Error verifying DNI:", error.message);
+    }
+};
+/**
+ * Query to find alumno by dni from alumnos table
+ * @param {string} dni 
+ * @returns 
+ */
+alumnosModel.verifyStatusInscriptionKinderPreparatorio = async (dni) => {
+    try {
+        const query = `
+            SELECT * 
+            FROM alumnos 
+            WHERE dni = ? 
+              AND status = 'apto' 
+              AND promedio_oral  >= 6
+        `;
+        const [rows] = await pool.query(query, [dni]);
+        console.log(rows);
         return rows.length > 0 ? rows[0] : {message:"No Apto"};
     } catch (error) {
         console.error("Error verifying DNI:", error.message);

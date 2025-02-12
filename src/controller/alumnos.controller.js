@@ -1,4 +1,5 @@
 import alumnosModel from "../model/alumnos.model.js";
+import cursosModel from "../model/cursos.model.js";
 import filesController from "./files.controller.js";
 const controller = {};
     
@@ -60,18 +61,21 @@ const controller = {};
             if (!dni) {
                 return res.status(400).json({ message: "El campo DNI es obligatorio." });
             }
-    
             var row = await alumnosModel.verifyDni(dni);
-
             if (row) {
-                row = await alumnosModel.verifyStatusInscription(dni);
+                const curso = await cursosModel.getCursoById(row.curso_id);
+                if( !curso.nivel == 'PREPARATORIO 1' || !curso.nivel == 'PREPARATORIO 2' || !curso.nivel == 'KINDER') {
+                    row = await alumnosModel.verifyStatusInscription(dni);
+                } else {
+                    row = await alumnosModel.verifyStatusInscriptionKinderPreparatorio(dni);
+                }
                 res.status(200).json(row); 
             } else {
                 res.status(200).json({message:'Apto'}); 
             }
         } catch (error) {
             console.error("Error verifying DNI:", error.message);
-            res.status(500).json({ message: "Error interno del servidor al verificar el DNI." }); // Código 500 para errores del servidor
+            res.status(500).json({ message: "Error interno del servidor al verificar el DNI." }); 
         }
     };
     
