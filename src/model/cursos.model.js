@@ -77,7 +77,11 @@ cursosModel.getAllCursos = async () => {
  */
 cursosModel.getAllNiveles = async () => {
     try {
-        const [rows] = await pool.query(`SELECT DISTINCT id,nivel , horario, price FROM cursos ORDER BY nivel ASC`);
+        const [rows] = await pool.query(`    SELECT DISTINCT id, nivel, horario, price 
+                                                  FROM cursos 
+                                                    WHERE cupo_maximo - cupo > 0 
+                                              ORDER BY nivel ASC`
+                                        );
         return rows;
     } catch (error) {
         console.error("Error fetching all niveles:", error.message);

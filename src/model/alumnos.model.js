@@ -82,40 +82,66 @@ alumnosModel.createTableAlumnosByClicloLectivo = async (cicloLectivo) => {
  * @param {Object} alumnoData 
  * @returns {Promise<void>}
  */
-alumnosModel.insertAlumno = async (alumnoData,cicloLectivo) => {
+alumnosModel.insertAlumno = async (alumnoData, cicloLectivo) => {
+    let connection;
     try {
+        // Obtener una conexión del pool
+        connection = await pool.getConnection();
+
+        // Iniciar una transacción
+        await connection.beginTransaction();
+
         const tableName = `alumnos_${cicloLectivo}`;
         const {
             firstName, lastName, dni, gender, birthDate, address, phone, email,
             guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor,
-            nivel, horario
+            nivel, horario, curso_id
         } = alumnoData;
 
         // Convertir "on" en `isMinor` a un valor booleano/int
         const isMinorValue = isMinor === "on" ? 1 : 0;
 
         // Consulta SQL para insertar todos los campos
-        const query = `
+        const insertQuery = `
             INSERT INTO  \`${tableName}\` (
                 firstName, lastName, dni, gender, birthDate, address, phone, email, 
                 guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor,
-                nivel, horario
+                nivel, horario, curso_id
             ) 
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
 
         const values = [
             firstName, lastName, dni, gender, birthDate, address, phone, email,
             guardianName, guardianDNI, guardianEmail, guardianPhone, isMinorValue,
-            nivel, horario
+            nivel, horario, curso_id
         ];
 
-        // Ejecutar la consulta con pool.query
-        const [row] = await pool.query(query, values);
+        // Insertar al alumno
+        const [row] = await connection.query(insertQuery, values);
+
+        // Decrementar el cupo del curso
+        const updateCupoQuery = `
+            UPDATE cursos 
+            SET cupo = cupo + 1 
+            WHERE id = ?;
+        `;
+
+        // Ejecutar la actualización del cupo
+        await connection.query(updateCupoQuery, [curso_id]);
+
+        // Confirmar la transacción
+        await connection.commit();
+
         return row;
     } catch (error) {
+        // Revertir la transacción en caso de error
+        if (connection) await connection.rollback();
         console.error("Error inserting alumno:", error.message);
         throw new Error("Failed to insert alumno into the database.");
+    } finally {
+        // Liberar la conexión
+        if (connection) connection.release();
     }
 };
 
@@ -504,7 +530,6 @@ alumnosModel.inserAlumnosMassive = async ( values ) => {
         console.error("Error inserting alumnos :", error.message);   
     }
 }
-
 
 export default alumnosModel;
 /* 
