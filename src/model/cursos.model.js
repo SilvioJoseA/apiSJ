@@ -135,9 +135,10 @@ cursosModel.insertPrices = async (value, id) => {
         console.error("Error al insertar precios en cursos:", error.message);
     }
 };
-cursosModel.updateCupoMaximoCursoById = async ( cupoMaximo , id ) => {
+cursosModel.updateCupoMaximoCursoById = async ( id , cupoMaximo ) => {
     try {
-        await pool.query(`UPDATE cursos SET cupo_maximo = ? WHERE id = ?`,[cupoMaximo,id]);
+        const row = await pool.query(`UPDATE cursos SET cupo_maximo = ? WHERE id = ?`,[cupoMaximo,id]);
+        console.log(row);
     } catch (error) {
         console.error("Error updating cupo maximo by id:"+error.message);
     }
