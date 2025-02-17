@@ -336,6 +336,14 @@ alumnosModel.updateStatusById = async ( alumno_id , status ) => {
 alumnosModel.updateCursoByCursoId = async ( curso_id , alumno_id ) => {
     try {
         await pool.query(`UPDATE alumnos SET curso_id = ? WHERE id = ?`, [curso_id,alumno_id])
+        // Incrementar el cupo del curso
+        const updateCupoQuery = `
+                UPDATE cursos 
+                SET cupo = cupo + 1 
+                WHERE id = ?;
+            `;
+            // Ejecutar la actualización del cupo
+        await connection.query(updateCupoQuery, [curso_id]);
     } catch (error) {
         console.error('Error updating curso : ',error.message);
     }
