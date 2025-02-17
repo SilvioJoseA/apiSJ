@@ -187,5 +187,16 @@ controller.insertPrices = async (req, res) => {
     }
 };
 
+controller.updateCupoMaximoById = async ( req , res ) => {
+    try {
+        const { id } = req.params;
+        const { cupoMaximo } = req.body;
+        await cursosModel.updateCupoMaximoCursoById(id,cupoMaximo);
+        res.status(200).json({ message: "Cupo Maximo updated successfully!"});
+        } catch (error) {
+        console.error("Error updating cupo maximo by id :"+error.message);
+    }
+}
+
 export default controller;
 

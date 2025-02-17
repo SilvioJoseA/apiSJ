@@ -77,8 +77,7 @@ cursosModel.getAllCursos = async () => {
  */
 cursosModel.getAllNiveles = async () => {
     try {
-        const [rows] = await pool.query(`    SELECT DISTINCT id, nivel, horario, price 
-                                                  FROM cursos 
+        const [rows] = await pool.query(`SELECT id, nivel, horario, price FROM cursos 
                                                     WHERE cupo_maximo - cupo > 0 
                                               ORDER BY nivel ASC`
                                         );
@@ -136,6 +135,13 @@ cursosModel.insertPrices = async (value, id) => {
         console.error("Error al insertar precios en cursos:", error.message);
     }
 };
+cursosModel.updateCupoMaximoCursoById = async ( cupoMaximo , id ) => {
+    try {
+        await pool.query(`UPDATE cursos SET cupo_maximo = ? WHERE id = ?`,[cupoMaximo,id]);
+    } catch (error) {
+        console.error("Error updating cupo maximo by id:"+error.message);
+    }
+}
 
 
 export default cursosModel;

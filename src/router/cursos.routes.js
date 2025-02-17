@@ -14,5 +14,6 @@ const router = Router();
     router.get('/upload/files', filesController.readFile);
     router.get('/cursos/insert/massive', controller.insertCursoMassiveData);
     router.get('/cursos/insert/prices', controller.insertPrices);
+    router.post('/cursos/update-cupos/:id', controller.updateCupoMaximoById);
 
 export default router;
