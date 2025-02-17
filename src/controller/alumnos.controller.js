@@ -102,8 +102,8 @@ const controller = {};
     controller.updateCursoByCursoId= async ( req , res ) => {
         try {
             const { id } = req.params;
-            const { curso_id } = req.body;
-            await alumnosModel.updateCursoByCursoId(curso_id,id);
+            const { curso_id , curso_id_old } = req.body;
+            await alumnosModel.updateCursoByCursoId(curso_id,id,curso_id_old);
             res.status(201).json({message:"curso updated successfully!"})
         } catch (error) {
             console.error("Error updating curso by id : ",error.message);
