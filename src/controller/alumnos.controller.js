@@ -64,10 +64,11 @@ const controller = {};
             var row = await alumnosModel.verifyDni(dni);
             if (row) {
                 const curso = await cursosModel.getCursoById(row.curso_id);
-                if( !curso.nivel == 'PREPARATORIO 1' || !curso.nivel == 'PREPARATORIO 2' || !curso.nivel == 'KINDER') {
+                if( curso.nivel == 'PREPARATORIO 1' || curso.nivel == 'PREPARATORIO 2' || curso.nivel == 'KINDER') {
+                   row = await alumnosModel.verifyStatusInscriptionKinderPreparatorio(dni);
+                } else { 
                     row = await alumnosModel.verifyStatusInscription(dni);
-                } else {
-                    row = await alumnosModel.verifyStatusInscriptionKinderPreparatorio(dni);
+                    
                 }
                 res.status(200).json(row); 
             } else {

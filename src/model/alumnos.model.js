@@ -261,13 +261,15 @@ alumnosModel.verifyStatusInscription = async (dni) => {
     try {
         const query = `
             SELECT * 
-            FROM alumnos 
-            WHERE dni = ? 
-              AND status = 'apto' 
-              AND promedio >= 6
+FROM alumnos 
+WHERE dni = ? 
+  AND status = 'apto' 
+  AND CAST(promedio AS DECIMAL(4, 2)) >= 6
+  AND CAST(promedio_escrito AS DECIMAL(4, 2)) >= 6
+  AND CAST(promedio_oral AS DECIMAL(4, 2)) >= 6;
         `;
         const [rows] = await pool.query(query, [dni]);
-        console.log(rows);
+        console.log("Rows"+rows);
         return rows.length > 0 ? rows[0] : {message:"No Apto"};
     } catch (error) {
         console.error("Error verifying DNI:", error.message);
@@ -285,7 +287,7 @@ alumnosModel.verifyStatusInscriptionKinderPreparatorio = async (dni) => {
             FROM alumnos 
             WHERE dni = ? 
               AND status = 'apto' 
-              AND promedio_oral  >= 6
+              AND CAST(promedio_oral AS DECIMAL(4, 2)) >= 6
         `;
         const [rows] = await pool.query(query, [dni]);
         console.log(rows);
