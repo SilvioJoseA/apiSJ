@@ -24,11 +24,11 @@ controller.createTableCursos = async (req, res) => {
  */
 controller.insertCurso = async (req, res) => {
     try {
-        const { curso, aula, nivel, horario } = req.body;
+        const { curso, aula, nivel, horario , price } = req.body;
         if (!curso || !aula || !nivel) {
             return res.status(400).json({ error: "Required fields: curso, aula, nivel" });
         }
-        await cursosModel.insertCurso({ curso, aula, nivel, horario });
+        await cursosModel.insertCurso({ curso, aula, nivel, horario , price });
         res.status(201).json({ message: "Curso added successfully!" });
     } catch (error) {
         console.error("Error inserting curso:", error.message);
@@ -189,7 +189,7 @@ controller.insertPrices = async (req, res) => {
 
 controller.updateCupoMaximoById = async ( req , res ) => {
     try {
-        const { id } = req.params;
+        const { id  } = req.params;
         const { cupoMaximo } = req.body;
         await cursosModel.updateCupoMaximoCursoById(id,cupoMaximo);
         res.status(200).json({ message: "Cupo Maximo updated successfully!"});

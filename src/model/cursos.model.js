@@ -37,11 +37,13 @@ cursosModel.createTableCursos = async (cicloLectivo) => {
  */
 cursosModel.insertCurso = async (dataCurso) => {
     try {
-        const { curso, aula, nivel, horario } = dataCurso;
+        const { curso, aula, nivel, horario,price } = dataCurso;
         await pool.query(
-            `INSERT INTO cursos (curso, aula, nivel, horario) VALUES (?, ?, ?, ?)`,
-            [curso, aula, nivel, horario]
+            `INSERT INTO cursos (id, curso, aula, nivel, horario, created_at, updated_at, profesor_id, cupo, price, cupo_maximo, ciclo_lectivo ) VALUES (NULL,?,?,?,?, current_timestamp(), current_timestamp(), NULL, '0',?, '0', NULL)`,
+            [curso, aula, nivel, horario,price]
         );
+        //NULL, 'Curso A', 'Aula 1', 'Nivel 1', 'Horario 1', current_timestamp(), current_timestamp(), NULL, '0', '0', '0', NULL
+        //INSERT INTO `cursos` (`id`, `curso`, `aula`, `nivel`, `horario`, `created_at`, `updated_at`, `profesor_id`, `cupo`, `price`, `cupo_maximo`, `ciclo_lectivo`) VALUES (NULL, 'Curso A', 'Aula 1', 'Nivel 1', 'Horario 1', current_timestamp(), current_timestamp(), NULL, '0', '0', '0', NULL);
     } catch (error) {
         console.error("Error inserting course:", error.message);
     }
