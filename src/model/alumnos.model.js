@@ -259,22 +259,32 @@ alumnosModel.dniRegistred = async (ciclolectivo,dni) => {
  */
 alumnosModel.verifyStatusInscription = async (dni) => {
     try {
+        // Consulta temporal para verificar el DNI
+        const queryTemporal = `SELECT * FROM alumnos WHERE dni = ?`;
+        const [rows] = await pool.query(queryTemporal, [dni]); // Ejecutar la consulta temporal
+        console.log("Rows Temporal:", rows); // Mostrar resultados en consola para depuración
+
+        // Verificar si hay resultados
+        return rows.length > 0 ? rows[0] : { message: "No Apto" };
+
+        /*
+        // Código comentado (consulta principal)
         const query = `
             SELECT * 
-FROM alumnos 
-WHERE dni = ? 
-  AND status = 'apto' 
-  AND CAST(promedio AS DECIMAL(4, 2)) >= 6
-  AND CAST(promedio_escrito AS DECIMAL(4, 2)) >= 6
-  AND CAST(promedio_oral AS DECIMAL(4, 2)) >= 6;
+            FROM alumnos 
+            WHERE dni = ? 
+              AND status = 'apto' 
+              AND CAST(promedio AS DECIMAL(4, 2)) >= 6
+              AND CAST(promedio_escrito AS DECIMAL(4, 2)) >= 6
+              AND CAST(promedio_oral AS DECIMAL(4, 2)) >= 6;
         `;
-        const queryTemporal = `SELECT * FROM alumnos WHERE dni = ?`;
-         const [rows] = pool.query(queryTemporal,[dni]);
-        //const [rows] = await pool.query(query, [dni]);
-        console.log("Rows"+rows);
-        return rows.length > 0 ? rows[0] : {message:"No Apto"};
+        const [rowsPrincipal] = await pool.query(query, [dni]);
+        console.log("Rows Principal:", rowsPrincipal);
+        return rowsPrincipal.length > 0 ? rowsPrincipal[0] : { message: "No Apto" };
+        */
     } catch (error) {
         console.error("Error verifying DNI:", error.message);
+        throw error; // Relanzar el error para manejarlo en un nivel superior
     }
 };
 /**
