@@ -128,16 +128,30 @@ controller.deleteCursoById = async (req, res) => {
  * @param {Object} req 
  * @param {Object} res 
  */
-controller.insertCursoMassiveData = async ( req , res ) => {
+controller.insertCursoMassiveData = async (req, res) => {
     try {
         const cursosData = await filesController.readFile('./../files/cursos.xls');
-        const values = cursosData.map( ({ identif_cu , curso , aula , nivel , horario , identif_pr}) => [identif_cu,curso,aula,nivel,horario,identif_pr]);
+
+        // Lista de IDs permitidos
+        const listaID = [
+            99, 142, 392, 397, 464, 532, 550, 597, 614, 617, 620, 642, 647, 649, 650, 663, 664, 665, 666, 667, 674, 676, 692, 693, 702, 708, 709, 710, 712, 716, 718, 724, 725, 732, 748, 752, 753, 754, 762, 763, 764, 771, 772, 773
+        ];
+
+        // Filtrar los cursos cuyos identif_cu estén en listaID
+        const filteredData = cursosData.filter(({ identif_cu }) => listaID.includes(identif_cu));
+
+        // Mapear los datos filtrados
+        const values = filteredData.map(({ identif_cu, curso, aula, nivel, horario, identif_pr }) => [identif_cu, curso, aula, nivel, horario, identif_pr]);
+
+        // Insertar los datos filtrados
         await cursosModel.inserCursosMassive(values);
-        res.status(200).json({message:"Cursos inserted successfully!"});
+
+        res.status(200).json({ message: "Cursos insertados exitosamente!" });
     } catch (error) {
-        console.error("Error inserting data : " , error.message);
+        console.error("Error inserting data:", error.message);
+        res.status(500).json({ message: "Error al insertar los cursos." });
     }
-}
+};
 /**
  * Function to insert the prices into cursos per level 
  * @param {Object} req 

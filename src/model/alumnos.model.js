@@ -287,10 +287,18 @@ alumnosModel.verifyStatusInscriptionKinderPreparatorio = async (dni) => {
             FROM alumnos 
             WHERE dni = ? 
               AND status = 'apto' 
-              AND CAST(promedio_oral AS DECIMAL(4, 2)) >= 6
+             AND CAST(promedio_oral AS DECIMAL(4, 2))>=6
         `;
-        const [rows] = await pool.query(query, [dni]);
-        console.log(rows);
+        const query1 = `
+        SELECT * 
+        FROM alumnos 
+        WHERE dni = ?
+        AND status = 'apto'
+        `;
+
+       // const row1 = await pool.query(query1, [dni]);
+        const [rows] = await pool.query(query1, [dni]);
+        //console.log(row1);
         return rows.length > 0 ? rows[0] : {message:"No Apto"};
     } catch (error) {
         console.error("Error verifying DNI:", error.message);

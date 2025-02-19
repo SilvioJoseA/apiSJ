@@ -183,17 +183,33 @@ const controller = {};
     * @param {Object} req 
     * @param {Object} res 
     */
-controller.insertAlumnosMassiveData = async ( req , res ) => {
-    try {
-        const cursosData = await filesController.readFile('./../files/alumnos.xls');
-        const values = cursosData.map( ({ nombalu,apellalu,dnialu,sexoalu,fecnacal,direcalu,celualu,emailalu,identif_cu }) => [apellalu,nombalu,dnialu,sexoalu,fecnacal,direcalu,celualu,emailalu,identif_cu ]);
-            console.log("Longitud de array : ",values.length);
-            await alumnosModel.inserAlumnosMassive(values);
-            res.status(200).json({message:"Alumnos inserted successfully!"});
-    } catch (error) {
-        console.error("Error inserting data : " , error.message);
-    }
-}
+    controller.insertAlumnosMassiveData = async (req, res) => {
+        try {
+            const cursosData = await filesController.readFile('./../files/alumnos.xls');
+            
+            // Lista de identif_cu permitidos
+            const listaIdentif_cu = [
+                99, 142, 392, 397, 464, 532, 550, 597, 614, 617, 620, 642, 647, 649, 650, 663, 664, 665, 666, 667, 674, 676, 692, 693, 702, 708, 709, 710, 712, 716, 718, 724, 725, 732, 748, 752, 753, 754, 762, 763, 764, 771, 772, 773
+            ];
+    
+            // Filtrar los estudiantes cuyos identif_cu estén en la lista
+            const filteredValues = cursosData
+                .filter(({ identif_cu }) => listaIdentif_cu.includes(identif_cu))
+                .map(({ nombalu, apellalu, dnialu, sexoalu, fecnacal, direcalu, celualu, emailalu, identif_cu }) => [
+                    apellalu, nombalu, dnialu, sexoalu, fecnacal, direcalu, celualu, emailalu, identif_cu
+                ]);
+    
+            console.log("Longitud de array filtrado: ", filteredValues.length);
+    
+            // Insertar solo los estudiantes filtrados
+          //  await alumnosModel.inserAlumnosMassive(filteredValues);
+    
+            res.status(200).json({ message: "Alumnos filtrados e insertados exitosamente!" });
+        } catch (error) {
+            console.error("Error insertando datos: ", error.message);
+            res.status(500).json({ message: "Error al insertar los datos" });
+        }
+    };
 
 controller.calculateAverageEscritoById = async (req, res) => {
     try {
