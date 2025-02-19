@@ -79,7 +79,7 @@ cursosModel.getAllCursos = async () => {
  */
 cursosModel.getAllNiveles = async () => {
     try {
-        const [rows] = await pool.query(`SELECT id, nivel, horario, price FROM cursos 
+        const [rows] = await pool.query(`SELECT * FROM cursos 
                                                     WHERE cupo_maximo - cupo > 0 
                                               ORDER BY nivel ASC`
                                         );
