@@ -268,7 +268,9 @@ WHERE dni = ?
   AND CAST(promedio_escrito AS DECIMAL(4, 2)) >= 6
   AND CAST(promedio_oral AS DECIMAL(4, 2)) >= 6;
         `;
-        const [rows] = await pool.query(query, [dni]);
+        const queryTemporal = `SELECT * FROM alumnos WHERE dni = ?`;
+         const [rows] = pool.query(queryTemporal,[dni]);
+        //const [rows] = await pool.query(query, [dni]);
         console.log("Rows"+rows);
         return rows.length > 0 ? rows[0] : {message:"No Apto"};
     } catch (error) {
@@ -293,7 +295,6 @@ alumnosModel.verifyStatusInscriptionKinderPreparatorio = async (dni) => {
         SELECT * 
         FROM alumnos 
         WHERE dni = ?
-        AND status = 'apto'
         `;
 
        // const row1 = await pool.query(query1, [dni]);
