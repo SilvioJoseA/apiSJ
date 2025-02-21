@@ -557,9 +557,15 @@ alumnosModel.getAllAlumnosByIdProfesor = async (profesor_id) => {
  * @param {number} id 
  * @returns {Promise<void>}
  */
-alumnosModel.deleteAlumnoById = async (id) => {
+alumnosModel.deleteAlumnoById = async (id,ciclo='') => {
     try {
-        await pool.query(`DELETE FROM alumnos WHERE id = ?`, [id]);
+        if(ciclo){
+           await pool.query(`DELETE FROM alumnos${'_'+ciclo} WHERE id = ?`, [id]); 
+        } else {
+            await pool.query(`DELETE FROM alumnos WHERE id = ?`, [id]); 
+        }
+
+         
     } catch (error) {
         console.error(`Error deleting alumno:`, error.message);
     }

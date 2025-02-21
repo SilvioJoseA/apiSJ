@@ -8,7 +8,7 @@ const router = Router();
     router.get('/alumnos/all/:proximociclo?', controller.getAllAlumnos);
     router.get('/alumnos-teacher/:id_profesor',controller.getAllAlumnosByIdProfesor)
     router.post('/alumnos/insert/:cicloLectivo', controller.addAlumno);
-    router.delete('/alumnos/:id', controller.deleteAlumnoById);
+    router.delete('/alumnos/:cicle/:id', controller.deleteAlumnoById);
     router.get('/alumnos/:id', controller.getAlunoById);
     router.get('/alumnos/insert/massive', controller.insertAlumnosMassiveData);
     router.put('/alumnos/update/status/:id', controller.updateStatusById);

@@ -156,8 +156,12 @@ const controller = {};
      */
     controller.deleteAlumnoById = async ( req , res ) => {
         try {
-            const { id } = req.params;
-                await alumnosModel.deleteAlumnoById(id);
+            const { id,cicle } = req.params;
+                if( cicle ){
+                    await alumnosModel.deleteAlumnoById(id,cicle);
+                } else {
+                    await alumnosModel.deleteAlumnoById(id);
+                }
                 res.status(201).json({ message: "Alumno deleted successfully!"});
         } catch (error) {
             console.error("Error deleting alumno by id from alumnos table :", error.message);
