@@ -174,9 +174,15 @@ const controller = {};
      */
     controller.getAlunoById = async ( req , res ) => {
         try {
-            const { id } = req.params;
-            const row = await alumnosModel.getAlumnoById(id);
-            res.status(201).json(row[0]);
+            const { ciclo , id } = req.params;
+            console.log(ciclo);
+            if(ciclo){
+                const row = await alumnosModel.getAlumnoById(id,ciclo);  
+                res.status(201).json(row[0]); 
+            } else {
+                const row = await alumnosModel.getAlumnoById(id);
+                res.status(201).json(row[0]);
+            }
         } catch (error) {
             console.error("Error fetching alumno by id :", error.message);
         }

@@ -9,7 +9,7 @@ const router = Router();
     router.get('/alumnos-teacher/:id_profesor',controller.getAllAlumnosByIdProfesor)
     router.post('/alumnos/insert/:cicloLectivo', controller.addAlumno);
     router.delete('/alumnos/:cicle/:id', controller.deleteAlumnoById);
-    router.get('/alumnos/:id', controller.getAlunoById);
+    router.get('/alumnos/:ciclo/:id', controller.getAlunoById);
     router.get('/alumnos/insert/massive', controller.insertAlumnosMassiveData);
     router.put('/alumnos/update/status/:id', controller.updateStatusById);
     router.put('/alumnos/update/inscription/:id', controller.updateInscriptionById);
