@@ -561,9 +561,11 @@ alumnosModel.deleteAlumnoById = async (id, ciclo = '') => {
     try {
         const tableName = ciclo ? `alumnos_${ciclo}` : 'alumnos';
         const [alumno] = await pool.query(`SELECT * FROM ${tableName} WHERE id = ?`, [id]);
-        if (alumno && alumno.curso_id) {
-            const updateCupoQuery = `UPDATE cursos SET cupo = cupo - 1 WHERE id = ?;`;
-            await pool.query(updateCupoQuery, [alumno.curso_id]);
+        if (alumno[0] && alumno[0].curso_id) {
+            console.log(alumno[0].curso_id);
+            const updateCupoQuery = `UPDATE cursos SET cupo = cupo - 1 WHERE id = ?`;
+            await pool.query(updateCupoQuery, [alumno[0].curso_id]);
+            console.log("Deleted succesufully!");
         }
         await pool.query(`DELETE FROM ${tableName} WHERE id = ?`, [id]);
     } catch (error) {
