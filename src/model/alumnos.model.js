@@ -557,15 +557,15 @@ alumnosModel.getAllAlumnosByIdProfesor = async (profesor_id) => {
  * @param {number} id 
  * @returns {Promise<void>}
  */
-alumnosModel.deleteAlumnoById = async (id,ciclo='') => {
+alumnosModel.deleteAlumnoById = async (id, ciclo = '') => {
     try {
-        if(ciclo){
-           await pool.query(`DELETE FROM alumnos${'_'+ciclo} WHERE id = ?`, [id]); 
-        } else {
-            await pool.query(`DELETE FROM alumnos WHERE id = ?`, [id]); 
+        const tableName = ciclo ? `alumnos_${ciclo}` : 'alumnos';
+        const [alumno] = await pool.query(`SELECT * FROM ${tableName} WHERE id = ?`, [id]);
+        if (alumno && alumno.curso_id) {
+            const updateCupoQuery = `UPDATE cursos SET cupo = cupo - 1 WHERE id = ?;`;
+            await pool.query(updateCupoQuery, [alumno.curso_id]);
         }
-
-         
+        await pool.query(`DELETE FROM ${tableName} WHERE id = ?`, [id]);
     } catch (error) {
         console.error(`Error deleting alumno:`, error.message);
     }
@@ -577,6 +577,18 @@ alumnosModel.deleteAlumnoById = async (id,ciclo='') => {
 alumnosModel.getAlumnoById = async ( id ) => {
     try {
         const [row] = await pool.query("SELECT * FROM alumnos WHERE id = ?", [ id ]);
+        return row;
+    } catch (error) {
+        console.error("Error fetching alumno by id :", error.message);  
+    }
+}
+/**
+ * Query to get alumno by id
+ * @param {number} id 
+ */
+alumnosModel.getAlumno2025ById = async ( id ) => {
+    try {
+        const [row] = await pool.query("SELECT * FROM alumnos_2025 WHERE id = ?", [ id ]);
         return row;
     } catch (error) {
         console.error("Error fetching alumno by id :", error.message);  
