@@ -610,7 +610,3 @@ alumnosModel.inserAlumnosMassive = async ( values ) => {
 }
 
 export default alumnosModel;
-/* 
-id firstName lastName	dni	sexo	birthDate	address	phone	email	id_curso id_profesor
-
-*/
