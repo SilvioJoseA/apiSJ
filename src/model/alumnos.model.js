@@ -154,53 +154,22 @@ alumnosModel.insertAlumno = async (alumnoData, cicloLectivo) => {
 alumnosModel.updateAlumnoById = async (id, alumnoData) => {
     try {
         const {
-            firstName,
-            lastName,
-            dni,
-            gender,
-            birthDate,
-            address,
-            phone,
-            email,
-            guardianName,
-            guardianDNI,
-            guardianEmail,
-            guardianPhone,
-            isMinor
+            firstName, lastName, dni, gender, birthDate, address, phone, email, 
+            guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor,
+            nivel, horario, curso_id
         } = alumnoData;
 
         const query = `
             UPDATE alumnos 
-            SET firstName = ?,
-                lastName = ?,
-                dni = ?,
-                gender = ?,
-                birthDate = ?,
-                address = ?,
-                phone = ?,
-                email = ?,
-                guardianName = ?,
-                guardianDNI = ?,
-                guardianEmail = ?,
-                guardianPhone = ?,
-                isMinor = ?
+            SET  firstName =?, lastName=?, dni=?, gender=?, birthDate=?, address=?, phone=?, email=?, 
+                guardianName=?, guardianDNI=?, guardianEmail=?, guardianPhone=?, isMinor=?,
+                nivel=?, horario=?, curso_id=?
             WHERE id = ?`;
 
         const values = [
-            firstName,
-            lastName,
-            dni,
-            gender,
-            birthDate,
-            address,
-            phone,
-            email,
-            guardianName,
-            guardianDNI,
-            guardianEmail,
-            guardianPhone,
-            isMinor,
-            id
+            firstName, lastName, dni, gender, birthDate, address, phone, email, 
+            guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor,
+            nivel, horario, curso_id,id
         ];
 
         await pool.query(query, values);
