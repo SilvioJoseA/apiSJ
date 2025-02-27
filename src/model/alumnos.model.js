@@ -578,4 +578,23 @@ alumnosModel.inserAlumnosMassive = async ( values ) => {
     }
 }
 
+/**
+ * Function to calculate cuantities of alumnos in each cicle
+ * @param {number} ciclo 
+ * @returns 
+ */
+alumnosModel.counterAlumnos = async (ciclo) => {
+    try {
+        const query2024 = `SELECT COUNT(*) AS total_alumnos FROM alumnos`;
+        const query2025 = `SELECT COUNT(*) AS total_alumnos FROM alumnos_${ciclo}`;
+        const query = ciclo?query2025:query2024;
+        console.log(query);
+        const result = await pool.query(query);
+        console.log(result);
+        return result[0];
+    } catch (error) {
+        console.error(error.message);
+    }
+}
+
 export default alumnosModel;

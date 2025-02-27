@@ -26,5 +26,6 @@ const router = Router();
     router.get('/alumnos/create/:cicloLectivo', controller.createTableAlumnosByCicloLectivo);
     router.post('/alumnos/dni-registred', controller.dniRegistred);
     router.put('/alumnos/:id',controller.updateAlumnoById);
+    router.get('/alumnos_counter/:cicle?', controller.counterAlumnos);
 
 export default router;

@@ -276,5 +276,16 @@ controller.calculateAverageGeneral = async ( req , res ) => {
         console.error("Error calculating average general : ",error.message);
     }
 }
+controller.counterAlumnos = async ( req , res ) => {
+    try {
+        const {cicle} = req.params;
+        console.log(cicle);
+        const total_alumnos = await alumnosModel.counterAlumnos(cicle);
+
+        res.status(200).json(total_alumnos[0]);
+    } catch (error) {
+        console.error("Error counted alumnos :",error.message);
+    }
+}
 
 export default controller;
