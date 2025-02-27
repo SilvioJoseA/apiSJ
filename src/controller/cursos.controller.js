@@ -211,6 +211,19 @@ controller.updateCupoMaximoById = async ( req , res ) => {
         console.error("Error updating cupo maximo by id :"+error.message);
     }
 }
+/**
+ * Function to count cursos with cupo more than 0
+ * @param {Object} req 
+ * @param {Object} res 
+ */
+controller.counterCursos = async ( req , res ) => {
+    try {
+        const total_cursos = await cursosModel.counterCursos();
+        res.status(200).json(total_cursos[0]);
+    } catch (error) {
+        console.error("Error counted cursos :",error.message);
+    }
+}
 
 export default controller;
 

@@ -146,5 +146,13 @@ cursosModel.updateCupoMaximoCursoById = async ( id , cupoMaximo ) => {
     }
 }
 
-
+cursosModel.counterCursos = async (ciclo) => {
+    try {
+        const query = `SELECT COUNT(*) AS total_cursos FROM cursos WHERE cupo_maximo > 0`;
+        const result = await pool.query(query);
+        return result[0];
+    } catch (error) {
+        console.error(error.message);
+    }
+}
 export default cursosModel;

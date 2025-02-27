@@ -97,4 +97,13 @@ profesoresModel.deleteProfesorById = async (id) => {
     }
 };
 
+profesoresModel.counterProfesores = async () => {
+    try {
+        const query = `SELECT COUNT(*) AS total_profesores FROM profesores`;
+        const result = await pool.query(query);
+        return result[0];
+    } catch (error) {
+        console.error(error.message);
+    }
+}
 export default profesoresModel;

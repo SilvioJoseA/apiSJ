@@ -15,5 +15,6 @@ const router = Router();
     router.get('/cursos/insert/massive', controller.insertCursoMassiveData);
     router.get('/cursos/insert/prices', controller.insertPrices);
     router.post('/cursos/update-cupos/:id', controller.updateCupoMaximoById);
+    router.get('/cursos-counter', controller.counterCursos);
 
 export default router;
