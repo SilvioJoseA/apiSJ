@@ -319,6 +319,25 @@ alumnosModel.updateStatusById = async ( alumno_id , status ) => {
     }
 }
 /**
+ * Querys to update type of cuota
+ * @param {number} alumno_id 
+ * @param {string} typeCuota 
+ * @param {string} ciclo 
+ * @returns 
+ */
+alumnosModel.updateTypeCuotaById = async (alumno_id, typeCuota, ciclo) => {
+    try {
+        if (!alumno_id || !typeCuota) {
+            throw new Error("alumno_id y typeCuota son obligatorios");
+        }
+        const tableName = ciclo ? `alumnos_${ciclo}` : 'alumnos';
+        await pool.query(`UPDATE ${tableName} SET type_cuota = ? WHERE id = ?`, [typeCuota, alumno_id]);
+        return true; 
+    } catch (error) {
+        console.error("Error updating type of cuota by id:", error);
+    }
+};
+/**
  * Query to update curso from alumno by alumno_id and curso_id
  * @param {number} alumno_id 
  * @param {string} status 

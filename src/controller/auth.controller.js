@@ -1,6 +1,11 @@
 import fetch from "node-fetch";
 import qs from "querystring";
 const controller = {};
+/**
+ * Function to get token of pagos TIC
+ * @param {Object} req 
+ * @param {Object} res 
+ */
 controller.getToken = async ( req , res ) => {
     const body = qs.stringify({ 
         grant_type: "password",
@@ -23,4 +28,43 @@ controller.getToken = async ( req , res ) => {
   console.log("Token obtenido:", data.access_token);
   res.status(200).json(data.access_token);
 }
+controller.getFormPay = async ( objectoToSend ) => {
+    const response = await fetch("https://api.paypertic.com", {
+        method: "POST",
+        headers: {
+            "Content-Type": "aplication/x-www-form-urlencoded",
+        },
+        body: objectoToSend
+    }
+    );
+    const data = await response.json();
+    return data;
+}
+controller.toMakeBodyTIC = (bodyForm) => {
+    const objectoToSend = {};
+    const objectPayer = {};
+    const objectDetails = {
+        external_reference: "98725",
+        concept_id: "920",
+        concept_description: "Pago de Inscripción",
+        notification_url: "https://backend.acsaintjohns.org/pagos",
+        amount : 10,
+    };
+    if (bodyForm) {
+        objectPayer.name = bodyForm.name || "name";
+        objectPayer.email = bodyForm.email || "user@example.com";
+        objectPayer.identification = {
+            type: bodyForm.identification_type || "DNI_ARG",
+            number: bodyForm.identification_number || "1111111",
+            country: bodyForm.country || "ARG"
+        }; 
+        objectoToSend.external_transaction_id = objectPayer.name + '_' + objectPayer.identification.number + '_' + new Date().getTime() || 'name'+'_'+'1111111'+'_'+new Date().getTime() ;
+    } 
+    objectoToSend.currency_id = "ARS";
+    objectoToSend.due_date = getLocalDateWithOffset(new Date());
+    objectoToSend.details = [objectDetails];
+    objectoToSend.payer = objectPayer;
+
+    return objectoToSend;
+}   
 export default controller;

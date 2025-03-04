@@ -287,5 +287,43 @@ controller.counterAlumnos = async ( req , res ) => {
         console.error("Error counted alumnos :",error.message);
     }
 }
+controller.toMakePriceMonth = async ( req , res ) => {
+    try {
+        const {alumno_id,ciclo} = req.params;
+        const alumno = await alumnosModel.getAlumnoById(alumno_id,ciclo);
+        if(alumno.curso_id ){
+            const curso = await cursosModel.getCursoById(alumno.curso_id);
+            if( alumno.type_cuota === 'type1'){
+                console.log(curso.price_month);
+            }else if(alumno.type_cuota==='type2'){
+                const amount = curso.price_month-curso.price_month*0.07;
+                console.log(amount);
+            }else if (alumno.type_cuota ==='type3'){
+                const amount = curso.price_month-curso.price_month*0.5;
+                console.log(amount)
+            }
+        }   
+    } catch (error) {
+        console.error(error);
+    }
+}
+/**
+ * Function to updated Type Of Cuota
+ * @param {Object} req 
+ * @param {Object} res 
+ */
+controller.updateTypeCuotaById = async ( req , res ) => {
+    try {
+        const typeCuota = req.body.typeCuota;
+        const { id, ciclo } = req.params;
+        if (!typeCuota || !id) {
+            return res.status(400).json({ message: "Type of cuota and id are required!" });
+        }
+        await alumnosModel.updateTypeCuotaById(id,typeCuota,ciclo);
+        return res.status(200).json({message:"Updated successfylly!"});
+    } catch (error) {
+        console.error("Error updating type of cuota by id:"+error);
+    }
+}
 
 export default controller;
