@@ -63,4 +63,5 @@ controller.getAllPagos = async ( req , res ) => {
     }
 }
 
+
 export default controller;

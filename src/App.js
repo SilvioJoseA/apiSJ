@@ -3,6 +3,7 @@ import userRouter from "./router/users.routes.js";
 import preinscriptosRouter from "./router/preinscripto.routes.js";
 import amdRouter from "./router/amd.routes.js";
 import cors from "cors";
+import cron from "node-cron";
 import alumnoRouter from "./router/alumnos.routes.js";
 import notaRouter from "./router/notas.routes.js";
 import cursoRouter from "./router/cursos.routes.js";
@@ -10,6 +11,7 @@ import profesoresRouter from "./router/profesores.routes.js";
 import authRouter from "./router/auth.router.js";
 import pagosRouter from "./router/pagos.router.js";
 import inscripcionesRouter from "./router/inscripciones.router.js";
+import controller from "./controller/cuotas.controller.js";
 
 const app = express();
 
@@ -25,6 +27,11 @@ const app = express();
     app.use(authRouter);
     app.use(pagosRouter);
     app.use(inscripcionesRouter);
+    cron.schedule("0 9 1,10 3-11 *", () => {
+        console.log("Ejecutando la función programada...");
+        //controller.App();
+    });
+    ///make-array-options
     app.listen(4008, ()=>{
         console.log("Listening on port 4008");
     });

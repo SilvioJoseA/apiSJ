@@ -8,5 +8,6 @@ import controllerCuotas from "../controller/cuotas.controller.js";
         router.get('/pagos', controller.getAllPagos);
         //Cuotas
         router.get('/enviar/emails', controllerCuotas.toSendEmails);
+        router.get('/make-array-options', controllerCuotas.App);
         
 export default router;

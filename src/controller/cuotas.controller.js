@@ -1,7 +1,6 @@
 import { APP_PASSWORD, FROM } from "../config.js";
 import alumnosModel from "../model/alumnos.model.js";
 import nodemailer from 'nodemailer';
-import authController from "./auth.controller.js";
 const controller = {};
 /**
  * Function to validate Email;
@@ -12,75 +11,37 @@ controller.validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 };
-controller.fetchToken = async () => {
-    try {
-        const token = await authController.getToken();
-        return token;
-    } catch (error) {
-        console.error("Error fetching tokem :"+error);
-    }
-}
-controller.toSendEmails = async () => {
-    try {
-        const token = controller.fetchToken();
-        const interval = 30*60*1000;
-        setInterval(controller.fetchToken, interval);
-        const ciclo = '2025';
-        const alumnos = await alumnosModel.getAllAlumnos(ciclo);
-        const transporter = controller.toMakeTransporter();
-        const from = 'chavezzsilvio@gmail.com';
-        const subject = 'Prueba 1';
-        const text = 'Este es el contenido del correo en texto plano.';
-        const html = `<p>Este es el contenido del correo en <b>HTML</b>.</p>`;
-
-        for (const alumno of alumnos) {
-            if (alumno.email) {
-                const to = alumno.email;
-                const mailOptions = controller.toMakeMailOptions(from, to, subject, text, html);
-                try {
-                    await controller.toMakeEmail(transporter, mailOptions);
-                    console.log(`Correo enviado a: ${alumno.email}`);
-                } catch (error) {
-                    console.error(`Error enviando correo a ${alumno.email}:`, error);
-                }
-            }
-        }
-    } catch (error) {
-        console.error("Error fetching alumnos!", error);
-    }
-};
-
-controller.toMakeEmail = async (transporter, mailOptions) => {
-    return new Promise((resolve, reject) => {
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                reject(new Error("Error al enviar correo: " + error.message));
-            } else {
-                console.log('Correo Enviado:', info.response);
-                resolve(info);
-            }
-        });
-    });
-};
-
-/**
- * 
- * @param {*} to 
- * @param {*} subject 
- * @param {*} text 
- * @param {*} html 
- * @returns 
- */
-controller.toMakeMailOptions = (to, subject, text, html) => {
+controller.toMakeMailOptions = ( emailAlumno , alumno_id ) => {
     const mailOptions = {
         from: FROM,
-        to: to,
-        subject: subject,
-        text: text,
-        html: html
+        to: emailAlumno,
+        subject: 'Cuota Instituto SJ',
+        text: 'Link de pago de cuota en instituto SJ',
+        html:`
+                <link>
+                    https://sistemasaintjohns.com.ar/Formulario/pagos.html?alumno_id=${alumno_id}
+                </link>`
     };
     return mailOptions;
 };
+controller.toMakeArrayMailOptions = async ( req , res ) => {
+    try {
+        const ciclo = '2025';
+        const alumnos = await alumnosModel.getAllAlumnos(ciclo);
+        const arrayMailOptions = [];
+        console.log(alumnos.length);
+        if( alumnos.length>0){
+            for (let i = 0; i < alumnos.length; i++) {
+                if(alumnos[i].id && alumnos[i].email);
+                const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id);
+                arrayMailOptions.push(mailOptions);
+            }
+        }
+        return arrayMailOptions;
+    } catch (error) {
+        console.error("Error makeing array mail Options :"+error);
+    }
+}
 
 /**
  * Function to make trasporter
@@ -95,5 +56,25 @@ controller.toMakeTransporter = () => {
         }
     });
 };
+controller.toSendEmails = async (transporter, arrMailOptions) => {
+    try {
+        for (let index = 0; index < arrMailOptions.length; index++) {
+            // Usamos await para esperar a que el correo se envíe antes de continuar
+     //       const info = await transporter.sendMail(arrMailOptions[index]);
+            console.log('Correo Enviado:', arrMailOptions[index]);
+        }
+    } catch (error) {
+        console.error('Error al enviar correo:', error);
+    }
+};
+controller.App = async ( req , res ) => {
+    try {
+        const transporter = controller.toMakeTransporter();
+        const arrayMailOptions = await controller.toMakeArrayMailOptions();
+            controller.toSendEmails(transporter,arrayMailOptions);
+    } catch (error) {
+        console.error(error);
+    }
+}
 
 export default controller;
