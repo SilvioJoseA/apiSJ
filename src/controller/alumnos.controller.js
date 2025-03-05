@@ -287,22 +287,15 @@ controller.counterAlumnos = async ( req , res ) => {
         console.error("Error counted alumnos :",error.message);
     }
 }
-controller.toMakePriceMonth = async ( req , res ) => {
+controller.toMakePriceMonth = ( alumno ) => {
     try {
-        const {alumno_id,ciclo} = req.params;
-        const alumno = await alumnosModel.getAlumnoById(alumno_id,ciclo);
-        if(alumno.curso_id ){
-            const curso = await cursosModel.getCursoById(alumno.curso_id);
-            if( alumno.type_cuota === 'type1'){
-                console.log(curso.price_month);
-            }else if(alumno.type_cuota==='type2'){
-                const amount = curso.price_month-curso.price_month*0.07;
-                console.log(amount);
-            }else if (alumno.type_cuota ==='type3'){
-                const amount = curso.price_month-curso.price_month*0.5;
-                console.log(amount)
+            if(alumno.type_cuota=='type1'){
+                return alumno.price_month;
+            }else if(alumno.type_cuota=='type2'){
+                return alumno.price_month-alumno.price_month*0.07;
+            }else if (alumno.type_cuota=='type3'){
+                return alumno.price_month-alumno.price_month*0.5;
             }
-        }   
     } catch (error) {
         console.error(error);
     }
@@ -325,5 +318,23 @@ controller.updateTypeCuotaById = async ( req , res ) => {
         console.error("Error updating type of cuota by id:"+error);
     }
 }
-
+controller.toMakeObjectPayerAndAmount = async ( req , res ) => {
+    try {
+        const { id } = req.params;
+        const alumno = await alumnosModel.getAlumnoById(id,'2025');
+        const objectPayer = {
+            name: `${alumno[0].firstName} ${alumno[0].lastName}`.trim(),
+            email: alumno[0].email,
+            identification: {
+                type: "DNI_ARG",
+                number: alumno[0].dni,
+                country: "ARG"
+            }
+        };
+        const amount = controller.toMakePriceMonth(alumno[0]);
+        res.status(201).json({objectPayer:objectPayer,amount:amount});
+    } catch (error) {
+        console.error("Error making object payer :"+error.message);
+    }
+}
 export default controller;
