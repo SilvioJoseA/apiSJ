@@ -186,7 +186,14 @@ alumnosModel.updateAlumnoById = async (id, alumnoData) => {
 alumnosModel.getAllAlumnos = async (proximociclo='') => {
     try {
         const query = !proximociclo? `SELECT * FROM alumnos`:`SELECT * FROM alumnos_${proximociclo}`;
-        const [rows] = await pool.query(query);
+        const query1 = !proximociclo
+            ? `SELECT a.*, c.price_month 
+                FROM alumnos a
+                LEFT JOIN cursos c ON a.curso_id = c.id`
+            : `SELECT a.*, c.price_month 
+       FROM alumnos_${proximociclo} a
+       LEFT JOIN cursos c ON a.curso_id = c.id`;
+        const [rows] = await pool.query(query1);
         return rows;
     } catch (error) {
         console.error("Error fetching alumnos:", error.message);
