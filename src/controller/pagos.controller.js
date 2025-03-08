@@ -9,7 +9,7 @@ controller.createPagoTable = async ( req , res ) => {
     } catch (error) {
         console.error("Error creating pago table : ",error.message);
     }
-}
+} 
 
 controller.insertPago = async ( req , res ) => {
     try {

@@ -1,7 +1,42 @@
 import { APP_PASSWORD, FROM } from "../config.js";
 import alumnosModel from "../model/alumnos.model.js";
 import nodemailer from 'nodemailer';
+import cuotasModel from "../model/cuotas.model.js";
+import Joi from "joi";
 const controller = {};
+const cuotaEschema = Joi.object({
+    alumno_id: Joi.number().required(),
+    mes: Joi.string().required(),
+    monto: Joi.number().required(),
+    status: Joi.string().required(),
+    id_pagos_tic: Joi.number().required(),
+});
+/**
+ * Function to insert cuota by each month
+ * @param {Object} req 
+ * @param {Object} res  
+ */ 
+controller.addCuota = async ( req , res ) => {
+    try {
+        const { error } = cuotaEschema.validate(req.body);
+        if( error ) {
+            return res.status(400).json({ message: error.details[0].message});
+        }
+        const {alumno_id,mes,monto,status,id_pagos_tic} = req.body;
+        await cuotasModel.insertCuota({alumno_id,mes,monto,status,id_pagos_tic});
+        res.status(201).json({message:"Cuota inserted successfully!"});
+    } catch (error) {
+        console.error("Error adding cuota :", error.message);
+    }
+}
+controller.createTableCuotas = async ( req , res ) => {
+    try {
+        await cuotasModel.createTableCuotas();
+        res.status(201).json({message:"Cuotas table created successfully!"});
+    } catch (error) {
+        console.error("Error creating table cuotas :", error.message);
+    }
+}
 /**
  * Function to validate Email;
  * @param {string} email 

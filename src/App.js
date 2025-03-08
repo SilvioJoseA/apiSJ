@@ -12,6 +12,7 @@ import authRouter from "./router/auth.router.js";
 import pagosRouter from "./router/pagos.router.js";
 import inscripcionesRouter from "./router/inscripciones.router.js";
 import controller from "./controller/cuotas.controller.js";
+import cuotasRouter from "./router/cuotas.router.js";
 
 const app = express();
 
@@ -27,6 +28,7 @@ const app = express();
     app.use(authRouter);
     app.use(pagosRouter);
     app.use(inscripcionesRouter);
+    app.use(cuotasRouter);
     cron.schedule("0 9 1,10 3-11 *", () => {
         console.log("Ejecutando la función programada...");
         //controller.App();
