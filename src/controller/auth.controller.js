@@ -1,5 +1,6 @@
 import fetch from "node-fetch";
 import qs from "querystring";
+import qs1 from "qs";
 const controller = {};
 /**
  * Function to get token of pagos TIC
@@ -25,20 +26,49 @@ controller.getToken = async ( req , res ) => {
         }
     );
     const data = await response.json();
-  console.log("Token obtenido:", data.access_token);
+  //console.log("Token obtenido:", data.access_token);
   res.status(200).json(data.access_token);
 }
-controller.getFormPay = async ( objectoToSend ) => {
-    const response = await fetch("https://api.paypertic.com", {
-        method: "POST",
-        headers: {
-            "Content-Type": "aplication/x-www-form-urlencoded",
+controller.getTokenBackend = async () => {
+    const body = qs.stringify({ 
+        grant_type: "password",
+        username: "DY4jcnNHwBzj7Bg6",
+        password: "MreBw8zhHs55kBy3",
+        client_id: "16465308-1844-4abe-abe6-f184149ee740",
+        client_secret: "a2d03fa3-f6c4-45e5-9792-dc0d8b51a25c",
+    });
+    const response = await fetch(
+        "https://a.paypertic.com/auth/realms/entidades/protocol/openid-connect/token",
+        {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
         },
-        body: objectoToSend
-    }
+        body: body,
+        }
     );
     const data = await response.json();
-    return data;
+  return (data.access_token);
+}
+controller.getFormPay = async ( objectoToSend , token ) => {
+    try {
+        const body = JSON.stringify(objectoToSend);
+        console.log(body);
+        const response = await fetch("https://api.paypertic.com/pagos", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: body
+            }
+            );
+            const data = await response.json();
+        return data;
+    } catch (error) {
+        console.error("Erro sendig oToSend :"+error);
+    }
+
 }
 controller.toMakeBodyTIC = (bodyForm) => {
     const objectoToSend = {};
