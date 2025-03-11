@@ -10,7 +10,7 @@ const cuotaEschema = Joi.object({
     mes: Joi.string().required(),
     monto: Joi.number().required(),
     status: Joi.string().required(),
-    id_pagos_tic: Joi.number().required(),
+    id_pagos_tic: Joi.string().required(),
 });
 /**
  * Function to insert cuota by each month

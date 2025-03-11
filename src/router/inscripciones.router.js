@@ -7,4 +7,4 @@ const router = Router();
     router.post('/inscripciones', controller.toInserInscripto);
     router.get('/inscripciones', controller.toGetAllInsctipciones);
 
-export default router;
+export default router; 

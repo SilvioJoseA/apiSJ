@@ -61,5 +61,5 @@ const controller = {};
         console.error(error);
         res.status(500).json({ message: "Anything was wrong!"});
     }
- }
+ } 
  export default controller;
