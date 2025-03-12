@@ -7,5 +7,6 @@ const router = Router();
     router.post('/cuotas', controller.addCuota);
     router.post('/to-see-mail-options', controller.toMakeArrayMailOptions);
     router.get('/to-see-cuotas', controller.getAllCuotasByAllAlumnos);
+    router.get('/cuotas', controller.getAllCuotas);
 
 export default router;

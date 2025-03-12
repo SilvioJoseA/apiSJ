@@ -241,6 +241,14 @@ controller.getAllCuotasByAllAlumnos = async ( req , res ) => {
         console.error(error);
     }
 }
+controller.getAllCuotas = async ( req , res ) => {
+    try {
+        const rows = await cuotasModel.getAllCuotas();
+        res.status(201).json(rows);
+    } catch (error) {
+        console.error("Error fetching all Cuotas :"+error.message);
+    }
+}
 const html = `<!DOCTYPE html>
                 <html lang="es">
                     <head>

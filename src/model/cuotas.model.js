@@ -58,4 +58,12 @@ cuotasModel.getAllCuotasByAllAlumnos = async (ciclo='') => {
         console.error("Error fetchig all cuotas by all alumnos "+error);
     }
 } 
+cuotasModel.getAllCuotas = async () => {
+    try {
+        const [ rows ] = await pool.query(`SELECT * FROM cuotas_2025`);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching all cuotas : "+error);
+    }
+}
 export default cuotasModel;

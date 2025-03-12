@@ -289,6 +289,7 @@ controller.counterAlumnos = async ( req , res ) => {
 }
 controller.toMakePriceMonth = ( alumno ) => {
     try {
+            return alumno.price_month
             if(alumno.type_cuota=='type1'){
                 return alumno.price_month;
             }else if(alumno.type_cuota=='type2'){
