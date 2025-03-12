@@ -5,12 +5,14 @@ import cuotasModel from "../model/cuotas.model.js";
 import Joi from "joi";
 import authController from "./auth.controller.js";
 const controller = {};
-const cuotaEschema = Joi.object({
+const cuotaEschema = Joi.object({ 
     alumno_id: Joi.number().required(),
     mes: Joi.string().required(),
     monto: Joi.number().required(),
     status: Joi.string().required(),
     id_pagos_tic: Joi.string().required(),
+    usuario: Joi.string().required(),
+    metodo: Joi.string().required(),
 });
 /**
  * Function to insert cuota by each month
@@ -23,8 +25,8 @@ controller.addCuota = async ( req , res ) => {
         if( error ) {
             return res.status(400).json({ message: error.details[0].message});
         }
-        const {alumno_id,mes,monto,status,id_pagos_tic} = req.body;
-        await cuotasModel.insertCuota({alumno_id,mes,monto,status,id_pagos_tic});
+        const {alumno_id,mes,monto,status,id_pagos_tic,usuario,metodo} = req.body;
+        await cuotasModel.insertCuota({alumno_id,mes,monto,status,id_pagos_tic,usuario,metodo});
         res.status(201).json({message:"Cuota inserted successfully!"});
     } catch (error) {
         console.error("Error adding cuota :", error.message);
@@ -126,7 +128,7 @@ controller.toMakeArrayMailOptions = async ( req , res ) => {
                 const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumnos[i]));
                 const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,responsePTic.form_url);
                 arrayMailOptions.push(mailOptions);
-                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'marzo',monto:alumnos[i].price_month,status:'pending',id_pagos_tic:responsePTic.id});
+                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'marzo',monto:alumnos[i].price_month,status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
                
             } 
         }
@@ -227,6 +229,14 @@ controller.App = async ( req , res ) => {
         const transporter = controller.toMakeTransporter();
         const arrayMailOptions = await controller.toMakeArrayMailOptions();
             controller.toSendEmails(transporter,arrayMailOptions);
+    } catch (error) {
+        console.error(error);
+    }
+}
+controller.getAllCuotasByAllAlumnos = async ( req , res ) => {
+    try {
+        const rows = await cuotasModel.getAllCuotasByAllAlumnos('2025');
+        res.status(201).json(rows)
     } catch (error) {
         console.error(error);
     }
