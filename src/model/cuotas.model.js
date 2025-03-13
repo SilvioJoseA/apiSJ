@@ -60,7 +60,11 @@ cuotasModel.getAllCuotasByAllAlumnos = async (ciclo='') => {
 } 
 cuotasModel.getAllCuotas = async () => {
     try {
-        const [ rows ] = await pool.query(`SELECT * FROM cuotas_2025`);
+        const [rows] = await pool.query(`
+            SELECT a.firstName, a.lastName, c.* 
+            FROM cuotas_2025 c
+            INNER JOIN alumnos_2025 a ON c.alumno_id = a.id
+        `);
         return rows;
     } catch (error) {
         console.error("Error fetching all cuotas : "+error);
