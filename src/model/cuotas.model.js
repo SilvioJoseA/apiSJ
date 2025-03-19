@@ -77,7 +77,7 @@ cuotasModel.getAllCuotasByMonth = async () => {
           a.firstName, 
           a.lastName, 
           a.email, 
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.monto ELSE NULL END) AS motnoMarzo,
+          MAX(CASE WHEN c.mes = 'marzo' THEN c.monto ELSE NULL END) AS montoMarzo,
           MAX(CASE WHEN c.mes = 'marzo' THEN c.mes ELSE NULL END) AS mesMarzo,
           MAX(CASE WHEN c.mes = 'marzo' THEN c.status ELSE NULL END) AS statusMarzo,
           MAX(CASE WHEN c.mes = 'marzo' THEN c.metodo ELSE NULL END) AS metodoMarzo,
