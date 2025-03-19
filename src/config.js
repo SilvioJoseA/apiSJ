@@ -6,7 +6,7 @@ import { config } from 'dotenv';
     export const DB_HOST = process.env.DB_HOST || 'srv1146.hstgr.io'; // o usa '195.35.61.56'
     export const DB_DATABASE = process.env.DB_DATABASE || 'u202166280_appsj';
     export const DB_PORT = process.env.DB_PORT || 3306;
-    export const FROM = process.env.FROM || 'chavezzsilvio@gmail.com';
-    export const APP_PASSWORD = process.env.APP_PASSWORD || 'euqd dbyj cwya ohoy';
+    export const FROM = process.env.FROM ||'saintjohnscuotas@gmail.com';// 'chavezzsilvio@gmail.com';//
+    export const APP_PASSWORD = process.env.APP_PASSWORD || 'qgxc spoq ammm kwew';// */'euqd dbyj cwya ohoy';//instituto:qgxc spoq ammm kwew
 
 config();

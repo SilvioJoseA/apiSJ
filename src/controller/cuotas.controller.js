@@ -51,23 +51,23 @@ controller.validateEmail = (email) => {
 };
 controller.toMakeMailOptions = ( emailAlumno , alumno_id , link_form) => {
     const mailOptions = {
-        from: FROM,
-        to: 'chavezzsilvio@gmail.com',//emailAlumno,
+        from: 'saintjohns@gmail.com>', // Puedes poner un nombre genérico
+        to: emailAlumno || 'saintjohns@gmail.com',//emailAlumno,
         subject: `Cuota Saint John's`,
         text: `Link de pago de cuota en Saint John's`,
         html:`<!DOCTYPE html>
-                <html lang="es">
-                    <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Cuota Mensual</title>
-                        <style>
-                        body {
-                        font-family: Arial, sans-serif;
-                        line-height: 1.6;
-                        color: #333;
-                        }
-                .container {
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cuota Mensual</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .container {
             max-width: 600px;
             margin: 0 auto;
             padding: 20px;
@@ -80,7 +80,7 @@ controller.toMakeMailOptions = ( emailAlumno , alumno_id , link_form) => {
             padding: 10px 20px;
             margin-top: 20px;
             font-size: 16px;
-            color: #ffff;
+            color: #fff;
             background-color: #007bff;
             text-decoration: none;
             border-radius: 5px;
@@ -93,13 +93,21 @@ controller.toMakeMailOptions = ( emailAlumno , alumno_id , link_form) => {
             font-size: 14px;
             color: #777;
         }
+        .logo {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .logo img {
+            max-width: 150px;
+            height: auto;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <p>Estimado/a,</p>
-        <p>Espero que este mail le encuentre bien.</p>
-        <p>Le recordamos la importancia de realizar el pago a tiempo a través de los medios habilitados para evitar recargos por mora.</p>
+<p>Estimado/a,</p>
+<p>Espero que este mensaje le encuentre bien.</p>
+<p>A continuación, puede acceder al botón de pago para la cuota del mes en curso:</p>
         <a href="${link_form}" class="button">Pagar</a>
         <p>Quedamos a disposición ante cualquier consulta.</p>
         <p>¡Saludos cordiales y que tenga un excelente mes!</p>
@@ -109,10 +117,28 @@ controller.toMakeMailOptions = ( emailAlumno , alumno_id , link_form) => {
         </div>
     </div>
 </body>
-</html>`
+</html>`,
+        replyTo:'no-reply@example.com'
     };
     return mailOptions;
 };
+controller.toMakeArrayMailOptionsByModel = async ( ) => {
+    try {
+        const ciclo = '2025';
+        const cuotas = await cuotasModel.getAllCuotas();
+        const arrayMailOptions = [];
+        for (let i = 1013; i < 1030; i++) {
+           if(cuotas[i].email) {
+            const mailOptions = controller.toMakeMailOptions(cuotas[i].email,cuotas[i].alumno_id,'https://servicios.paypertic.com/formularios/v2/pagos/'+cuotas[i].id_pagos_tic);
+            arrayMailOptions.push(mailOptions);
+           }    
+        }
+        console.log(arrayMailOptions.length);
+        return arrayMailOptions;
+    } catch (error) {
+        console.error("Error fetching alumnos or meaking mailOptions :"+error);
+    }
+}
 controller.toMakeArrayMailOptions = async ( req , res ) => {
     try {
         const ciclo = '2025';
@@ -121,14 +147,14 @@ controller.toMakeArrayMailOptions = async ( req , res ) => {
         const arrayObjectPayerAndAmount = [];
         console.log(alumnos.length); 
         if( alumnos.length>0){
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 200; i++) {
                 if(alumnos[i].id && alumnos[i].email);
                 
                 arrayObjectPayerAndAmount.push(controller.toMakeObjectPayerAndAmount(alumnos[i]));
                 const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumnos[i]));
                 const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,responsePTic.form_url);
                 arrayMailOptions.push(mailOptions);
-                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'marzo',monto:alumnos[i].price_month,status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
+          //      await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'marzo',monto:alumnos[i].price_month,status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
                
             } 
         }
@@ -154,11 +180,15 @@ controller.toMakeTransporter = () => {
 controller.toSendEmails = async (transporter, arrMailOptions) => {
     try {
         for (let index = 0; index < arrMailOptions.length; index++) {
-            const info = await transporter.sendMail(arrMailOptions[index]);
-            console.log('Correo Enviado:', info);
+            try {
+                const info = await transporter.sendMail(arrMailOptions[index]);
+                console.log('Correo Enviado:', info);
+            } catch (error) {
+                console.error('Error al enviar correo:', error.message || error);
+            }
         }
     } catch (error) {
-        console.error('Error al enviar correo:', error);
+        console.error('Error inesperado:', error);
     }
 };
 controller.toMakeLinkCuota = async (oToSend) => {
@@ -176,8 +206,8 @@ controller.toMakeObjectPayerAndAmount = ( alumno ) => {
         const amount = alumno.price_month || ' ';
         const objectPayer = {};
         const identification = {}
-            objectPayer.name = alumno.firstName|| ' '+' '+lastName||' ';
-            objectPayer.email = 'chavezzsilvio@gmail.com';
+            objectPayer.name = (alumno.firstName || '') + ' ' + (alumno.lastName || '').trim();
+            objectPayer.email = alumno.email;//'chavezzsilvio@gmail.com';//
             identification.type = 'DNI_ARG';
             identification.number = alumno.dni || ' ';
             identification.country = 'ARG';
@@ -227,8 +257,9 @@ controller.getLocalDateWithOffset = (date) => {
 controller.App = async ( req , res ) => {
     try {
         const transporter = controller.toMakeTransporter();
-        const arrayMailOptions = await controller.toMakeArrayMailOptions();
-            controller.toSendEmails(transporter,arrayMailOptions);
+        const arrayMailOptions = await controller.toMakeArrayMailOptionsByModel(); //await controller.toMakeArrayMailOptions();
+        console.log(arrayMailOptions);
+        controller.toSendEmails(transporter,arrayMailOptions);
     } catch (error) {
         console.error(error);
     }
@@ -244,9 +275,21 @@ controller.getAllCuotasByAllAlumnos = async ( req , res ) => {
 controller.getAllCuotas = async ( req , res ) => {
     try {
         const rows = await cuotasModel.getAllCuotas();
+    /*    const status = rows.map( cuota => {
+           // const token = await authController.getToken();
+            authController.toCheckPay( cuota.id_pagos_tic) });
+        console.log(status);*/
         res.status(201).json(rows);
     } catch (error) {
         console.error("Error fetching all Cuotas :"+error.message);
+    }
+}
+controller.getAllCuotasByMonth = async ( req , res ) => {
+    try {
+        const rows = await cuotasModel.getAllCuotasByMonth();
+        res.status(201).json(rows);
+    } catch (error) {
+        console.error("Error fetchin all cuotas by month :"+error.message);
     }
 }
 const html = `<!DOCTYPE html>
