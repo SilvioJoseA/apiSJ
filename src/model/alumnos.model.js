@@ -154,24 +154,70 @@ alumnosModel.insertAlumno = async (alumnoData, cicloLectivo) => {
 alumnosModel.updateAlumnoById = async (id, alumnoData) => {
     try {
         const {
-            firstName, lastName, dni, gender, birthDate, address, phone, email, 
-            guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor,
-            nivel, horario, curso_id
-        } = alumnoData;
-
-        const query = `
-            UPDATE alumnos_2025 
-            SET  firstName =?, lastName=?, dni=?, gender=?, birthDate=?, address=?, phone=?, email=?, 
-                guardianName=?, guardianDNI=?, guardianEmail=?, guardianPhone=?, isMinor=?,
-                nivel=?, horario=?, curso_id=?
-            WHERE id = ?`;
-
-        const values = [
-            firstName, lastName, dni, gender, birthDate, address, phone, email, 
-            guardianName, guardianDNI, guardianEmail, guardianPhone, isMinor,
-            nivel, horario, curso_id,id
-        ];
-
+            firstName,
+            lastName,
+            dni,
+            gender,
+            birthDate,
+            address,
+            phone,
+            email,
+            guardianName,
+            guardianDNI,
+            guardianEmail,
+            guardianPhone,
+            isMinor,
+            nivel,
+            horario,
+            curso_id,
+            id
+          } = alumnoData;
+      
+          // Definir la consulta SQL
+          const query = `
+            UPDATE alumnos_2025
+            SET 
+              firstName = ?, 
+              lastName = ?, 
+              dni = ?, 
+              gender = ?, 
+              birthDate = ?, 
+              address = ?, 
+              phone = ?, 
+              email = ?,
+              guardianName = ?, 
+              guardianDNI = ?, 
+              guardianEmail = ?, 
+              guardianPhone = ?, 
+              isMinor = ?,
+              nivel = ?, 
+              horario = ?, 
+              curso_id = ?
+            WHERE id = ?;
+          `;
+      
+          // Definir los valores para la consulta
+          const values = [
+            firstName,
+            lastName,
+            dni,
+            gender,
+            birthDate,
+            address,
+            phone,
+            email,
+            guardianName,
+            guardianDNI,
+            guardianEmail,
+            guardianPhone,
+            isMinor,
+            nivel,
+            horario,
+            curso_id,
+            id
+          ];
+      
+        console.log(query);
         await pool.query(query, values);
     } catch (error) {
         console.error("Error updating alumno:", error.message);
