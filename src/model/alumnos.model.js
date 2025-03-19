@@ -160,7 +160,7 @@ alumnosModel.updateAlumnoById = async (id, alumnoData) => {
         } = alumnoData;
 
         const query = `
-            UPDATE alumnos 
+            UPDATE alumnos_2025 
             SET  firstName =?, lastName=?, dni=?, gender=?, birthDate=?, address=?, phone=?, email=?, 
                 guardianName=?, guardianDNI=?, guardianEmail=?, guardianPhone=?, isMinor=?,
                 nivel=?, horario=?, curso_id=?

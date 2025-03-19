@@ -143,6 +143,7 @@ const controller = {};
         try {
             const id = req.params;
             const alumnoData = req.body;
+            console.log(alumnoData);
             await alumnosModel.updateAlumnoById(id,alumnoData);
             res.status(201).json({ message: "Alumno updated successfully!"});
         } catch (error) {
