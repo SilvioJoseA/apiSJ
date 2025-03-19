@@ -81,51 +81,61 @@ cuotasModel.getAllCuotasByMonth = async () => {
           MAX(CASE WHEN c.mes = 'marzo' THEN c.mes ELSE NULL END) AS mesMarzo,
           MAX(CASE WHEN c.mes = 'marzo' THEN c.status ELSE NULL END) AS statusMarzo,
           MAX(CASE WHEN c.mes = 'marzo' THEN c.metodo ELSE NULL END) AS metodoMarzo,
+          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticMarzo,
 
           MAX(CASE WHEN c.mes = 'abril' THEN c.monto ELSE NULL END) AS montoAbril,
           MAX(CASE WHEN c.mes = 'abril' THEN c.mes ELSE NULL END) AS mesAbril,
           MAX(CASE WHEN c.mes = 'abril' THEN c.status ELSE NULL END) AS statusAbril,
           MAX(CASE WHEN c.mes = 'abril' THEN c.metodo ELSE NULL END) AS metodoAbril,
+          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticAbril,
 
           MAX(CASE WHEN c.mes = 'mayo' THEN c.monto ELSE NULL END) AS montoMayo,
           MAX(CASE WHEN c.mes = 'mayo' THEN c.mes ELSE NULL END) AS mesMayo,
           MAX(CASE WHEN c.mes = 'mayo' THEN c.status ELSE NULL END) AS statusMayo,
           MAX(CASE WHEN c.mes = 'mayo' THEN c.metodo ELSE NULL END) AS metodoMayo,
+          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticMayo,
 
           MAX(CASE WHEN c.mes = 'junio' THEN c.monto ELSE NULL END) AS montoJunio,
           MAX(CASE WHEN c.mes = 'junio' THEN c.mes ELSE NULL END) AS mesJunio,
           MAX(CASE WHEN c.mes = 'junio' THEN c.status ELSE NULL END) AS statusJunio,
           MAX(CASE WHEN c.mes = 'junio' THEN c.metodo ELSE NULL END) AS metodoJunio,
+          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticJunio,
 
           MAX(CASE WHEN c.mes = 'julio' THEN c.monto ELSE NULL END) AS montoJulio,
           MAX(CASE WHEN c.mes = 'julio' THEN c.mes ELSE NULL END) AS mesJulio,
           MAX(CASE WHEN c.mes = 'julio' THEN c.status ELSE NULL END) AS statusJulio,
           MAX(CASE WHEN c.mes = 'julio' THEN c.metodo ELSE NULL END) AS metodoJulio,
+          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticJulio,
 
           MAX(CASE WHEN c.mes = 'agosto' THEN c.monto ELSE NULL END) AS montoAgosto,
           MAX(CASE WHEN c.mes = 'agosto' THEN c.mes ELSE NULL END) AS mesAgosto,
           MAX(CASE WHEN c.mes = 'agosto' THEN c.status ELSE NULL END) AS statusAgosto,
           MAX(CASE WHEN c.mes = 'agosto' THEN c.metodo ELSE NULL END) AS metodoAgosto,
+          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticAgosto,
 
           MAX(CASE WHEN c.mes = 'septiembre' THEN c.monto ELSE NULL END) AS montoSeptiembre,
           MAX(CASE WHEN c.mes = 'septiembre' THEN c.mes ELSE NULL END) AS mesSeptiembre,
           MAX(CASE WHEN c.mes = 'septiembre' THEN c.status ELSE NULL END) AS statusSeptiembre,
           MAX(CASE WHEN c.mes = 'septiembre' THEN c.metodo ELSE NULL END) AS metodoSeptiembre,
+          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticSeptiembre,
 
           MAX(CASE WHEN c.mes = 'octubre' THEN c.monto ELSE NULL END) AS montoOctubre,
           MAX(CASE WHEN c.mes = 'octubre' THEN c.mes ELSE NULL END) AS mesOctubre,
           MAX(CASE WHEN c.mes = 'octubre' THEN c.status ELSE NULL END) AS statusOctubre,
           MAX(CASE WHEN c.mes = 'octubre' THEN c.metodo ELSE NULL END) AS metodoOctubre,
+          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticOctubre,
 
           MAX(CASE WHEN c.mes = 'noviembre' THEN c.monto ELSE NULL END) AS montoNoviembre,
           MAX(CASE WHEN c.mes = 'noviembre' THEN c.mes ELSE NULL END) AS mesNoviembre,
           MAX(CASE WHEN c.mes = 'noviembre' THEN c.status ELSE NULL END) AS statusNoviembre,
           MAX(CASE WHEN c.mes = 'noviembre' THEN c.metodo ELSE NULL END) AS metoodNoviembre,
+          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticNoviembre,
 
           MAX(CASE WHEN c.mes = 'diciembre' THEN c.monto ELSE NULL END) AS montoDiciembre,
           MAX(CASE WHEN c.mes = 'diciembre' THEN c.mes ELSE NULL END) AS mesDiciembre,
           MAX(CASE WHEN c.mes = 'diciembre' THEN c.status ELSE NULL END) AS statusDiciembre,
-          MAX(CASE WHEN c.mes = 'diciembre' THEN c.metodo ELSE NULL END) AS metodoDiciembre
+          MAX(CASE WHEN c.mes = 'diciembre' THEN c.metodo ELSE NULL END) AS metodoDiciembre,
+          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticDiciembre
 
         FROM 
           cuotas_2025 c 
