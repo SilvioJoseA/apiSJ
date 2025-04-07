@@ -70,6 +70,53 @@ cuotasModel.getAllCuotas = async () => {
         console.error("Error fetching all cuotas : "+error);
     }
 }
+/**
+ * Query to fetch all cuotas created today
+ * @returns {Promise<Object[]>} Array of cuotas created today with alumno info
+ */
+cuotasModel.getCuotasCreatedToday = async () => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT a.firstName, a.lastName, a.email, c.* 
+            FROM cuotas_2025 c
+            INNER JOIN alumnos_2025 a ON c.alumno_id = a.id
+            WHERE DATE(c.created_at) = CURDATE()
+        `);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching today's cuotas: ", error);
+        throw error; // Es mejor lanzar el error para manejarlo donde se llame a la función
+    }
+};
+cuotasModel.getCuotasPending = async () => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT a.firstName, a.lastName, a.email, a.dni , c.* 
+            FROM cuotas_2025 c
+            INNER JOIN alumnos_2025 a ON c.alumno_id = a.id
+            WHERE c.status = 'pending'
+        `);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching today's cuotas: ", error);
+        throw error; // Es mejor lanzar el error para manejarlo donde se llame a la función
+    }
+};
+cuotasModel.getAlumnosPending = async () => {
+    try {
+        const [ rows ] = await pool.query(`SELECT 
+                                                a.firstName,
+                                                cursos.price_month,
+                                            FROM cuotas_2025 c 
+                                            INNER JOIN alumnos_2025 a ON c.alumno_id = a.id 
+                                            INNER JOIN cursos ON cursos.id = a.curso_id 
+                                            WHERE c.status = 'pending'`
+        );
+            return rows;
+    } catch (error) {
+        console.error("Error fetching alumnos :"+error);
+    }
+}
 cuotasModel.getAllCuotasByMonth = async () => {
     try {
       const query = `
@@ -87,7 +134,7 @@ cuotasModel.getAllCuotasByMonth = async () => {
           MAX(CASE WHEN c.mes = 'abril' THEN c.mes ELSE NULL END) AS mesAbril,
           MAX(CASE WHEN c.mes = 'abril' THEN c.status ELSE NULL END) AS statusAbril,
           MAX(CASE WHEN c.mes = 'abril' THEN c.metodo ELSE NULL END) AS metodoAbril,
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticAbril,
+          MAX(CASE WHEN c.mes = 'abril' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticAbril,
 
           MAX(CASE WHEN c.mes = 'mayo' THEN c.monto ELSE NULL END) AS montoMayo,
           MAX(CASE WHEN c.mes = 'mayo' THEN c.mes ELSE NULL END) AS mesMayo,
@@ -165,4 +212,14 @@ cuotasModel.getAllCuotasByMonth = async () => {
       throw error;
     }
   };
+  cuotasModel.updateStatus = async ( cuota_id , newStatus ) => {
+    try {
+        console.log(cuota_id, newStatus);
+        const query =   `UPDATE cuotas_2025 SET status = ? WHERE id = ?`
+        await pool.query(query,[ newStatus, cuota_id ]);
+        return 'Uploaded successfully!';
+    } catch (error) {
+        console.error(error);
+    }
+  }
 export default cuotasModel;

@@ -49,7 +49,7 @@ controller.validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 };
-controller.toMakeMailOptions = ( emailAlumno , alumno_id , link_form) => {
+controller.toMakeMailOptions = ( emailAlumno = '' , alumno_id , link_form) => {
     const mailOptions = {
         from: 'saintjohns@gmail.com>', // Puedes poner un nombre genérico
         to: emailAlumno || 'saintjohns@gmail.com',//emailAlumno,
@@ -125,42 +125,106 @@ controller.toMakeMailOptions = ( emailAlumno , alumno_id , link_form) => {
 controller.toMakeArrayMailOptionsByModel = async ( ) => {
     try {
         const ciclo = '2025';
-        const cuotas = await cuotasModel.getAllCuotas();
+        const cuotas = await cuotasModel.getCuotasCreatedToday();
+        console.log(cuotas);
         const arrayMailOptions = [];
-        for (let i = 1013; i < 1030; i++) {
+        for (let i = 0; i < cuotas.length; i++) {
            if(cuotas[i].email) {
             const mailOptions = controller.toMakeMailOptions(cuotas[i].email,cuotas[i].alumno_id,'https://servicios.paypertic.com/formularios/v2/pagos/'+cuotas[i].id_pagos_tic);
             arrayMailOptions.push(mailOptions);
-           }    
+           }   
         }
-        console.log(arrayMailOptions.length);
-        return arrayMailOptions;
+         return arrayMailOptions;
     } catch (error) {
         console.error("Error fetching alumnos or meaking mailOptions :"+error);
     }
 }
+controller.toMakeArrayMailOptionsByModelSecond = async ( ) => {
+    try {
+        const ciclo = '2025';
+        const cuotas = await cuotasModel.getCuotasPending();
+        console.log(cuotas);
+        const arrayMailOptions = [];
+        for (let i = 0; i < cuotas.length; i++) {
+           if(cuotas[i].email) {
+            const mailOptions = controller.toMakeMailOptions(cuotas[i].email,cuotas[i].alumno_id,'https://servicios.paypertic.com/formularios/v2/pagos/'+cuotas[i].id_pagos_tic);
+            arrayMailOptions.push(mailOptions);
+           }   
+        }
+         return arrayMailOptions;
+    } catch (error) {
+        console.error("Error fetching alumnos or meaking mailOptions :"+error);
+    }
+}/*
 controller.toMakeArrayMailOptions = async ( req , res ) => {
     try {
         const ciclo = '2025';
-        const alumnos = await alumnosModel.getAllAlumnos(ciclo);
+        const alumnos = await cuotasModel.getCuotasPending();
         const arrayMailOptions = [];
-        const arrayObjectPayerAndAmount = [];
-        console.log(alumnos.length); 
+        console.log(alumnos);
+       const arrayObjectPayerAndAmount = [];
+ //       console.log(alumnos.length); 
         if( alumnos.length>0){
-            for (let i = 0; i < 200; i++) {
-                if(alumnos[i].id && alumnos[i].email);
+            for (let i = 0; i < alumnos.length; i++) {
+               // if(alumnos[i].id && alumnos[i].email);
                 
                 arrayObjectPayerAndAmount.push(controller.toMakeObjectPayerAndAmount(alumnos[i]));
                 const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumnos[i]));
                 const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,responsePTic.form_url);
+              //
                 arrayMailOptions.push(mailOptions);
-          //      await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'marzo',monto:alumnos[i].price_month,status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
-               
+                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'marzo',monto:alumnos[i].monto,status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic1'});
+               console.log(alumnos[i]);
             } 
         }
         return arrayMailOptions;
     } catch (error) {
         console.error("Error makeing array mail Options :"+error);
+    }
+}*/
+controller.toMakeArrayMailOptions = async ( req , res ) => {
+    try {
+        const ciclo = '2025';
+        const alumnos = await alumnosModel.getAllAlumnos(ciclo);
+        const arrayMailOptions = [];
+       const arrayObjectPayerAndAmount = [];
+ //       console.log(alumnos.length); 
+        if( alumnos.length>0){
+            for (let i = 0; i < alumnos.length; i++){
+                console.log(alumnos[i]);
+                const amount = controller.toGetAmount(alumnos[i].price_month,alumnos[i].type_cuota);
+                console.log(amount);
+               // if(alumnos[i].id && alumnos[i].email);
+              
+                arrayObjectPayerAndAmount.push(controller.toMakeObjectPayerAndAmount(alumnos[i]));
+                const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumnos[i]));
+                const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,responsePTic.form_url);
+              //
+                arrayMailOptions.push(mailOptions);
+                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'abril',monto:controller.toGetAmount(alumnos[i].price_month,alumnos[i].type_cuota),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
+            } 
+        }
+       // return arrayMailOptions;
+    } catch (error) {
+        console.error("Error makeing array mail Options :"+error);
+    }
+}
+controller.toGetAmount = ( amount , type ) => {
+    try {
+        if(amount && type ){
+            switch ( type ) {
+                case 'type1':
+                    return parseFloat(amount);
+                case 'type2':
+                    return parseFloat(amount)*0.93;
+                case 'type3':
+                    return parseFloat(amount)*0.5;
+                default:
+                    break;
+            }  
+        }
+    } catch (error) {
+        console.error("Error making amount :"+error);
     }
 }
 
@@ -194,8 +258,8 @@ controller.toSendEmails = async (transporter, arrMailOptions) => {
 controller.toMakeLinkCuota = async (oToSend) => {
     try {
         const token = await authController.getTokenBackend();
-        console.log(token);
         const response = await authController.getFormPay(oToSend,token);
+        console.log(response)
         return response;
     } catch (error) {
         console.error("Error in toMakeLinkCuota:", error);
@@ -203,7 +267,7 @@ controller.toMakeLinkCuota = async (oToSend) => {
 };
 controller.toMakeObjectPayerAndAmount = ( alumno ) => {
     try {
-        const amount = alumno.price_month || ' ';
+        const amount = controller.toGetAmount(alumno.price_month,alumno.type_cuota);
         const objectPayer = {};
         const identification = {}
             objectPayer.name = (alumno.firstName || '') + ' ' + (alumno.lastName || '').trim();
@@ -233,7 +297,7 @@ controller.toMakeObjectPayerAndAmount = ( alumno ) => {
 }
 controller.getLastDayOfMarch = (currentDate) => {
     const year = currentDate.getFullYear();
-    const marchDate = new Date(year, 2, 28);
+    const marchDate = new Date(year, 3, 15);
     if (currentDate > marchDate) {
         return new Date(year + 1, 2, 31);
     }
@@ -257,8 +321,8 @@ controller.getLocalDateWithOffset = (date) => {
 controller.App = async ( req , res ) => {
     try {
         const transporter = controller.toMakeTransporter();
-        const arrayMailOptions = await controller.toMakeArrayMailOptionsByModel(); //await controller.toMakeArrayMailOptions();
-        console.log(arrayMailOptions);
+        const arrayMailOptions = await controller.toMakeArrayMailOptionsByModelSecond(); //await controller.toMakeArrayMailOptions();
+       // console.log(arrayMailOptions);
         controller.toSendEmails(transporter,arrayMailOptions);
     } catch (error) {
         console.error(error);
@@ -275,10 +339,6 @@ controller.getAllCuotasByAllAlumnos = async ( req , res ) => {
 controller.getAllCuotas = async ( req , res ) => {
     try {
         const rows = await cuotasModel.getAllCuotas();
-    /*    const status = rows.map( cuota => {
-           // const token = await authController.getToken();
-            authController.toCheckPay( cuota.id_pagos_tic) });
-        console.log(status);*/
         res.status(201).json(rows);
     } catch (error) {
         console.error("Error fetching all Cuotas :"+error.message);
@@ -290,6 +350,25 @@ controller.getAllCuotasByMonth = async ( req , res ) => {
         res.status(201).json(rows);
     } catch (error) {
         console.error("Error fetchin all cuotas by month :"+error.message);
+    }
+}
+controller.toCheckAllPayCuotas = async ( req , res ) => {
+    try {
+        const rows = await cuotasModel.getAllCuotas();
+        for (let i = 0; i < rows.length; i++) {
+           // console.log(rows[i]);
+            if( rows[i].mes === 'Marzo' ){
+               const status = await authController.toCheckPayBackend(rows[i].id_pagos_tic);
+               //console.log(status);
+               if(status === 'approved'){
+                console.log(status);
+                await cuotasModel.updateStatus(rows[i].id,'pagado');
+               } 
+            }
+
+        }
+    } catch (error) {
+        console.error(error);
     }
 }
 const html = `<!DOCTYPE html>

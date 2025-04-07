@@ -246,6 +246,34 @@ alumnosModel.getAllAlumnos = async (proximociclo='') => {
     }
 };
 /**
+ * Query to fetch alumnos without a payment link for March 2025
+ * @param {string} proximociclo - Optional cycle suffix for table name
+ * @returns {Promise<Object[]>}
+ */
+alumnosModel.getAlumnosWithoutMarchPayment = async (proximociclo = '') => {
+    try {
+        const alumnosTable = proximociclo ? `alumnos_${proximociclo}` : 'alumnos';
+        
+        const query = `
+            SELECT a.*, c.price_month 
+            FROM ${alumnosTable} a
+            LEFT JOIN cursos c ON a.curso_id = c.id
+            WHERE NOT EXISTS (
+                SELECT 1 
+                FROM cuotas_2025 cu 
+                WHERE cu.alumno_id = a.id 
+                AND cu.mes = 'marzo'
+            )
+        `;
+        console.log(query)
+        const [rows] = await pool.query(query);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching alumnos without March payment:", error.message);
+        throw error; // Es buena práctica relanzar el error para manejarlo más arriba
+    }
+};
+/**
  * Query to find alumno by dni from alumnos table
  * @param {string} dni 
  * @returns 

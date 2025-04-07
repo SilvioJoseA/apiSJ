@@ -1,6 +1,5 @@
 import fetch from "node-fetch";
 import qs from "querystring";
-import qs1 from "qs";
 const controller = {};
 /**
  * Function to get token of pagos TIC
@@ -70,21 +69,92 @@ controller.getFormPay = async ( objectoToSend , token ) => {
     }
 
 }
-controller.toCheckPay = async ( id_pagos_tic  ) => {
+/**
+ * To Check status of pagos tic
+ * @param {String} id_pagos_tic 
+ * @returns 
+ */
+controller.toCheckPay = async ( req , res  ) => {
     try { 
-        const token = await controller.getToken();
-        if(id_pagos_tic){
-            console.log(id_pagos_tic);
-            const response = await fetch("https://api.paypertic.com/pagos/"+"9936a264-9558-4574-9a45-1cafd79e2650"/*id_pagos_tic*/, {
+        const {id_pagos_tic} = req.params;
+        console.log(id_pagos_tic);
+        const token = await controller.getTokenBackend();
+        console.log(token);
+        if(id_pagos_tic){   
+            const response = await fetch("https://api.paypertic.com/pagos/"+id_pagos_tic, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                "Authorization": `Bearer eyJhbGciOiJSUzI1NiIsInR5cCIgOiAiSldUIiwia2lkIiA6ICJLdnB0T0R6RXdlQUp4LXZVWDc1NFJWVnFlak51NGwtTXUxUE9UbVB4Q1dBIn0.eyJleHAiOjE3NDE5ODYyOTUsImlhdCI6MTc0MTk4MzI5NSwianRpIjoiODUyYzc3NjAtMmYyMC00YmUzLWIzNDQtMjIzODc4ZGI3M2NhIiwiaXNzIjoiaHR0cHM6Ly9hLnBheXBlcnRpYy5jb20vYXV0aC9yZWFsbXMvZW50aWRhZGVzIiwic3ViIjoiZDE4ZjQ4MmYtMjFiNy00MzQ4LTg3NTMtZTNhYTkxM2VkNjQ4IiwidHlwIjoiQmVhcmVyIiwiYXpwIjoiMTY0NjUzMDgtMTg0NC00YWJlLWFiZTYtZjE4NDE0OWVlNzQwIiwic2Vzc2lvbl9zdGF0ZSI6ImI2Zjc1Y2E3LWI1ZmMtNDA3NC1iNjgzLTc5ZjE3MjEyOGYyYSIsImFjciI6IjEiLCJyZWFsbV9hY2Nlc3MiOnsicm9sZXMiOlsib2ZmbGluZV9hY2Nlc3MiLCJ1bWFfYXV0aG9yaXphdGlvbiJdfSwicmVzb3VyY2VfYWNjZXNzIjp7IjE2NDY1MzA4LTE4NDQtNGFiZS1hYmU2LWYxODQxNDllZTc0MCI6eyJyb2xlcyI6WyJleHBvcnQtc2VhcmNoIiwiZXhwb3J0LXNob3ciLCJhcGktdXNlciIsInVtYV9wcm90ZWN0aW9uIiwiZXhwb3J0LWNyZWF0ZSIsImJhc2UtdXNlciJdfX0sInNjb3BlIjoiZW1haWwgcHJvZmlsZSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJzaWduYXR1cmUiOiI4NjQxIiwibmFtZSI6IkFTT0NJQUNJT04gQ0lWSUwgREUgQ1VMVFVSQSBTQUlOVCBKT0hOJ1MgODY0MSIsInByZWZlcnJlZF91c2VybmFtZSI6ImR5NGpjbm5od2J6ajdiZzYiLCJnaXZlbl9uYW1lIjoiQVNPQ0lBQ0lPTiBDSVZJTCBERSBDVUxUVVJBIFNBSU5UIEpPSE4nUyIsImZhbWlseV9uYW1lIjoiODY0MSJ9.qnfiJUigQXhs6ddQhZ-KiLDuLSuwpqG1upCPalyuSX2Ktbx9XDuh5WwlaprlvTX0ty7UqZMG4FJlVGt_2JiV-GIpnHB2uR2K1qSFiWfEFrTafZLvrFE4fQ_BGD-MsG9JfQadVYKrDdqIyGkw9LqtJ_sHNEtu0oLgu5Tat75-lmtkN5qeq2UwFuTli-WiA1srKgDchJw122LSAL_5_bHBRKlkUNUgTn0oU1bcI1uQUZfORKA8PKl685F4Q0jy7EyX5Xj-qaL848xjL3-liQNgiKzadKksjSe9yVw6DKSJ5bSTLBEX8g2VDZTx1yYTM6XZzGPoCvPJX_8bOv6l9xnGMg`
+                "Authorization": `Bearer ${token}`     
             },
             }
             );
-            console.log(response);
-            return response;
+            if ( response.ok ){
+                const data = await response.json(); 
+                res.status(201).json(data.status); 
+            }
+            res.json("Not Valid")
+
+            
+        }
+    } catch (error) {
+        console.error("Error checking pay by id_pagos_tic : "+error);
+    }
+} 
+controller.cancelarPago = async ( req , res ) => {
+    try {
+        const { id_pagos_tic } = req.params;
+        const token = await controller.getTokenBackend();
+        if(id_pagos_tic){   
+            const response = await fetch("https://api.paypertic.com/pagos/cancelar/"+id_pagos_tic, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`     
+            },
+            body: {
+                "status_detail":"Pago cancelado por solicitud del pagador"
+            },
+            }
+            );
+            if ( response.ok ){
+                const data = await response.json(); 
+                res.status(201).json(data.status); 
+            }
+            res.json("Not Valid")
+
+            
+        } 
+    } catch (error) {
+        console.error("Error al cancelar pago :"+error);        
+    }
+}
+/**
+ * To Check status of pagos tic
+ * @param {String} id_pagos_tic 
+ * @returns 
+ */
+controller.toCheckPayBackend = async ( id_pagos_tic ) => {
+    try { 
+        console.log(id_pagos_tic);
+        const token = await controller.getTokenBackend();
+        if(id_pagos_tic){   
+            const response = await fetch("https://api.paypertic.com/pagos/"+id_pagos_tic, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`     
+            },
+            }
+            );
+            if ( response.ok ){
+                const data = await response.json(); 
+              //  console.log(data.status); 
+                return data.status;
+            }
+            console.log("Not Valid")
+
+            
         }
     } catch (error) {
         console.error("Error checking pay by id_pagos_tic : "+error);
