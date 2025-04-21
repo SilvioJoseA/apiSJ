@@ -70,6 +70,19 @@ cuotasModel.getAllCuotas = async () => {
         console.error("Error fetching all cuotas : "+error);
     }
 }
+cuotasModel.getAllCuotasAbril = async () => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT a.firstName, a.lastName, a.email, c.* 
+            FROM cuotas_2025 c
+            INNER JOIN alumnos_2025 a ON c.alumno_id = a.id
+            WHERE mes='abril'
+        `);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching all cuotas : "+error);
+    }
+}
 /**
  * Query to fetch all cuotas created today
  * @returns {Promise<Object[]>} Array of cuotas created today with alumno info
@@ -99,9 +112,23 @@ cuotasModel.getCuotasPending = async () => {
         return rows;
     } catch (error) {
         console.error("Error fetching today's cuotas: ", error);
+        throw error; 
+    }
+};/*
+cuotasModel.getCuotasPending = async () => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT a.firstName, a.lastName, a.email, a.dni , c.* 
+            FROM cuotas_2025 c
+            INNER JOIN alumnos_2025 a ON c.alumno_id = a.id
+            WHERE c.mes = 'abril'
+        `);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching today's cuotas: ", error);
         throw error; // Es mejor lanzar el error para manejarlo donde se llame a la función
     }
-};
+};*/
 cuotasModel.getAlumnosPending = async () => {
     try {
         const [ rows ] = await pool.query(`SELECT 
@@ -123,84 +150,82 @@ cuotasModel.getAllCuotasByMonth = async () => {
         SELECT 
           a.firstName, 
           a.lastName, 
-          a.email, 
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.monto ELSE NULL END) AS montoMarzo,
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.mes ELSE NULL END) AS mesMarzo,
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.status ELSE NULL END) AS statusMarzo,
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.metodo ELSE NULL END) AS metodoMarzo,
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticMarzo,
-
-          MAX(CASE WHEN c.mes = 'abril' THEN c.monto ELSE NULL END) AS montoAbril,
-          MAX(CASE WHEN c.mes = 'abril' THEN c.mes ELSE NULL END) AS mesAbril,
-          MAX(CASE WHEN c.mes = 'abril' THEN c.status ELSE NULL END) AS statusAbril,
-          MAX(CASE WHEN c.mes = 'abril' THEN c.metodo ELSE NULL END) AS metodoAbril,
-          MAX(CASE WHEN c.mes = 'abril' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticAbril,
-
-          MAX(CASE WHEN c.mes = 'mayo' THEN c.monto ELSE NULL END) AS montoMayo,
-          MAX(CASE WHEN c.mes = 'mayo' THEN c.mes ELSE NULL END) AS mesMayo,
-          MAX(CASE WHEN c.mes = 'mayo' THEN c.status ELSE NULL END) AS statusMayo,
-          MAX(CASE WHEN c.mes = 'mayo' THEN c.metodo ELSE NULL END) AS metodoMayo,
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticMayo,
-
-          MAX(CASE WHEN c.mes = 'junio' THEN c.monto ELSE NULL END) AS montoJunio,
-          MAX(CASE WHEN c.mes = 'junio' THEN c.mes ELSE NULL END) AS mesJunio,
-          MAX(CASE WHEN c.mes = 'junio' THEN c.status ELSE NULL END) AS statusJunio,
-          MAX(CASE WHEN c.mes = 'junio' THEN c.metodo ELSE NULL END) AS metodoJunio,
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticJunio,
-
-          MAX(CASE WHEN c.mes = 'julio' THEN c.monto ELSE NULL END) AS montoJulio,
-          MAX(CASE WHEN c.mes = 'julio' THEN c.mes ELSE NULL END) AS mesJulio,
-          MAX(CASE WHEN c.mes = 'julio' THEN c.status ELSE NULL END) AS statusJulio,
-          MAX(CASE WHEN c.mes = 'julio' THEN c.metodo ELSE NULL END) AS metodoJulio,
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticJulio,
-
-          MAX(CASE WHEN c.mes = 'agosto' THEN c.monto ELSE NULL END) AS montoAgosto,
-          MAX(CASE WHEN c.mes = 'agosto' THEN c.mes ELSE NULL END) AS mesAgosto,
-          MAX(CASE WHEN c.mes = 'agosto' THEN c.status ELSE NULL END) AS statusAgosto,
-          MAX(CASE WHEN c.mes = 'agosto' THEN c.metodo ELSE NULL END) AS metodoAgosto,
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticAgosto,
-
-          MAX(CASE WHEN c.mes = 'septiembre' THEN c.monto ELSE NULL END) AS montoSeptiembre,
-          MAX(CASE WHEN c.mes = 'septiembre' THEN c.mes ELSE NULL END) AS mesSeptiembre,
-          MAX(CASE WHEN c.mes = 'septiembre' THEN c.status ELSE NULL END) AS statusSeptiembre,
-          MAX(CASE WHEN c.mes = 'septiembre' THEN c.metodo ELSE NULL END) AS metodoSeptiembre,
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticSeptiembre,
-
-          MAX(CASE WHEN c.mes = 'octubre' THEN c.monto ELSE NULL END) AS montoOctubre,
-          MAX(CASE WHEN c.mes = 'octubre' THEN c.mes ELSE NULL END) AS mesOctubre,
-          MAX(CASE WHEN c.mes = 'octubre' THEN c.status ELSE NULL END) AS statusOctubre,
-          MAX(CASE WHEN c.mes = 'octubre' THEN c.metodo ELSE NULL END) AS metodoOctubre,
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticOctubre,
-
-          MAX(CASE WHEN c.mes = 'noviembre' THEN c.monto ELSE NULL END) AS montoNoviembre,
-          MAX(CASE WHEN c.mes = 'noviembre' THEN c.mes ELSE NULL END) AS mesNoviembre,
-          MAX(CASE WHEN c.mes = 'noviembre' THEN c.status ELSE NULL END) AS statusNoviembre,
-          MAX(CASE WHEN c.mes = 'noviembre' THEN c.metodo ELSE NULL END) AS metoodNoviembre,
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticNoviembre,
-
-          MAX(CASE WHEN c.mes = 'diciembre' THEN c.monto ELSE NULL END) AS montoDiciembre,
-          MAX(CASE WHEN c.mes = 'diciembre' THEN c.mes ELSE NULL END) AS mesDiciembre,
-          MAX(CASE WHEN c.mes = 'diciembre' THEN c.status ELSE NULL END) AS statusDiciembre,
-          MAX(CASE WHEN c.mes = 'diciembre' THEN c.metodo ELSE NULL END) AS metodoDiciembre,
-          MAX(CASE WHEN c.mes = 'marzo' THEN c.id_pagos_tic ELSE NULL END) AS id_pagos_ticDiciembre
-
-        FROM 
-          cuotas_2025 c 
-        INNER JOIN 
-          alumnos_2025 a ON c.alumno_id = a.id
-        GROUP BY 
-          a.firstName, a.lastName, a.email;
+          a.email,
+          
+          -- Datos de Marzo
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'marzo' LIMIT 1) AS montoMarzo,
+          'marzo' AS mesMarzo,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'marzo' LIMIT 1) AS statusMarzo,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'marzo' LIMIT 1) AS metodoMarzo,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'marzo' LIMIT 1) AS id_pagos_ticMarzo,
+          
+          -- Datos de Abril
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'abril' LIMIT 1) AS montoAbril,
+          'abril' AS mesAbril,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'abril' LIMIT 1) AS statusAbril,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'abril' LIMIT 1) AS metodoAbril,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'abril' LIMIT 1) AS id_pagos_ticAbril,
+          
+          -- Datos de Mayo
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'mayo' LIMIT 1) AS montoMayo,
+          'mayo' AS mesMayo,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'mayo' LIMIT 1) AS statusMayo,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'mayo' LIMIT 1) AS metodoMayo,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'mayo' LIMIT 1) AS id_pagos_ticMayo,
+          
+          -- Datos de Junio
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'junio' LIMIT 1) AS montoJunio,
+          'junio' AS mesJunio,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'junio' LIMIT 1) AS statusJunio,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'junio' LIMIT 1) AS metodoJunio,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'junio' LIMIT 1) AS id_pagos_ticJunio,
+          
+          -- Datos de Julio
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'julio' LIMIT 1) AS montoJulio,
+          'julio' AS mesJulio,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'julio' LIMIT 1) AS statusJulio,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'julio' LIMIT 1) AS metodoJulio,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'julio' LIMIT 1) AS id_pagos_ticJulio,
+          
+          -- Datos de Agosto
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' LIMIT 1) AS montoAgosto,
+          'agosto' AS mesAgosto,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' LIMIT 1) AS statusAgosto,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' LIMIT 1) AS metodoAgosto,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' LIMIT 1) AS id_pagos_ticAgosto,
+          
+          -- Datos de Septiembre
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'septiembre' LIMIT 1) AS montoSeptiembre,
+          'septiembre' AS mesSeptiembre,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'septiembre' LIMIT 1) AS statusSeptiembre,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'septiembre' LIMIT 1) AS metodoSeptiembre,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'septiembre' LIMIT 1) AS id_pagos_ticSeptiembre,
+          
+          -- Datos de Octubre
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'octubre' LIMIT 1) AS montoOctubre,
+          'octubre' AS mesOctubre,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'octubre' LIMIT 1) AS statusOctubre,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'octubre' LIMIT 1) AS metodoOctubre,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'octubre' LIMIT 1) AS id_pagos_ticOctubre,
+          
+          -- Datos de Noviembre
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'noviembre' LIMIT 1) AS montoNoviembre,
+          'noviembre' AS mesNoviembre,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'noviembre' LIMIT 1) AS statusNoviembre,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'noviembre' LIMIT 1) AS metodoNoviembre,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'noviembre' LIMIT 1) AS id_pagos_ticNoviembre,
+          
+          -- Datos de Diciembre
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'diciembre' LIMIT 1) AS montoDiciembre,
+          'diciembre' AS mesDiciembre,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'diciembre' LIMIT 1) AS statusDiciembre,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'diciembre' LIMIT 1) AS metodoDiciembre,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'diciembre' LIMIT 1) AS id_pagos_ticDiciembre
+          
+        FROM alumnos_2025 a
+        WHERE EXISTS (SELECT 1 FROM cuotas_2025 c WHERE c.alumno_id = a.id);
       `;
-  /*
-        "mes": "Marzo",
-      "monto": "48000.00",
-      "status": "pending",
-      "id_pagos_tic": "307f71d3-df0a-4cba-a02e-57be2eaf9370",
-      "created_at": "2025-03-12T03:18:14.000Z",
-      "updated_at": "2025-03-12T03:18:14.000Z",
-      "usuario": "tic",
-      "metodo": "pagos-tic"
-  */
+
       const [rows] = await pool.query(query);
       if (Array.isArray(rows)) {
         return rows;

@@ -234,10 +234,16 @@ controller.toGetAmount = ( amount , type ) => {
  */
 controller.toMakeTransporter = () => {
     return nodemailer.createTransport({
-        service: 'gmail',
+        host: 'smtp.hostinger.com',
+        port: 465,
+        secure: true,
         auth: {
             user: FROM, 
             pass: APP_PASSWORD
+        }
+        ,
+        tls: {
+            rejectUnauthorized: false
         }
     });
 };
@@ -321,9 +327,9 @@ controller.getLocalDateWithOffset = (date) => {
 controller.App = async ( req , res ) => {
     try {
         const transporter = controller.toMakeTransporter();
-        const arrayMailOptions = await controller.toMakeArrayMailOptionsByModelSecond(); //await controller.toMakeArrayMailOptions();
+        const arrayMailOptions =  await controller.toMakeArrayMailOptions();//await controller.toMakeArrayMailOptionsByModelSecond();
        // console.log(arrayMailOptions);
-        controller.toSendEmails(transporter,arrayMailOptions);
+      //  controller.toSendEmails(transporter,arrayMailOptions);
     } catch (error) {
         console.error(error);
     }
@@ -339,6 +345,14 @@ controller.getAllCuotasByAllAlumnos = async ( req , res ) => {
 controller.getAllCuotas = async ( req , res ) => {
     try {
         const rows = await cuotasModel.getAllCuotas();
+        res.status(201).json(rows);
+    } catch (error) {
+        console.error("Error fetching all Cuotas :"+error.message);
+    }
+}
+controller.getAllCuotasAbril = async ( req , res ) => {
+    try {
+        const rows = await cuotasModel.getAllCuotasAbril();
         res.status(201).json(rows);
     } catch (error) {
         console.error("Error fetching all Cuotas :"+error.message);
@@ -365,6 +379,22 @@ controller.toCheckAllPayCuotas = async ( req , res ) => {
                 await cuotasModel.updateStatus(rows[i].id,'pagado');
                } 
             }
+
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
+controller.toCheckAllPayCuotasAbril = async ( req , res ) => {
+    try {
+        const rows = await cuotasModel.getAllCuotasAbril();
+        for (let i = 0; i < rows.length; i++) {
+               const status = await authController.toCheckPayBackend(rows[i].id_pagos_tic);
+               //console.log(status);
+               if(status === 'approved'){
+                console.log(status);
+                await cuotasModel.updateStatus(rows[i].id,'pagado');
+               } 
 
         }
     } catch (error) {

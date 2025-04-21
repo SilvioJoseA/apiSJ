@@ -2,16 +2,22 @@ import nodemailer from 'nodemailer';
 
 // Configura el transporter (puedes usar Gmail, Outlook, etc.)
 const transporter = nodemailer.createTransport({
-    service: 'gmail', // Puedes cambiar a otro servicio como 'outlook'
+    host: 'smtp.hostinger.com',
+    port: 465,
+    secure: true, // true for port 465
     auth: {
-        user: 'chavezzsilvio@gmail.com', // Tu dirección de correo electrónico
-        pass: 'euqd dbyj cwya ohoy' // Tu contraseña de aplicacion
+        user: 'cuotas@sistemasaintjohns.com.ar',
+        pass: '74GateWay!' // Consider using an App Password here
+    },
+    tls: {
+        // Additional TLS options if needed
+        rejectUnauthorized: false // Only use this for testing, not production!
     }
 });
 
 // Configura el contenido del correo electrónico
 const mailOptions = {
-    from: 'chavezzsilvio@gmail.com', // Remitente
+    from: 'cuotas@sistemasaintjohns.com.ar', // Remitente
     to: 'chavezzsilvio@gmail.com', // Destinatario
     subject: 'Prueba 1', // Asunto
     text: 'Este es el contenido del correo en texto plano.', // Cuerpo del correo en texto plano
