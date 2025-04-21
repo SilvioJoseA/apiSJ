@@ -83,6 +83,19 @@ cuotasModel.getAllCuotasAbril = async () => {
         console.error("Error fetching all cuotas : "+error);
     }
 }
+cuotasModel.getAllCuotasMarzo = async () => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT a.firstName, a.lastName, a.email, c.* 
+            FROM cuotas_2025 c
+            INNER JOIN alumnos_2025 a ON c.alumno_id = a.id
+            WHERE mes='marzo'
+        `);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching all cuotas : "+error);
+    }
+}
 /**
  * Query to fetch all cuotas created today
  * @returns {Promise<Object[]>} Array of cuotas created today with alumno info
