@@ -376,18 +376,13 @@ controller.getAllCuotasByMonth = async ( req , res ) => {
 }
 controller.toCheckAllPayCuotas = async ( req , res ) => {
     try {
-        const rows = await cuotasModel.getAllCuotas();
+        const rows = await cuotasModel.getAllCuotasMarzo();
         for (let i = 0; i < rows.length; i++) {
-           // console.log(rows[i]);
-            if( rows[i].mes === 'Marzo' ){
                const status = await authController.toCheckPayBackend(rows[i].id_pagos_tic);
-               //console.log(status);
                if(status === 'approved'){
                 console.log(status);
                 await cuotasModel.updateStatus(rows[i].id,'pagado');
                } 
-            }
-
         }
     } catch (error) {
         console.error(error);
@@ -398,7 +393,6 @@ controller.toCheckAllPayCuotasAbril = async ( req , res ) => {
         const rows = await cuotasModel.getAllCuotasAbril();
         for (let i = 0; i < rows.length; i++) {
                const status = await authController.toCheckPayBackend(rows[i].id_pagos_tic);
-               //console.log(status);
                if(status === 'approved'){
                 console.log(status);
                 await cuotasModel.updateStatus(rows[i].id,'pagado');

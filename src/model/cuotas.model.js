@@ -255,7 +255,7 @@ cuotasModel.getAllCuotasByMonth = async () => {
         console.log(cuota_id, newStatus);
         const query =   `UPDATE cuotas_2025 SET status = ? WHERE id = ?`
         await pool.query(query,[ newStatus, cuota_id ]);
-        return 'Uploaded successfully!';
+        console.log('Uploaded successfully!');
     } catch (error) {
         console.error(error);
     }

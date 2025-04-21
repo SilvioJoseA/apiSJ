@@ -8,6 +8,6 @@ const router = Router();
     router.get("/token", controller.getToken);
     router.get("/status/check/:id_pagos_tic", controller.toCheckPay);
     router.get("/status/all", cuotasController.toCheckAllPayCuotas);
-    router.get("/status/all/abril", cuotasController.toCheckAllPayCuotas);
+    router.get("/status/all/abril", cuotasController.toCheckAllPayCuotasAbril);
 
 export default router;
