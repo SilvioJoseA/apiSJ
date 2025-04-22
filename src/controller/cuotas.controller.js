@@ -51,7 +51,7 @@ controller.validateEmail = (email) => {
 };
 controller.toMakeMailOptions = ( emailAlumno = '', link_form) => {
     const mailOptions = {
-        from: FROM, // Puedes poner un nombre genérico
+        from: `"Saint John's Cuotas" <${FROM}>`,
         to: emailAlumno || 'saintjohns@gmail.com',//emailAlumno,
         subject: `Cuota Saint John's`,
         text: `Link de pago de cuota en Saint John's`,
@@ -231,10 +231,6 @@ controller.toMakeTransporter = () => {
         auth: {
             user: FROM, 
             pass: APP_PASSWORD
-        }
-        ,
-        tls: {
-            rejectUnauthorized: false
         }
     });
 };
