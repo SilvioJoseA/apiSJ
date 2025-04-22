@@ -13,4 +13,6 @@ const router = Router();
     router.get('/to-see-mailOptions', controller.toMakeArrayMailOptionsByModel);
     router.get('/cuotas/app', controller.App);
     router.get('/cuotas/month', controller.getAllCuotasByMonth);
+
+    router.get('/alumnos-not-payed', controller.toGetAlumnosNotPayed);
 export default router;

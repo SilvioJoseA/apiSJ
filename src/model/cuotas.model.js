@@ -127,21 +127,30 @@ cuotasModel.getCuotasPending = async () => {
         console.error("Error fetching today's cuotas: ", error);
         throw error; 
     }
-};/*
-cuotasModel.getCuotasPending = async () => {
+};
+cuotasModel.getCuotasCreatedToday = async () => {
     try {
         const [rows] = await pool.query(`
-            SELECT a.firstName, a.lastName, a.email, a.dni , c.* 
-            FROM cuotas_2025 c
-            INNER JOIN alumnos_2025 a ON c.alumno_id = a.id
-            WHERE c.mes = 'abril'
+            SELECT 
+                a.firstName, 
+                a.lastName, 
+                a.email, 
+                a.dni, 
+                c.* 
+            FROM 
+                cuotas_2025 c
+            INNER JOIN 
+                alumnos_2025 a ON c.alumno_id = a.id
+            WHERE 
+                DATE(c.created_at) = CURDATE()  -- Filtra solo las creadas hoy
+                AND c.status = 'pending'       -- Opcional: agregar si necesitas pendientes
         `);
         return rows;
     } catch (error) {
         console.error("Error fetching today's cuotas: ", error);
-        throw error; // Es mejor lanzar el error para manejarlo donde se llame a la función
+        throw error; 
     }
-};*/
+};
 cuotasModel.getAlumnosPending = async () => {
     try {
         const [ rows ] = await pool.query(`SELECT 
@@ -157,6 +166,28 @@ cuotasModel.getAlumnosPending = async () => {
         console.error("Error fetching alumnos :"+error);
     }
 }
+cuotasModel.getAlumnosNotPayed = async (month) => {
+    try {
+        const [rows] = await pool.query(
+            `SELECT 
+                a.*, 
+                cr.price_month
+             FROM 
+                alumnos_2025 a 
+             LEFT JOIN 
+                cuotas_2025 c ON a.id = c.alumno_id AND c.mes = ? AND c.status = 'pagado' 
+             LEFT JOIN 
+                cursos cr ON a.curso_id = cr.id  -- Asumo que hay un campo curso_id en alumnos_2025
+             WHERE 
+                c.alumno_id IS NULL;`,
+            [month]
+        );
+        return rows;
+    } catch (error) {
+        console.error("Error fetching alumnos NotPayed: " + error);
+        throw error; // Es buena práctica propagar el error para manejarlo arriba
+    }
+};
 cuotasModel.getAllCuotasByMonth = async () => {
     try {
       const query = `

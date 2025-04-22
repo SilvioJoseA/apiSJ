@@ -49,9 +49,9 @@ controller.validateEmail = (email) => {
     const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return regex.test(email);
 };
-controller.toMakeMailOptions = ( emailAlumno = '' , alumno_id , link_form) => {
+controller.toMakeMailOptions = ( emailAlumno = '', link_form) => {
     const mailOptions = {
-        from: 'saintjohns@gmail.com>', // Puedes poner un nombre genérico
+        from: FROM, // Puedes poner un nombre genérico
         to: emailAlumno || 'saintjohns@gmail.com',//emailAlumno,
         subject: `Cuota Saint John's`,
         text: `Link de pago de cuota en Saint John's`,
@@ -105,9 +105,14 @@ controller.toMakeMailOptions = ( emailAlumno = '' , alumno_id , link_form) => {
 </head>
 <body>
     <div class="container">
-<p>Estimado/a,</p>
+<p>Estimado/a, Cuota Mes de Abril</p>
 <p>Espero que este mensaje le encuentre bien.</p>
 <p>A continuación, puede acceder al botón de pago para la cuota del mes en curso:</p>
+        <ul>
+            <li><strong>1° vencimiento:</strong> 10 de cada mes</li>
+            <li><strong>2° vencimiento:</strong></li>
+        </ul>
+  
         <a href="${link_form}" class="button">Pagar</a>
         <p>Quedamos a disposición ante cualquier consulta.</p>
         <p>¡Saludos cordiales y que tenga un excelente mes!</p>
@@ -155,53 +160,36 @@ controller.toMakeArrayMailOptionsByModelSecond = async ( ) => {
     } catch (error) {
         console.error("Error fetching alumnos or meaking mailOptions :"+error);
     }
-}/*
-controller.toMakeArrayMailOptions = async ( req , res ) => {
+}
+controller.toMakeArrayMailOptionsAbril = async ( req , res ) => {
     try {
-        const ciclo = '2025';
-        const alumnos = await cuotasModel.getCuotasPending();
+        const alumnos = await cuotasModel.getCuotasCreatedToday();
         const arrayMailOptions = [];
         console.log(alumnos);
-       const arrayObjectPayerAndAmount = [];
- //       console.log(alumnos.length); 
         if( alumnos.length>0){
             for (let i = 0; i < alumnos.length; i++) {
-               // if(alumnos[i].id && alumnos[i].email);
-                
-                arrayObjectPayerAndAmount.push(controller.toMakeObjectPayerAndAmount(alumnos[i]));
-                const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumnos[i]));
-                const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,responsePTic.form_url);
-              //
+              const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,'https://servicios.paypertic.com/formularios/v2/pagos/'+alumnos[i].id_pagos_tic);
                 arrayMailOptions.push(mailOptions);
-                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'marzo',monto:alumnos[i].monto,status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic1'});
-               console.log(alumnos[i]);
             } 
         }
         return arrayMailOptions;
     } catch (error) {
         console.error("Error makeing array mail Options :"+error);
     }
-}*/
+}
 controller.toMakeArrayMailOptions = async ( req , res ) => {
     try {
-        const ciclo = '2025';
-        const alumnos = await alumnosModel.getAllAlumnos(ciclo);
+        const alumnos = await cuotasModel.getAlumnosNotPayed('abril');;
         const arrayMailOptions = [];
-       const arrayObjectPayerAndAmount = [];
- //       console.log(alumnos.length); 
+        const arrayObjectPayerAndAmount = [];
+        console.log(alumnos.length); 
         if( alumnos.length>0){
             for (let i = 0; i < alumnos.length; i++){
-                console.log(alumnos[i]);
-                const amount = controller.toGetAmount(alumnos[i].price_month,alumnos[i].type_cuota);
-                console.log(amount);
-               // if(alumnos[i].id && alumnos[i].email);
-              
                 arrayObjectPayerAndAmount.push(controller.toMakeObjectPayerAndAmount(alumnos[i]));
                 const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumnos[i]));
                 const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,responsePTic.form_url);
-              //
                 arrayMailOptions.push(mailOptions);
-                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'abril',monto:controller.toGetAmount(alumnos[i].price_month,alumnos[i].type_cuota),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
+                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'abril',monto:controller.toGetAmount(alumnos[i].price_month,'second-time'),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic-1'});
             } 
         }
        // return arrayMailOptions;
@@ -219,6 +207,8 @@ controller.toGetAmount = ( amount , type ) => {
                     return parseFloat(amount)*0.93;
                 case 'type3':
                     return parseFloat(amount)*0.5;
+                case 'second-time':
+                    return parseFloat(amount)*1.1;
                 default:
                     break;
             }  
@@ -273,7 +263,7 @@ controller.toMakeLinkCuota = async (oToSend) => {
 };
 controller.toMakeObjectPayerAndAmount = ( alumno ) => {
     try {
-        const amount = controller.toGetAmount(alumno.price_month,alumno.type_cuota);
+        const amount = controller.toGetAmount(alumno.price_month,'se cond-time');
         const objectPayer = {};
         const identification = {}
             objectPayer.name = (alumno.firstName || '') + ' ' + (alumno.lastName || '').trim();
@@ -303,7 +293,7 @@ controller.toMakeObjectPayerAndAmount = ( alumno ) => {
 }
 controller.getLastDayOfMarch = (currentDate) => {
     const year = currentDate.getFullYear();
-    const marchDate = new Date(year, 3, 15);
+    const marchDate = new Date(year, 3, 30);
     if (currentDate > marchDate) {
         return new Date(year + 1, 2, 31);
     }
@@ -324,16 +314,7 @@ controller.getLocalDateWithOffset = (date) => {
     const offset = `${offsetSign}${pad(offsetHours)}${pad(offsetRemainder)}`;
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${offset}`;
 }
-controller.App = async ( req , res ) => {
-    try {
-        const transporter = controller.toMakeTransporter();
-        const arrayMailOptions =  await controller.toMakeArrayMailOptions();//await controller.toMakeArrayMailOptionsByModelSecond();
-       // console.log(arrayMailOptions);
-      //  controller.toSendEmails(transporter,arrayMailOptions);
-    } catch (error) {
-        console.error(error);
-    }
-}
+
 controller.getAllCuotasByAllAlumnos = async ( req , res ) => {
     try {
         const rows = await cuotasModel.getAllCuotasByAllAlumnos('2025');
@@ -402,6 +383,14 @@ controller.toCheckAllPayCuotasAbril = async ( req , res ) => {
         console.error(error);
     }
 }
+controller.toGetAlumnosNotPayed = async ( req , res ) => {
+    try {
+        const rows = await cuotasModel.getAlumnosNotPayed('abril');
+        res.json(rows)    
+    } catch (error) {
+        console.error(error);
+    }
+}
 const html = `<!DOCTYPE html>
                 <html lang="es">
                     <head>
@@ -462,4 +451,15 @@ const html = `<!DOCTYPE html>
     </div>
 </body>
 </html>`;
+
+controller.App = async ( req , res ) => {
+    try {
+        const transporter = controller.toMakeTransporter();
+        const arrayMailOptions =  await controller.toMakeArrayMailOptionsAbril();
+        console.log(arrayMailOptions);
+        controller.toSendEmails(transporter,arrayMailOptions);
+    } catch (error) {
+        console.error(error);
+    }
+}
 export default controller;
