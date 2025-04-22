@@ -105,7 +105,8 @@ controller.toMakeMailOptions = ( emailAlumno = '', link_form) => {
 </head>
 <body>
     <div class="container">
-<p>Estimado/a, Cuota Mes de Abril</p>
+<p>Estimado/a</p>
+<p>  Cuota Mes de Abril </p>
 <p>Espero que este mensaje le encuentre bien.</p>
 <p>A continuación, puede acceder al botón de pago para la cuota del mes en curso:</p>
         <ul>
