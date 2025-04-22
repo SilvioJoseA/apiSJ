@@ -379,10 +379,9 @@ controller.toCheckAllPayCuotas = async ( req , res ) => {
         const rows = await cuotasModel.getAllCuotasMarzo();
         for (let i = 0; i < rows.length; i++) {
                const status = await authController.toCheckPayBackend(rows[i].id_pagos_tic);
-               if(status === 'approved'){
-                console.log(status);
-                await cuotasModel.updateStatus(rows[i].id,'pagado');
-               } 
+               console.log(status);
+               if(status === 'approved') await cuotasModel.updateStatus(rows[i].id,'pagado'); 
+               if(status === 'cancelled') await cuotasModel.updateStatus(rows[i].id,'cancelado'); 
         }
     } catch (error) {
         console.error(error);
@@ -393,10 +392,10 @@ controller.toCheckAllPayCuotasAbril = async ( req , res ) => {
         const rows = await cuotasModel.getAllCuotasAbril();
         for (let i = 0; i < rows.length; i++) {
                const status = await authController.toCheckPayBackend(rows[i].id_pagos_tic);
-               if(status === 'approved'){
-                console.log(status);
-                await cuotasModel.updateStatus(rows[i].id,'pagado');
-               } 
+               console.log(status);
+               if(status === 'approved') await cuotasModel.updateStatus(rows[i].id,'pagado'); 
+               if(status === 'cancelled') await cuotasModel.updateStatus(rows[i].id,'cancelado'); 
+
 
         }
     } catch (error) {
