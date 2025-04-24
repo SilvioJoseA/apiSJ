@@ -235,7 +235,7 @@ controller.toMakeTransporter = () => {
 
 controller.toSendEmails = async (transporter, arrMailOptions) => {
     try {
-        for (let index = 0; index < 10; index++) {
+        for (let index = 0; index < arrMailOptions.length; index++) {
             try {
                 const info = await transporter.sendMail(arrMailOptions[index]);
                 console.log('Correo Enviado:', info);
