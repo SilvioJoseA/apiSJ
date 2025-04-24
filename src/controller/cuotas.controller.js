@@ -1,5 +1,4 @@
 import { APP_PASSWORD, FROM } from "../config.js";
-import alumnosModel from "../model/alumnos.model.js";
 import nodemailer from 'nodemailer';
 import cuotasModel from "../model/cuotas.model.js";
 import Joi from "joi";
@@ -51,8 +50,8 @@ controller.validateEmail = (email) => {
 };
 controller.toMakeMailOptions = ( emailAlumno = '', link_form) => {
     const mailOptions = {
-        from: `"Saint John's Cuotas" <${FROM}>`,
-        to: emailAlumno || 'saintjohns@gmail.com',//emailAlumno,
+        from:FROM,
+        to:emailAlumno || 'saintjohns@gmail.com',//'chavezzsilvio@gmail.com',//emailAlumno || 'saintjohns@gmail.com',//emailAlumno,
         subject: `Cuota Saint John's`,
         text: `Link de pago de cuota en Saint John's`,
         html:`<!DOCTYPE html>
@@ -109,12 +108,8 @@ controller.toMakeMailOptions = ( emailAlumno = '', link_form) => {
 <p>  Cuota Mes de Abril </p>
 <p>Espero que este mensaje le encuentre bien.</p>
 <p>A continuación, puede acceder al botón de pago para la cuota del mes en curso:</p>
-        <ul>
-            <li><strong>1° vencimiento:</strong> 10 de cada mes</li>
-            <li><strong>2° vencimiento:</strong></li>
-        </ul>
-  
-        <a href="${link_form}" class="button">Pagar</a>
+         <a href="https://servicios.paypertic.com/formularios/v2/pagos/${link_form}" class="button">Pagar</a>
+          
         <p>Quedamos a disposición ante cualquier consulta.</p>
         <p>¡Saludos cordiales y que tenga un excelente mes!</p>
         <div class="footer">
@@ -123,8 +118,7 @@ controller.toMakeMailOptions = ( emailAlumno = '', link_form) => {
         </div>
     </div>
 </body>
-</html>`,
-        replyTo:'no-reply@example.com'
+</html>`
     };
     return mailOptions;
 };
@@ -136,7 +130,7 @@ controller.toMakeArrayMailOptionsByModel = async ( ) => {
         const arrayMailOptions = [];
         for (let i = 0; i < cuotas.length; i++) {
            if(cuotas[i].email) {
-            const mailOptions = controller.toMakeMailOptions(cuotas[i].email,cuotas[i].alumno_id,'https://servicios.paypertic.com/formularios/v2/pagos/'+cuotas[i].id_pagos_tic);
+            const mailOptions = controller.toMakeMailOptions(cuotas[i].email,cuotas[i].id_pagos_tic);
             arrayMailOptions.push(mailOptions);
            }   
         }
@@ -169,7 +163,7 @@ controller.toMakeArrayMailOptionsAbril = async ( req , res ) => {
         console.log(alumnos);
         if( alumnos.length>0){
             for (let i = 0; i < alumnos.length; i++) {
-              const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,'https://servicios.paypertic.com/formularios/v2/pagos/'+alumnos[i].id_pagos_tic);
+              const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id_pagos_tic);
                 arrayMailOptions.push(mailOptions);
             } 
         }
@@ -190,7 +184,7 @@ controller.toMakeArrayMailOptions = async ( req , res ) => {
                 const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumnos[i]));
                 const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,responsePTic.form_url);
                 arrayMailOptions.push(mailOptions);
-                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'abril',monto:controller.toGetAmount(alumnos[i].price_month,'second-time'),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic-1'});
+                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'abril',monto:controller.toGetAmount(alumnos[i].price_month,alumnos[i].type_cuota),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic-1'});
             } 
         }
        // return arrayMailOptions;
@@ -227,16 +221,21 @@ controller.toMakeTransporter = () => {
     return nodemailer.createTransport({
         host: 'smtp.hostinger.com',
         port: 465,
-        secure: true,
+        secure: true, // true for port 465
         auth: {
-            user: FROM, 
-            pass: APP_PASSWORD
+            user: FROM,
+            pass: APP_PASSWORD // Consider using an App Password here
+        },
+        tls: {
+            // Additional TLS options if needed
+            rejectUnauthorized: false // Only use this for testing, not production!
         }
     });
 };
+
 controller.toSendEmails = async (transporter, arrMailOptions) => {
     try {
-        for (let index = 0; index < arrMailOptions.length; index++) {
+        for (let index = 0; index < 10; index++) {
             try {
                 const info = await transporter.sendMail(arrMailOptions[index]);
                 console.log('Correo Enviado:', info);
@@ -260,7 +259,7 @@ controller.toMakeLinkCuota = async (oToSend) => {
 };
 controller.toMakeObjectPayerAndAmount = ( alumno ) => {
     try {
-        const amount = controller.toGetAmount(alumno.price_month,'se cond-time');
+        const amount = controller.toGetAmount(alumno.price_month,alumno.type_cuota);
         const objectPayer = {};
         const identification = {}
             objectPayer.name = (alumno.firstName || '') + ' ' + (alumno.lastName || '').trim();
@@ -388,73 +387,13 @@ controller.toGetAlumnosNotPayed = async ( req , res ) => {
         console.error(error);
     }
 }
-const html = `<!DOCTYPE html>
-                <html lang="es">
-                    <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Cuota Mensual</title>
-                        <style>
-                        body {
-                        font-family: Arial, sans-serif;
-                        line-height: 1.6;
-                        color: #333;
-                        }
-                .container {
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            background-color: #f9f9f9;
-        }
-        .button {
-            display: inline-block;
-            padding: 10px 20px;
-            margin-top: 20px;
-            font-size: 16px;
-            color: #ffff;
-            background-color: #007bff;
-            text-decoration: none;
-            border-radius: 5px;
-        }
-        .button:hover {
-            background-color: #0056b3;
-        }
-        .footer {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #777;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <p>Estimado/a,</p>
-        <p>Espero que este mail le encuentre bien.</p>
-        <p>Le informamos que la factura correspondiente al mes de marzo ya ha sido emitida. Las fechas de vencimiento son:</p>
-        <ul>
-            <li><strong>1° vencimiento:</strong> 10 de cada mes</li>
-            <li><strong>2° vencimiento:</strong> 15 de cada mes</li>
-        </ul>
-        <p>Le recordamos la importancia de realizar el pago a tiempo a través de los medios habilitados para evitar recargos por mora.</p>
-        <a href="...." class="button">Pagar</a>
-        <p>Quedamos a disposición ante cualquier consulta.</p>
-        <p>¡Saludos cordiales y que tenga un excelente mes!</p>
-        <div class="footer">
-            <p>Atentamente,</p>
-            <p>Saint John's</p>
-        </div>
-    </div>
-</body>
-</html>`;
 
 controller.App = async ( req , res ) => {
     try {
         const transporter = controller.toMakeTransporter();
         const arrayMailOptions =  await controller.toMakeArrayMailOptionsAbril();
         console.log(arrayMailOptions);
-        controller.toSendEmails(transporter,arrayMailOptions);
+       // controller.toSendEmails(transporter,arrayMailOptions);
     } catch (error) {
         console.error(error);
     }

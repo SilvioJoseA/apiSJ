@@ -103,15 +103,13 @@ cuotasModel.getAllCuotasMarzo = async () => {
 cuotasModel.getCuotasCreatedToday = async () => {
     try {
         const [rows] = await pool.query(`
-            SELECT a.firstName, a.lastName, a.email, c.* 
-            FROM cuotas_2025 c
-            INNER JOIN alumnos_2025 a ON c.alumno_id = a.id
-            WHERE DATE(c.created_at) = CURDATE()
-        `);
+        SELECT a.firstName, a.lastName, a.email, c.* 
+FROM cuotas_2025 c 
+INNER JOIN alumnos_2025 a ON c.alumno_id = a.id WHERE c.created_at >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
+            AND c.created_at <= NOW()`);
         return rows;
     } catch (error) {
         console.error("Error fetching today's cuotas: ", error);
-        throw error; // Es mejor lanzar el error para manejarlo donde se llame a la función
     }
 };
 cuotasModel.getCuotasPending = async () => {
@@ -128,7 +126,7 @@ cuotasModel.getCuotasPending = async () => {
         throw error; 
     }
 };
-cuotasModel.getCuotasCreatedToday = async () => {
+cuotasModel.getCuotasCreatedToday1 = async () => {
     try {
         const [rows] = await pool.query(`
             SELECT 
