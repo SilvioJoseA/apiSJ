@@ -393,7 +393,7 @@ controller.App = async ( req , res ) => {
         const transporter = controller.toMakeTransporter();
         const arrayMailOptions =  await controller.toMakeArrayMailOptionsAbril();
         console.log(arrayMailOptions);
-       // controller.toSendEmails(transporter,arrayMailOptions);
+        controller.toSendEmails(transporter,arrayMailOptions);
     } catch (error) {
         console.error(error);
     }
