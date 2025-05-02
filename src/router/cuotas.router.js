@@ -6,6 +6,7 @@ const router = Router();
     router.get('/create-table-cuotas', controller.createTableCuotas);
     router.post('/cuotas', controller.addCuota);
     router.get('/to-see-mail-options', controller.toMakeArrayMailOptions);
+    router.get('/to-make-links-mayo', controller.toMakeArrayMailOptionsMayo);
     router.get('/to-see-cuotas', controller.getAllCuotasByAllAlumnos);
     router.get('/cuotas', controller.getAllCuotas);
     router.get('/cuotas/abril', controller.getAllCuotasAbril);

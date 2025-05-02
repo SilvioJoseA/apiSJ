@@ -83,6 +83,19 @@ cuotasModel.getAllCuotasAbril = async () => {
         console.error("Error fetching all cuotas : "+error);
     }
 }
+cuotasModel.getAllCuotasAbrilNotAprobed = async () => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT a.firstName, a.lastName, a.email, c.* 
+            FROM cuotas_2025 c
+            INNER JOIN alumnos_2025 a ON c.alumno_id = a.id
+            WHERE mes='abril' AND c.status <> 'pagado' AND c.status <> 'cancelado'
+        `);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching all cuotas : "+error);
+    }
+}
 cuotasModel.getAllCuotasMarzo = async () => {
     try {
         const [rows] = await pool.query(`
@@ -90,6 +103,19 @@ cuotasModel.getAllCuotasMarzo = async () => {
             FROM cuotas_2025 c
             INNER JOIN alumnos_2025 a ON c.alumno_id = a.id
             WHERE mes='marzo'
+        `);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching all cuotas : "+error);
+    }
+}
+cuotasModel.getAllCuotasMarzoNotAproved = async () => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT a.firstName, a.lastName, a.email, c.* 
+            FROM cuotas_2025 c
+            INNER JOIN alumnos_2025 a ON c.alumno_id = a.id
+              WHERE mes='marzo' AND c.status <> 'pagado'
         `);
         return rows;
     } catch (error) {
@@ -106,7 +132,7 @@ cuotasModel.getCuotasCreatedToday = async () => {
         SELECT a.firstName, a.lastName, a.email, c.* 
 FROM cuotas_2025 c 
 INNER JOIN alumnos_2025 a ON c.alumno_id = a.id WHERE c.created_at >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
-            AND c.created_at <= NOW()`);
+            AND c.created_at <= NOW() AND mes='mayo'`);
         return rows;
     } catch (error) {
         console.error("Error fetching today's cuotas: ", error);
@@ -283,8 +309,8 @@ cuotasModel.getAllCuotasByMonth = async () => {
     try {
         console.log(cuota_id, newStatus);
         const query =   `UPDATE cuotas_2025 SET status = ? WHERE id = ?`
-        await pool.query(query,[ newStatus, cuota_id ]);
-        console.log('Uploaded successfully!');
+        const answer = await pool.query(query,[ newStatus, cuota_id ]);
+        console.log('Uploaded successfully! ->',answer);
     } catch (error) {
         console.error(error);
     }

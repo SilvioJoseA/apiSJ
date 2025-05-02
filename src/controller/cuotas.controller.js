@@ -3,6 +3,7 @@ import nodemailer from 'nodemailer';
 import cuotasModel from "../model/cuotas.model.js";
 import Joi from "joi";
 import authController from "./auth.controller.js";
+import alumnosModel from "../model/alumnos.model.js";
 const controller = {};
 const cuotaEschema = Joi.object({ 
     alumno_id: Joi.number().required(),
@@ -105,9 +106,11 @@ controller.toMakeMailOptions = ( emailAlumno = '', link_form) => {
 <body>
     <div class="container">
 <p>Estimado/a</p>
-<p>  Cuota Mes de Abril </p>
+<p>  Cuota Mes de Mayo </p>
 <p>Espero que este mensaje le encuentre bien.</p>
 <p>A continuación, puede acceder al botón de pago para la cuota del mes en curso:</p>
+    <p>1° vencimiento: 10 de cada mes</p>
+    <p>2° vencimiento: 15 de cada mes</p>
          <a href="https://servicios.paypertic.com/formularios/v2/pagos/${link_form}" class="button">Pagar</a>
           
         <p>Quedamos a disposición ante cualquier consulta.</p>
@@ -172,6 +175,14 @@ controller.toMakeArrayMailOptionsAbril = async ( req , res ) => {
         console.error("Error makeing array mail Options :"+error);
     }
 }
+controller.toMakeEmailsMayo = async ( ) => {
+    try {
+        
+    } catch (error) {
+        console.error("Error makeing emials ",error);
+    }
+}
+
 controller.toMakeArrayMailOptions = async ( req , res ) => {
     try {
         const alumnos = await cuotasModel.getAlumnosNotPayed('abril');;
@@ -185,6 +196,26 @@ controller.toMakeArrayMailOptions = async ( req , res ) => {
                 const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,responsePTic.form_url);
                 arrayMailOptions.push(mailOptions);
                 await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'abril',monto:controller.toGetAmount(alumnos[i].price_month,alumnos[i].type_cuota),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic-1'});
+            } 
+        }
+       // return arrayMailOptions;
+    } catch (error) {
+        console.error("Error makeing array mail Options :"+error);
+    }
+}
+controller.toMakeArrayMailOptionsMayo = async ( req , res ) => {
+    try {
+        const alumnos = await alumnosModel.getAllAlumnos('2025');
+        const arrayMailOptions = [];
+        const arrayObjectPayerAndAmount = [];
+        console.log(alumnos.length); 
+        if( alumnos.length>0){
+            for (let i = 0; i < alumnos.length; i++){
+                arrayObjectPayerAndAmount.push(controller.toMakeObjectPayerAndAmount(alumnos[i]));
+                const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumnos[i]));
+         //       const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,responsePTic.form_url);
+           //     arrayMailOptions.push(mailOptions);
+                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'mayo',monto:controller.toGetAmount(alumnos[i].price_month,alumnos[i].type_cuota),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
             } 
         }
        // return arrayMailOptions;
@@ -289,7 +320,7 @@ controller.toMakeObjectPayerAndAmount = ( alumno ) => {
 }
 controller.getLastDayOfMarch = (currentDate) => {
     const year = currentDate.getFullYear();
-    const marchDate = new Date(year, 3, 30);
+    const marchDate = new Date(year,4,16);
     if (currentDate > marchDate) {
         return new Date(year + 1, 2, 31);
     }
@@ -366,12 +397,13 @@ controller.toCheckAllPayCuotas = async ( req , res ) => {
 }
 controller.toCheckAllPayCuotasAbril = async ( req , res ) => {
     try {
-        const rows = await cuotasModel.getAllCuotasAbril();
+        const rows = await cuotasModel.getAllCuotasAbrilNotAprobed();
         for (let i = 0; i < rows.length; i++) {
                const status = await authController.toCheckPayBackend(rows[i].id_pagos_tic);
                console.log(status);
                if(status === 'approved') await cuotasModel.updateStatus(rows[i].id,'pagado'); 
                if(status === 'cancelled') await cuotasModel.updateStatus(rows[i].id,'cancelado'); 
+               if(status === 'overdue') await cuotasModel.updateStatus(rows[i].id,'vencido');
 
 
         }
