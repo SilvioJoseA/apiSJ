@@ -339,4 +339,22 @@ controller.toMakeObjectPayerAndAmount = async ( req , res ) => {
         console.error("Error making object payer :"+error.message);
     }
 }
+/**
+ * Function to updated seguro
+ * @param {Object} req 
+ * @param {Object} res 
+ */
+controller.updateSeguroById = async ( req , res ) => {
+    try {
+        const seguro = req.body.seguro;
+        const { id, ciclo } = req.params;
+        if (!seguro || !id) {
+            return res.status(400).json({ message: "Seguro and id are required!" });
+        }
+        await alumnosModel.updateSeguroById(id,seguro,ciclo);
+        return res.status(200).json({message:"Updated successfylly!"});
+    } catch (error) {
+        console.error("Error updating seguro by id:"+error);
+    }
+}
 export default controller;

@@ -702,4 +702,23 @@ alumnosModel.counterAlumnos = async (ciclo) => {
     }
 }
 
+/**
+ * Querys to update seguro of cuota
+ * @param {number} alumno_id 
+ * @param {string} seguro 
+ * @param {string} ciclo 
+ * @returns 
+ */
+alumnosModel.updateSeguroById = async (alumno_id, seguro, ciclo) => {
+    try {
+        if (!alumno_id || !seguro) {
+            throw new Error("alumno_id and seguro are necesary!");
+        }
+        const tableName = ciclo ? `alumnos_${ciclo}` : 'alumnos';
+        await pool.query(`UPDATE ${tableName} SET seguro = ?,updated_at = NOW() WHERE id = ?`, [seguro, alumno_id]);
+        return true; 
+    } catch (error) {
+        console.error("Error updating type of cuota by id:", error);
+    }
+};
 export default alumnosModel;

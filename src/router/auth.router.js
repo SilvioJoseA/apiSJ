@@ -9,5 +9,6 @@ const router = Router();
     router.get("/status/check/:id_pagos_tic", controller.toCheckPay);
     router.get("/status/all", cuotasController.toCheckAllPayCuotas);
     router.get("/status/all/abril", cuotasController.toCheckAllPayCuotasAbril);
+    router.get("/status/2025/:month", cuotasController.toCheckAllPayCuotasByMonth);
 
 export default router;

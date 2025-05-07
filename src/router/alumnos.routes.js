@@ -28,5 +28,6 @@ const router = Router();
     router.put('/alumnos/:id',controller.updateAlumnoById);
     router.get('/alumnos_counter/:cicle?', controller.counterAlumnos);
     router.put('/alumnos-type-cuota/:id/:ciclo?', controller.updateTypeCuotaById);
+    router.put('/alumnos-seguro/:id/:ciclo?', controller.updateSeguroById);
 
 export default router;

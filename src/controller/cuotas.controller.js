@@ -109,8 +109,8 @@ controller.toMakeMailOptions = ( emailAlumno = '', link_form) => {
 <p>  Cuota Mes de Mayo </p>
 <p>Espero que este mensaje le encuentre bien.</p>
 <p>A continuación, puede acceder al botón de pago para la cuota del mes en curso:</p>
-    <p>1° vencimiento: 10 de cada mes</p>
-    <p>2° vencimiento: 15 de cada mes</p>
+    <p>1° vencimiento: 15 de cada mes</p>
+    <p>2° vencimiento: último día de cada mes</p>
          <a href="https://servicios.paypertic.com/formularios/v2/pagos/${link_form}" class="button">Pagar</a>
           
         <p>Quedamos a disposición ante cualquier consulta.</p>
@@ -419,9 +419,34 @@ controller.toCheckAllPayCuotasAbril = async ( req , res ) => {
         console.error(error);
     }
 }
+controller.toCheckAllPayCuotasByMonth = async ( req , res ) => {
+    try {
+        const { month } = req.params;
+        let rows = [];
+        month?rows = await cuotasModel.getAllCuotasNotAprobed(month):rows = [];
+        for (let i = 0; i < rows.length; i++) {
+               const status = await authController.toCheckPayBackend(rows[i].id_pagos_tic);
+               console.log(status);
+               if(status === 'approved') await cuotasModel.updateStatus(rows[i].id,'pagado'); 
+               if(status === 'cancelled') await cuotasModel.updateStatus(rows[i].id,'cancelado'); 
+               if(status === 'overdue') await cuotasModel.updateStatus(rows[i].id,'vencido');
+
+
+        }
+    } catch (error) {
+        console.error(error);
+    }
+}
 controller.toGetAlumnosNotPayed = async ( req , res ) => {
     try {
-        const rows = await cuotasModel.getAlumnosNotPayed('abril');
+        const { month } = req.params;
+        let rows=[];
+        if( month ){
+         rows = await cuotasModel.getAlumnosNotPayed(month); 
+        } else {
+         rows = await cuotasModel.getAlumnosNotPayed('abril'); 
+        }
+        
         res.json(rows)    
     } catch (error) {
         console.error(error);

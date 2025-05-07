@@ -96,6 +96,19 @@ cuotasModel.getAllCuotasAbrilNotAprobed = async () => {
         console.error("Error fetching all cuotas : "+error);
     }
 }
+cuotasModel.getAllCuotasNotAprobed = async (month) => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT a.firstName, a.lastName, a.email, c.* 
+            FROM cuotas_2025 c
+            INNER JOIN alumnos_2025 a ON c.alumno_id = a.id
+            WHERE mes=? AND c.status <> 'pagado' AND c.status <> 'cancelado'
+        `,[month]);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching all cuotas : "+error);
+    }
+}
 cuotasModel.getAllCuotasMarzo = async () => {
     try {
         const [rows] = await pool.query(`
@@ -321,7 +334,7 @@ cuotasModel.getAllCuotasByMonth = async () => {
   cuotasModel.updateStatus = async ( cuota_id , newStatus ) => {
     try {
         console.log(cuota_id, newStatus);
-        const query =   `UPDATE cuotas_2025 SET status = ? WHERE id = ?`
+        const query = `UPDATE cuotas_2025 SET status = ?, updated_at = NOW() WHERE id = ?`;
         const answer = await pool.query(query,[ newStatus, cuota_id ]);
         console.log('Uploaded successfully! ->',answer);
     } catch (error) {
