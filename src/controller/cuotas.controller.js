@@ -452,7 +452,44 @@ controller.toGetAlumnosNotPayed = async ( req , res ) => {
         console.error(error);
     }
 }
-
+/**
+ * Function to update status of cuota by id
+ * @param {Object} req 
+ * @param {Object} res 
+ * @returns 
+ */
+controller.updateStatusById = async (req, res) => {
+    try {
+        const { idCuota } = req.params;
+        const { newStatus } = req.body;
+        const validStatus = ['pending','cancelado','vencido'];
+        if (isNaN(idCuota) || !validStatus.includes(newStatus.trim()) ) {
+            return res.status(400).json({ 
+                success: false,
+                message: "Both idCuota (number) and newStatus (string) are required." 
+            });
+        }
+        const updatedRows = await cuotasModel.updateStatus(idCuota, newStatus.trim());
+        if (updatedRows === 0) {
+            return res.status(404).json({ 
+                success: false,
+                message: "No quota found with the provided ID." 
+            });
+        }
+        res.status(200).json({ 
+            success: true,
+            message: "Quota status updated successfully.",
+            data: { idCuota, newStatus }
+        });
+    } catch (error) {
+        console.error("Error updating quota status:", error);
+        res.status(500).json({ 
+            success: false,
+            message: "Internal server error",
+            error: error.message 
+        });
+    }
+};
 controller.App = async ( req , res ) => {
     try {
         const transporter = controller.toMakeTransporter();

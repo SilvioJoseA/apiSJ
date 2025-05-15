@@ -331,6 +331,11 @@ cuotasModel.getAllCuotasByMonth = async () => {
       throw error;
     }
   };
+  /**
+   * 
+   * @param {number} cuota_id 
+   * @param {string} newStatus 
+   */
   cuotasModel.updateStatus = async ( cuota_id , newStatus ) => {
     try {
         console.log(cuota_id, newStatus);

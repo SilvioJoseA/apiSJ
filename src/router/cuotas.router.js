@@ -1,8 +1,6 @@
 import { Router } from "express";
 import controller from "../controller/cuotas.controller.js";
-
 const router = Router();
-
     router.get('/create-table-cuotas', controller.createTableCuotas);
     router.post('/cuotas', controller.addCuota);
     router.get('/to-see-mail-options', controller.toMakeArrayMailOptions);
@@ -15,6 +13,6 @@ const router = Router();
     router.get('/to-see-mailOptions', controller.toMakeArrayMailOptionsByModel);
     router.get('/cuotas/app', controller.App);
     router.get('/cuotas/month', controller.getAllCuotasByMonth);
-
     router.get('/alumnos-not-payed', controller.toGetAlumnosNotPayed);
+    router.put('/cuotas/update/:idCuota', controller.updateStatusById );
 export default router;
