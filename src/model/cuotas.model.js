@@ -135,6 +135,7 @@ cuotasModel.getAllCuotasMayo = async () => {
         console.error("Error fetching all cuotas : "+error);
     }
 }
+
 cuotasModel.getAllCuotasMarzoNotAproved = async () => {
     try {
         const [rows] = await pool.query(`

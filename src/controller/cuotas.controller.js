@@ -205,7 +205,7 @@ controller.toMakeArrayMailOptions = async ( req , res ) => {
 }
 controller.toMakeArrayMailOptionsMayo = async ( req , res ) => {
     try {
-        const alumnos = await alumnosModel.getAllAlumnos('2025');
+        const alumnos = await alumnosModel.getAllAlumnosNotPayed('2025');
         const arrayMailOptions = [];
         const arrayObjectPayerAndAmount = [];
         console.log(alumnos.length); 
@@ -215,7 +215,7 @@ controller.toMakeArrayMailOptionsMayo = async ( req , res ) => {
                 const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumnos[i]));
          //       const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,responsePTic.form_url);
            //     arrayMailOptions.push(mailOptions);
-                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'mayo',monto:controller.toGetAmount(alumnos[i].price_month,alumnos[i].type_cuota),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
+                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'mayo',monto:alumnos[i].price_month,status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
             } 
         }
        // return arrayMailOptions;
@@ -290,7 +290,7 @@ controller.toMakeLinkCuota = async (oToSend) => {
 };
 controller.toMakeObjectPayerAndAmount = ( alumno ) => {
     try {
-        const amount = controller.toGetAmount(alumno.price_month,alumno.type_cuota);
+        const amount = alumno.price_month;//controller.toGetAmount(alumno.price_month,alumno.type_cuota);
         const objectPayer = {};
         const identification = {}
             objectPayer.name = (alumno.firstName || '') + ' ' + (alumno.lastName || '').trim();
@@ -320,7 +320,7 @@ controller.toMakeObjectPayerAndAmount = ( alumno ) => {
 }
 controller.getLastDayOfMarch = (currentDate) => {
     const year = currentDate.getFullYear();
-    const marchDate = new Date(year,4,16);
+    const marchDate = new Date(year,5,1);
     if (currentDate > marchDate) {
         return new Date(year + 1, 2, 31);
     }
