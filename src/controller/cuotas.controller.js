@@ -215,7 +215,7 @@ controller.toMakeArrayMailOptionsMayo = async ( req , res ) => {
                 const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumnos[i]));
          //       const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,responsePTic.form_url);
            //     arrayMailOptions.push(mailOptions);
-                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'mayo',monto:alumnos[i].price_month,status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
+                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'mayo',monto:controller.toGetAmount(alumnos[i].price_month,'second-time'),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
             } 
         }
        // return arrayMailOptions;
@@ -290,7 +290,7 @@ controller.toMakeLinkCuota = async (oToSend) => {
 };
 controller.toMakeObjectPayerAndAmount = ( alumno ) => {
     try {
-        const amount = alumno.price_month;//controller.toGetAmount(alumno.price_month,alumno.type_cuota);
+        const amount =controller.toGetAmount(alumno.price_month,'second-time');// alumno.price_month;//
         const objectPayer = {};
         const identification = {}
             objectPayer.name = (alumno.firstName || '') + ' ' + (alumno.lastName || '').trim();

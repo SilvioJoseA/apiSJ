@@ -1,6 +1,10 @@
 import { pool } from "../db.js";
 
 const cuotasModel = {};
+/**
+ * Funtion to create Cuotas Table
+ * @returns 
+ */
 cuotasModel.createTableCuotas = async () => {
     try {
         const query = `
@@ -21,6 +25,11 @@ cuotasModel.createTableCuotas = async () => {
     }
 };
 
+/**
+ * Function to insert a cuota
+ * @param {Object} body 
+ * @returns 
+ */
 cuotasModel.insertCuota = async ( body ) => {
     try {
         const {alumno_id,mes,monto,status,id_pagos_tic,usuario,metodo} = body;
@@ -36,6 +45,11 @@ cuotasModel.insertCuota = async ( body ) => {
     }
 
 }  
+/**
+ * Fetch all cuotas by Cliclo lectivo 
+ * @param {string} ciclo 
+ * @returns 
+ */
 cuotasModel.getAllCuotasByAllAlumnos = async (ciclo='') => {
     try {
         const table_alumnos = ciclo?'alumnos_'+ciclo:'alumnos';
@@ -58,6 +72,10 @@ cuotasModel.getAllCuotasByAllAlumnos = async (ciclo='') => {
         console.error("Error fetchig all cuotas by all alumnos "+error);
     }
 } 
+/**
+ * Get all cuotas
+ * @returns 
+ */
 cuotasModel.getAllCuotas = async () => {
     try {
         const [rows] = await pool.query(`
@@ -70,6 +88,10 @@ cuotasModel.getAllCuotas = async () => {
         console.error("Error fetching all cuotas : "+error);
     }
 }
+/**
+ * 
+ * @returns cuotas of abril
+ */
 cuotasModel.getAllCuotasAbril = async () => {
     try {
         const [rows] = await pool.query(`
@@ -83,6 +105,10 @@ cuotasModel.getAllCuotasAbril = async () => {
         console.error("Error fetching all cuotas : "+error);
     }
 }
+/**
+ * 
+ * @returns Cuotas not payed of april
+ */
 cuotasModel.getAllCuotasAbrilNotAprobed = async () => {
     try {
         const [rows] = await pool.query(`
@@ -96,6 +122,11 @@ cuotasModel.getAllCuotasAbrilNotAprobed = async () => {
         console.error("Error fetching all cuotas : "+error);
     }
 }
+/**
+ * 
+ * @param {string} month 
+ * @returns 
+ */
 cuotasModel.getAllCuotasNotAprobed = async (month) => {
     try {
         const [rows] = await pool.query(`
