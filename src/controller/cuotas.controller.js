@@ -382,6 +382,14 @@ controller.getAllCuotasMayo = async ( req , res ) => {
         console.error("Error fetching all Cuotas :"+error.message);
     }
 }
+controller.getAllCuotasJunio = async ( req , res ) => {
+    try {
+        const rows = await cuotasModel.getAllCuotasJunio();
+        res.status(201).json(rows);
+    } catch (error) {
+        console.error("Error fetching all Cuotas :"+error.message);
+    }
+}
 controller.getAllCuotasByMonth = async ( req , res ) => {
     try {
         const rows = await cuotasModel.getAllCuotasByMonth();

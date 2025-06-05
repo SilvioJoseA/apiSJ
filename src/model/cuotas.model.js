@@ -166,6 +166,19 @@ cuotasModel.getAllCuotasMayo = async () => {
         console.error("Error fetching all cuotas : "+error);
     }
 }
+cuotasModel.getAllCuotasJunio = async () => {
+    try {
+        const [rows] = await pool.query(`
+            SELECT a.firstName, a.lastName, a.email, c.* 
+            FROM cuotas_2025 c
+            INNER JOIN alumnos_2025 a ON c.alumno_id = a.id
+            WHERE mes='junio'
+        `);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching all cuotas : "+error);
+    }
+}
 
 cuotasModel.getAllCuotasMarzoNotAproved = async () => {
     try {

@@ -10,6 +10,7 @@ const router = Router();
     router.get('/cuotas/abril', controller.getAllCuotasAbril);
     router.get('/cuotas/marzo', controller.getAllCuotasMarzo);
     router.get('/cuotas/mayo', controller.getAllCuotasMayo);
+    router.get('/cuotas/junio', controller.getAllCuotasJunio);
     router.get('/to-see-mailOptions', controller.toMakeArrayMailOptionsByModel);
     router.get('/cuotas/app', controller.App);
     router.get('/cuotas/month', controller.getAllCuotasByMonth);
