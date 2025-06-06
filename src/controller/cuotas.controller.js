@@ -106,7 +106,7 @@ controller.toMakeMailOptions = ( emailAlumno = '', link_form) => {
 <body>
     <div class="container">
 <p>Estimado/a</p>
-<p>  Cuota Mes de Mayo </p>
+<p>  Cuota Mes de Junio </p>
 <p>Espero que este mensaje le encuentre bien.</p>
 <p>A continuación, puede acceder al botón de pago para la cuota del mes en curso:</p>
     <p>1° vencimiento: 15 de cada mes</p>
@@ -223,6 +223,27 @@ controller.toMakeArrayMailOptionsMayo = async ( req , res ) => {
         console.error("Error makeing array mail Options :"+error);
     }
 }
+controller.toMakeArrayMailOptionsJunio = async ( req , res ) => {
+    try {
+        const alumnos = await alumnosModel.getAllAlumnosNotPayed('2025');
+        const arrayMailOptions = [];
+        const arrayObjectPayerAndAmount = [];
+        console.log(alumnos.length); 
+        if( alumnos.length>0){
+            for (let i = 0; i < alumnos.length; i++){
+                arrayObjectPayerAndAmount.push(controller.toMakeObjectPayerAndAmount(alumnos[i]));
+                const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumnos[i]));
+         //       const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,responsePTic.form_url);
+           //     arrayMailOptions.push(mailOptions);
+                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'junio',monto:controller.toGetAmount(alumnos[i].price_month,alumnos[i].type_cuota),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
+            } 
+        }
+       // return arrayMailOptions;
+    } catch (error) {
+        console.error("Error makeing array mail Options :"+error);
+    }
+}
+
 controller.toGetAmount = ( amount , type ) => {
     try {
         if(amount && type ){
@@ -290,7 +311,7 @@ controller.toMakeLinkCuota = async (oToSend) => {
 };
 controller.toMakeObjectPayerAndAmount = ( alumno ) => {
     try {
-        const amount =controller.toGetAmount(alumno.price_month,'second-time');// alumno.price_month;//
+        const amount =controller.toGetAmount(alumno.price_month,alumno.type_cuota);// alumno.price_month;//
         const objectPayer = {};
         const identification = {}
             objectPayer.name = (alumno.firstName || '') + ' ' + (alumno.lastName || '').trim();
@@ -320,7 +341,7 @@ controller.toMakeObjectPayerAndAmount = ( alumno ) => {
 }
 controller.getLastDayOfMarch = (currentDate) => {
     const year = currentDate.getFullYear();
-    const marchDate = new Date(year,5,1);
+    const marchDate = new Date(year,5,16);
     if (currentDate > marchDate) {
         return new Date(year + 1, 2, 31);
     }
