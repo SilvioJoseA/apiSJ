@@ -391,4 +391,84 @@ cuotasModel.getAllCuotasByMonth = async () => {
         console.error(error);
     }
   }
+/**
+ * Function to calculate average of cuptas pagadas by month
+ * @param {string} month 
+ * @returns 
+ */
+cuotasModel.getAverageCuotasByMonth = async (month) => {
+    try {
+        if(!month){
+            return ;
+        }
+        const result = await pool.query(`SELECT AVG(amount) as average FROM cuotas 
+                                          WHERE month=? AND status='pagado'`,[month]);
+        return result[0]?.average || 0;
+    } catch (error) {
+        console.error('Error calculating average cuotas:', error);
+    }
+}
+/**
+ * Function to calculate suma of cuotas by month
+ * @param {string} month 
+ * @returns 
+ */
+cuotasModel.getSumCuotasByMonth = async (month) => {
+    try {
+        if(!month){
+            return ;
+        }
+        const result = await pool.query(
+            `SELECT SUM(monto) as total 
+             FROM cuotas_2025 
+             WHERE mes = ? 
+             AND status = 'pagado'`,
+            [month]
+        );
+        console.log(result);
+        return result[0]?result[0][0]:0;
+    } catch (error) {
+        console.error('Error calculating suma of cuotas', error);
+    }
+}
+/**
+ * Function to calculate average of today
+ * @returns 
+ */
+cuotasModel.getAverageToday = async () => {
+    try {
+        const result = await pool.query(`SELECT AVG(amount) as average FROM cuotas 
+                                            WHERE DATE(created_at) = CURRENT_DATE() AND status='pagado'`);
+        return result[0]?.average || 0;
+    } catch (error) {
+        console.error("Error calculating average cuotas: ", error);
+    }
+}
+/**
+ * Function to calculate the suma of cuotas by today
+ * @returns 
+ */
+cuotasModel.getSumaCuotasByToday = async () => {
+    try {
+        const result = await pool.query(`SELECT SUM(monto) as total FROM cuotas_2025 
+                                        WHERE DATE(updated_at) = CURRENT_DATE() AND status='pagado'`);
+        return result[0]? result[0][0] : 0;
+    } catch (error) {
+        console.error("Error calculating suma of cuotas today :", error);
+    }
+}
+/**
+ * Function to fetch the deudores by month
+ * @param {string} month 
+ * @returns 
+ */
+cuotasModel.getAllDudoresByMonth = async ( month ) => {
+    try {
+        if(!month){return }
+        const rows = await pool.query(`SELECT * AS a FROM alumnos_2025 WHERE a.id`)
+    } catch (error) {
+        console.error("Error fetching all Deudores by month :"+error);
+    }
+}
+
 export default cuotasModel;

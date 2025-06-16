@@ -244,10 +244,11 @@ controller.toMakeArrayMailOptionsJunio = async ( req , res ) => {
     }
 }
 
+
 controller.toGetAmount = ( amount , type ) => {
     try {
         if(amount && type ){
-            switch ( type ) {
+            switch ( 'second-time' ) {
                 case 'type1':
                     return parseFloat(amount);
                 case 'type2':
@@ -341,7 +342,7 @@ controller.toMakeObjectPayerAndAmount = ( alumno ) => {
 }
 controller.getLastDayOfMarch = (currentDate) => {
     const year = currentDate.getFullYear();
-    const marchDate = new Date(year,5,16);
+    const marchDate = new Date(year,6,1);
     if (currentDate > marchDate) {
         return new Date(year + 1, 2, 31);
     }
@@ -519,6 +520,60 @@ controller.updateStatusById = async (req, res) => {
         });
     }
 };
+/**
+ * Function to calculate average by month
+ * @param {Object} req 
+ * @param {Object} res 
+ */
+controller.getAverageByMonth = async ( req , res ) => {
+    try {
+        const { month } = req.params;
+        const result = await cuotasModel.getAverageByMonth(month);
+            res.status(201).json(result);
+    } catch (error) {
+        console.error("Error calculating average :"+error);
+    }
+}
+/**
+ * Function to calculate average by day
+ * @param {Object} req 
+ * @param {Object} res 
+ */
+controller.getAverageByToday = async ( req , res ) => {
+    try {
+        const result = await cuotasModel.getAverageByToday();
+            res.status(201).json(result);
+    } catch (error) {
+        console.error("Error calculating average :"+error);
+    }
+}
+/**
+ * Function to calculate suma of cuotas
+ * @param {Object} req 
+ * @param {ObJect} res 
+ */
+controller.getSumToday = async ( req , res ) => {
+    try {
+        const result = await cuotasModel.getSumaCuotasByToday();
+            res.status(201).json(result);
+    } catch (error) {
+        console.error("Error calculating suma :", error);
+    }
+}
+/**
+ * Function to calculate suma of cuotas by month
+ * @param {Object} req 
+ * @param {ObJect} res 
+ */
+controller.getSumByMonth = async ( req , res ) => {
+    try {
+        const { month } = req.params;
+        const result = await cuotasModel.getSumCuotasByMonth(month);
+            res.status(201).json(result);
+    } catch (error) {
+        console.error("Error calculating suma by month :", error);
+    }
+}
 controller.App = async ( req , res ) => {
     try {
         const transporter = controller.toMakeTransporter();

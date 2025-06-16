@@ -17,4 +17,6 @@ const router = Router();
     router.get('/cuotas/month', controller.getAllCuotasByMonth);
     router.get('/alumnos-not-payed', controller.toGetAlumnosNotPayed);
     router.put('/cuotas/update/:idCuota', controller.updateStatusById );
+    router.get('/cuotas/sum/:month', controller.getSumByMonth);
+    router.get('/cuotas/sum', controller.getSumToday);
 export default router;
