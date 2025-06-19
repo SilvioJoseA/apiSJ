@@ -19,4 +19,5 @@ const router = Router();
     router.put('/cuotas/update/:idCuota', controller.updateStatusById );
     router.get('/cuotas/sum/:month', controller.getSumByMonth);
     router.get('/cuotas/sum', controller.getSumToday);
+    router.get('/cuotas/suma/week', controller.getSumByLastWeek);
 export default router;

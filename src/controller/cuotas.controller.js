@@ -574,6 +574,14 @@ controller.getSumByMonth = async ( req , res ) => {
         console.error("Error calculating suma by month :", error);
     }
 }
+controller.getSumByLastWeek = async ( req , res ) => {
+    try {
+        const result = await cuotasModel.getSumaCuotasByLastWeek();
+            res.status(201).json(result);
+    } catch (error) {
+        console.error("Error calculating sum by the last week :",error);
+    }
+} 
 controller.App = async ( req , res ) => {
     try {
         const transporter = controller.toMakeTransporter();

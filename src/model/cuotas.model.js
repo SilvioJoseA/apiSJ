@@ -457,6 +457,31 @@ cuotasModel.getSumaCuotasByToday = async () => {
         console.error("Error calculating suma of cuotas today :", error);
     }
 }
+cuotasModel.getSumaCuotasByLastWeek = async () => {
+    try {
+        const result = await pool.query(`WITH fechas_ultimos_7_dias AS (
+                                        SELECT DATE_SUB(CURDATE(), INTERVAL 6 DAY) as fecha
+                                            UNION SELECT DATE_SUB(CURDATE(), INTERVAL 5 DAY)
+                                            UNION SELECT DATE_SUB(CURDATE(), INTERVAL 4 DAY)
+                                            UNION SELECT DATE_SUB(CURDATE(), INTERVAL 3 DAY)
+                                            UNION SELECT DATE_SUB(CURDATE(), INTERVAL 2 DAY)
+                                            UNION SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+                                            UNION SELECT CURDATE()
+                                        )
+                                SELECT 
+                                    f.fecha,
+                                    COALESCE(SUM(c.monto), 0) as total_diario
+                                    FROM 
+                                    fechas_ultimos_7_dias f
+                                    LEFT JOIN 
+                                    cuotas_2025 c ON DATE(c.updated_at) = f.fecha 
+                                AND c.status = 'pagado'
+                                GROUP BY f.fecha ASC;`)
+        return result[0] ? result[0] : 0;
+    } catch (error) {
+        console.error("Error calculating suma of cuptas by the last week", error);
+    }
+}
 /**
  * Function to fetch the deudores by month
  * @param {string} month 
