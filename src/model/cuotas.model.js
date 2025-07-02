@@ -179,6 +179,19 @@ cuotasModel.getAllCuotasJunio = async () => {
         console.error("Error fetching all cuotas : "+error);
     }
 }
+cuotasModel.getAllCuotasJulio = async () => {
+    try {
+        const [ rows ] = await pool.query(`
+                SELECT a.firstName, a.lastName , a.email , c.*
+                FROM cuotas_2025 c
+                INNER JOIN alumnos_2025 a ON c.alumno_id = a.id
+                WHERE mes = 'julio'
+            `);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching all cuotas : "+error);
+    }
+}
 
 cuotasModel.getAllCuotasMarzoNotAproved = async () => {
     try {
@@ -457,6 +470,10 @@ cuotasModel.getSumaCuotasByToday = async () => {
         console.error("Error calculating suma of cuotas today :", error);
     }
 }
+/**
+ * Function to get 7 days with the sum of cuotas
+ * @returns 
+ */
 cuotasModel.getSumaCuotasByLastWeek = async () => {
     try {
         const result = await pool.query(`WITH fechas_ultimos_7_dias AS (
@@ -483,6 +500,40 @@ cuotasModel.getSumaCuotasByLastWeek = async () => {
     }
 }
 /**
+ * Function to sum of cuotas by the last 7 days by user
+ * @returns 
+ */
+cuotasModel.getSumCuotasByLastWeekAndUsers = async () => {
+    try {
+        const result = await pool.query(`WITH fechas_ultimos_7_dias AS (
+    SELECT DATE_SUB(CURDATE(), INTERVAL 6 DAY) as fecha
+        UNION SELECT DATE_SUB(CURDATE(), INTERVAL 5 DAY)
+        UNION SELECT DATE_SUB(CURDATE(), INTERVAL 4 DAY)
+        UNION SELECT DATE_SUB(CURDATE(), INTERVAL 3 DAY)
+        UNION SELECT DATE_SUB(CURDATE(), INTERVAL 2 DAY)
+        UNION SELECT DATE_SUB(CURDATE(), INTERVAL 1 DAY)
+        UNION SELECT CURDATE())
+    SELECT 
+        f.fecha,
+        c.usuario,
+        COALESCE(SUM(c.monto), 0) as total_diario_por_usuario
+    FROM 
+        fechas_ultimos_7_dias f
+    LEFT JOIN 
+        cuotas_2025 c ON DATE(c.updated_at) = f.fecha 
+    AND c.status = 'pagado'
+    GROUP BY 
+        f.fecha,
+        c.usuario
+    ORDER BY 
+        f.fecha ASC`
+        );
+            return result[0]? result[0] : 0;
+    } catch (error) {
+        console.error("Error calculating sum by the last week :",error);
+    }
+}
+/**
  * Function to fetch the deudores by month
  * @param {string} month 
  * @returns 
@@ -493,6 +544,34 @@ cuotasModel.getAllDudoresByMonth = async ( month ) => {
         const rows = await pool.query(`SELECT * AS a FROM alumnos_2025 WHERE a.id`)
     } catch (error) {
         console.error("Error fetching all Deudores by month :"+error);
+    }
+}
+/**
+ * Function that fetching all cuotas from each idAlumno
+ * @param {number} idAlumno 
+ * @returns 
+ */
+cuotasModel.getCuotasByIdAlumno = async ( idAlumno ) => {
+    try {
+        const result = await pool.query(`SLECT * FROM cuotas_2025 WHERE idAlumno = ?`,[idAlumno]);
+        return result;
+    } catch (error) {
+        console.error()
+    }
+}
+/**
+ * Function that is fetching all cuotas from each alumno_id payed
+ * @param {number} idAlumno 
+ * @returns 
+ */
+cuotasModel.getCuotasByMonthByIdAlumno = async ( idAlumno ) => {
+    try {
+        const result = await pool.query(`SELECT * FROM cuotas_2025 WHERE alumno_id =? AND status = 'pagado'`,[idAlumno]);
+        return result[0]? result[0]:0;
+        //  (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' LIMIT 1) AS statusAgosto,
+        
+    } catch (error) {
+        console.error(error);
     }
 }
 

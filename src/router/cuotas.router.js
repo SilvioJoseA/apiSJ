@@ -12,6 +12,7 @@ const router = Router();
     router.get('/cuotas/marzo', controller.getAllCuotasMarzo);
     router.get('/cuotas/mayo', controller.getAllCuotasMayo);
     router.get('/cuotas/junio', controller.getAllCuotasJunio);
+    router.get('/cuotas/julio', controller.getAllCuotasJulio);
     router.get('/to-see-mailOptions', controller.toMakeArrayMailOptionsByModel);
     router.get('/cuotas/app', controller.App);
     router.get('/cuotas/month', controller.getAllCuotasByMonth);
@@ -20,4 +21,8 @@ const router = Router();
     router.get('/cuotas/sum/:month', controller.getSumByMonth);
     router.get('/cuotas/sum', controller.getSumToday);
     router.get('/cuotas/suma/week', controller.getSumByLastWeek);
+    router.get('/cuotas/suma/week-and-users', controller.getSumByLastWeekByUser);
+    //New Part
+    router.get('/cuotas/meses/:idAlumno', controller.getAllCuotasPayedByIdAlumno);
+    router.get('/cuota/:idAlumno/:month', controller.toMakeOneLink);
 export default router;

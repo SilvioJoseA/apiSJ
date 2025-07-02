@@ -748,4 +748,28 @@ alumnosModel.updateSeguroById = async (alumno_id, seguro, ciclo) => {
         console.error("Error updating type of cuota by id:", error);
     }
 };
+/**
+ * Query to fetch all alumnos from alumnos table
+ * @returns {Promise<Object[]>}
+ */
+alumnosModel.getAlumnoNotPayedById = async (idAlumno) => {
+    try {
+       const query1 =  `SELECT a.*, c.price_month 
+FROM alumnos_2025 a
+LEFT JOIN cursos c ON a.curso_id = c.id 
+WHERE NOT EXISTS (
+    SELECT 1 
+    FROM cuotas_2025 c
+    WHERE c.alumno_id = a.id
+    AND c.mes = 'junio'
+    AND c.status = 'pagado'
+)
+AND a.id = ?
+`;
+        const [rows] = await pool.query(query1, idAlumno);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching alumnos:", error.message);
+    }
+};
 export default alumnosModel;

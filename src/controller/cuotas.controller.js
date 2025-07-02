@@ -4,6 +4,7 @@ import cuotasModel from "../model/cuotas.model.js";
 import Joi from "joi";
 import authController from "./auth.controller.js";
 import alumnosModel from "../model/alumnos.model.js";
+import alumnoController from "./alumnos.controller.js";
 const controller = {};
 const cuotaEschema = Joi.object({ 
     alumno_id: Joi.number().required(),
@@ -310,9 +311,9 @@ controller.toMakeLinkCuota = async (oToSend) => {
         console.error("Error in toMakeLinkCuota:", error);
     }
 };
-controller.toMakeObjectPayerAndAmount = ( alumno ) => {
+controller. toMakeObjectPayerAndAmount = ( alumno ) => {
     try {
-        const amount =controller.toGetAmount(alumno.price_month,alumno.type_cuota);// alumno.price_month;//
+        const amount = controller.toGetAmount(alumno.price_month,alumno.type_cuota);// alumno.price_month;//
         const objectPayer = {};
         const identification = {}
             objectPayer.name = (alumno.firstName || '') + ' ' + (alumno.lastName || '').trim();
@@ -407,6 +408,14 @@ controller.getAllCuotasMayo = async ( req , res ) => {
 controller.getAllCuotasJunio = async ( req , res ) => {
     try {
         const rows = await cuotasModel.getAllCuotasJunio();
+        res.status(201).json(rows);
+    } catch (error) {
+        console.error("Error fetching all Cuotas :"+error.message);
+    }
+}
+controller.getAllCuotasJulio = async ( req , res ) => {
+    try {
+        const rows = await cuotasModel.getAllCuotasJulio();
         res.status(201).json(rows);
     } catch (error) {
         console.error("Error fetching all Cuotas :"+error.message);
@@ -574,6 +583,11 @@ controller.getSumByMonth = async ( req , res ) => {
         console.error("Error calculating suma by month :", error);
     }
 }
+/**
+ * Function to get sum of cuotas by the last week
+ * @param {Object} req 
+ * @param {Object} res 
+ */
 controller.getSumByLastWeek = async ( req , res ) => {
     try {
         const result = await cuotasModel.getSumaCuotasByLastWeek();
@@ -582,6 +596,55 @@ controller.getSumByLastWeek = async ( req , res ) => {
         console.error("Error calculating sum by the last week :",error);
     }
 } 
+/**
+ * Function to get the sum by the last week and users
+ * @param {Object} req 
+ * @param {Object} res 
+ */
+controller.getSumByLastWeekByUser = async ( req , res ) => {
+    try {
+        const result = await cuotasModel.getSumCuotasByLastWeekAndUsers();
+            res.status(201).json(result);
+    } catch (error) {
+        console.error("Error fetching suma by the last week :", error);
+    }
+}
+/**
+ * Function that is fetching all cuotas by alumnoId
+ * @param {Object} req 
+ * @param {Object} res 
+ */
+controller.getAllCuotasPayedByIdAlumno = async ( req , res ) => {
+    try {
+        const { idAlumno } = req.params;
+        const result = await cuotasModel.getCuotasByMonthByIdAlumno(idAlumno);
+            res.status(200).json(result);
+    } catch (error) {
+        console.error(`Error fetchin all cuotas payed by alumno_id`, error);
+    }
+}
+/**
+ * Function that create an link of pagosTic by alumnoId and Month
+ * Falta la parte de mes
+ * y definir dias de duracion y valor de interes;
+ * @param {Object} req 
+ * @param {Object} res 
+ */
+controller.toMakeOneLink = async ( req , res ) => {
+    try {
+        const { idAlumno , month } = req.params;
+        console.log(idAlumno);
+        if( isNaN(idAlumno) || !idAlumno ) throw new Error("The idAlumno is necesary!");
+        const alumno = await alumnosModel.getAlumnoNotPayedById(idAlumno);
+        console.log(alumno[0]);
+        const objToSend = controller.toMakeObjectPayerAndAmount(alumno[0]);
+        console.log(objToSend);
+        const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumno[0]))
+        console.log(responsePTic);
+    } catch (error) {
+        console.error('Error making cuota by id :',error);
+    }
+}
 controller.App = async ( req , res ) => {
     try {
         const transporter = controller.toMakeTransporter();
