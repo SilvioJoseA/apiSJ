@@ -54,7 +54,7 @@ controller.toMakeMailOptions = ( emailAlumno = '', link_form) => {
     const mailOptions = {
         from:FROM,
         to:emailAlumno || 'saintjohns@gmail.com',//'chavezzsilvio@gmail.com',//emailAlumno || 'saintjohns@gmail.com',//emailAlumno,
-        subject: `Cuota Saint John's`,
+        subject: `Cuota Saint John's Julio`,
         text: `Link de pago de cuota en Saint John's`,
         html:`<!DOCTYPE html>
 <html lang="es">
@@ -107,7 +107,7 @@ controller.toMakeMailOptions = ( emailAlumno = '', link_form) => {
 <body>
     <div class="container">
 <p>Estimado/a</p>
-<p>  Cuota Mes de Julio </p>
+<p>Cuota Mes de Julio</p>
 <p>Espero que este mensaje le encuentre bien.</p>
 <p>A continuación, puede acceder al botón de pago para la cuota del mes en curso:</p>
     <p>1° vencimiento: 15 de cada mes</p>
