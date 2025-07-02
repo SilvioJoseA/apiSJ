@@ -216,7 +216,7 @@ cuotasModel.getCuotasCreatedToday = async () => {
         SELECT a.firstName, a.lastName, a.email, c.* 
 FROM cuotas_2025 c 
 INNER JOIN alumnos_2025 a ON c.alumno_id = a.id WHERE c.created_at >= DATE_SUB(CURDATE(), INTERVAL WEEKDAY(CURDATE()) DAY)
-            AND c.created_at <= NOW() AND mes='junio' AND c.status='pending'`);
+            AND c.created_at <= NOW() AND mes='julio' AND c.status='pending'`);
         return rows;
     } catch (error) {
         console.error("Error fetching today's cuotas: ", error);
