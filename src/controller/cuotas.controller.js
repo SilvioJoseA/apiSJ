@@ -236,7 +236,7 @@ controller.toMakeArrayMailOptionsJunio = async ( req , res ) => {
                 const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumnos[i]));
          //       const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,responsePTic.form_url);
            //     arrayMailOptions.push(mailOptions);
-                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'junio',monto:controller.toGetAmount(alumnos[i].price_month,alumnos[i].type_cuota),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
+                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'julio',monto:controller.toGetAmount(alumnos[i].price_month,alumnos[i].type_cuota),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
             } 
         }
        // return arrayMailOptions;
@@ -249,7 +249,7 @@ controller.toMakeArrayMailOptionsJunio = async ( req , res ) => {
 controller.toGetAmount = ( amount , type ) => {
     try {
         if(amount && type ){
-            switch ( 'second-time' ) {
+            switch ( type ) {
                 case 'type1':
                     return parseFloat(amount);
                 case 'type2':
@@ -343,7 +343,7 @@ controller. toMakeObjectPayerAndAmount = ( alumno ) => {
 }
 controller.getLastDayOfMarch = (currentDate) => {
     const year = currentDate.getFullYear();
-    const marchDate = new Date(year,6,1);
+    const marchDate = new Date(year,6,16);
     if (currentDate > marchDate) {
         return new Date(year + 1, 2, 31);
     }

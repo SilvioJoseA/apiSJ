@@ -262,7 +262,7 @@ alumnosModel.getAllAlumnosNotPayed = async (proximociclo='') => {
     SELECT 1 
     FROM cuotas_2025 c
     WHERE c.alumno_id = a.id
-    AND c.mes = 'junio'
+    AND c.mes = 'julio'
     AND c.status = 'pagado')
 `;
         const [rows] = await pool.query(query1);
