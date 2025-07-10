@@ -357,4 +357,18 @@ controller.updateSeguroById = async ( req , res ) => {
         console.error("Error updating seguro by id:"+error);
     }
 }
+/**
+ * Function to fetch alumno by dni 
+ * @param {Object} req 
+ * @param {Object} res 
+ */
+controller.getAlumnoByDni = async ( req , res ) => {
+    try {
+        const { dni } = req.body;
+        const alumno = await alumnosModel.getAlumnoByDni(dni);
+        res.status(201).json(alumno);
+    } catch (error) {
+        console.error("Error getching alumno by dni : ", error);
+    }
+}
 export default controller;

@@ -633,16 +633,35 @@ controller.getAllCuotasPayedByIdAlumno = async ( req , res ) => {
 controller.toMakeOneLink = async ( req , res ) => {
     try {
         const { idAlumno , month } = req.params;
+        const days = 1;
+        const type = 'second-time';
         console.log(idAlumno);
         if( isNaN(idAlumno) || !idAlumno ) throw new Error("The idAlumno is necesary!");
-        const alumno = await alumnosModel.getAlumnoNotPayedById(idAlumno);
-        console.log(alumno[0]);
-        const objToSend = controller.toMakeObjectPayerAndAmount(alumno[0]);
+        const alumno = await alumnosModel.getAlumnoNotPayedById(idAlumno,month);
+        console.log(alumno);
+        const objToSend = controller.toMakeObjectPayerAndAmount(alumno);
         console.log(objToSend);
-        const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumno[0]))
+        const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumno))
+        await cuotasModel.insertCuota({alumno_id:alumno.id,mes:month,monto:controller.toGetAmount(alumno.price_month,alumno.type_cuota),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
         console.log(responsePTic);
     } catch (error) {
         console.error('Error making cuota by id :',error);
+    }
+}
+//SELECT * FROM cuotas_2025 INNER JOIN alumnos_2025 AS alumnos ON alumnos.id = cuotas_2025.alumno_id WHERE cuotas_2025.mes = 'julio' AND alumnos.nivel = '5° AÑO (CAUCETE)';
+controller.toCancelOneLink = async ( req , res ) => {
+    try {
+        const { idPago } = req.params;
+        const token = await authController.getTokenBackend();
+    } catch (error) {
+        console.error("Error canceletd pay :", error);
+    }
+}
+controller.toCancelArray = async ( req , res ) => {
+    try {
+        const alumnos = async 
+    } catch (error) {
+        console.error("Error canceling payment : ",error);
     }
 }
 controller.App = async ( req , res ) => {

@@ -566,7 +566,7 @@ cuotasModel.getCuotasByIdAlumno = async ( idAlumno ) => {
  */
 cuotasModel.getCuotasByMonthByIdAlumno = async ( idAlumno ) => {
     try {
-        const result = await pool.query(`SELECT * FROM cuotas_2025 WHERE alumno_id =? AND status = 'pagado'`,[idAlumno]);
+        const result = await pool.query(`SELECT * FROM cuotas_2025 WHERE alumno_id =? AND (status = 'pagado' OR status = 'pending')`,[idAlumno]);
         return result[0]? result[0]:0;
         //  (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' LIMIT 1) AS statusAgosto,
         
@@ -574,5 +574,13 @@ cuotasModel.getCuotasByMonthByIdAlumno = async ( idAlumno ) => {
         console.error(error);
     }
 }
-
+cuotasModel.toCancelCuotas = async () => {
+    try {
+        const query = `SELECT * FROM cuotas_2025 INNER JOIN alumnos_2025 AS alumnos ON alumnos.id = cuotas_2025.alumno_id WHERE cuotas_2025.mes = 'julio' AND alumnos.nivel = '5° AÑO'`;
+        const alumnos = await pool.query(query);
+        return alumnos;
+    } catch (error) {
+        console.error("Error fetching cuotas to cancel :", error);
+    }
+}
 export default cuotasModel;

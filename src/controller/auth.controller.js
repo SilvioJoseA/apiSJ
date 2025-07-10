@@ -101,10 +101,18 @@ controller.toCheckPay = async ( req , res  ) => {
         console.error("Error checking pay by id_pagos_tic : "+error);
     }
 } 
+/**
+ * Cancelar pago de pagos tic
+ * @param {Object} req 
+ * @param {Object} res 
+ * @returns 
+ */
 controller.cancelarPago = async ( req , res ) => {
     try {
         const { id_pagos_tic } = req.params;
+        console.log(id_pagos_tic);
         const token = await controller.getTokenBackend();
+        console.log(token);
         if(id_pagos_tic){   
             const response = await fetch("https://api.paypertic.com/pagos/cancelar/"+id_pagos_tic, {
             method: "POST",
@@ -112,23 +120,41 @@ controller.cancelarPago = async ( req , res ) => {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`     
             },
-            body: {
-                "status_detail":"Pago cancelado por solicitud del pagador"
-            },
+            body: JSON.stringify({
+   "status_detail": "Pago cancelado por solicitud del pagador"
+}),
             }
             );
             if ( response.ok ){
                 const data = await response.json(); 
                 res.status(201).json(data.status); 
             }
-            res.json("Not Valid")
-
-            
+            res.json(response);
+            return 0;
         } 
     } catch (error) {
         console.error("Error al cancelar pago :"+error);        
     }
 }
+controller.cancelarPagoBackend = async ( id_pagos_tic ) => {
+    try {
+        console.log(id_pagos_tic);
+        const token = await controller.getTokenBackend();
+            const response = await fetch("https://api.paypertic.com/pagos/cancelar/"+id_pagos_tic, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`     
+            },
+            body: JSON.stringify({"status_detail": "Pago cancelado por solicitud del pagador"}),
+            }
+            );
+            res.status(201).json(response); 
+    } catch (error) {
+        console.error("Error al cancelar pago :"+error);        
+    }
+}
+//SELECT * FROM cuotas_2025 INNER JOIN alumnos_2025 AS alumnos ON alumnos.id = cuotas_2025.alumno_id WHERE cuotas_2025.mes = 'julio' AND alumnos.nivel = '5° AÑO';
 /**
  * To Check status of pagos tic
  * @param {String} id_pagos_tic 

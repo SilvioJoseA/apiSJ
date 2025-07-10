@@ -689,6 +689,24 @@ alumnosModel.getAlumnoById = async ( id , ciclo = '' ) => {
     }
 }
 /**
+ * Fetch alumno by dni, 
+ * Function by start session's fathers
+ * @param {string} dni 
+ * @param {string} ciclo 
+ * @returns 
+ */
+alumnosModel.getAlumnoByDni = async ( dni , ciclo ) => {
+    try {
+        const tableName = ciclo? `alumnos_${ciclo}`:`alumnos`
+        const alumno = await pool.query(`SELECT * FROM ${tableName}
+                                        WHERE dni = ? 
+                            `,[dni]);
+        return alumno;
+    } catch (error) {
+        console.error("Error fetching dni :", error);
+    }
+}
+/**
  * Query to get alumno by id
  * @param {number} id 
  */
@@ -752,7 +770,7 @@ alumnosModel.updateSeguroById = async (alumno_id, seguro, ciclo) => {
  * Query to fetch all alumnos from alumnos table
  * @returns {Promise<Object[]>}
  */
-alumnosModel.getAlumnoNotPayedById = async (idAlumno) => {
+alumnosModel.getAlumnoNotPayedById = async (idAlumno,month) => {
     try {
        const query1 =  `SELECT a.*, c.price_month 
 FROM alumnos_2025 a
@@ -761,13 +779,13 @@ WHERE NOT EXISTS (
     SELECT 1 
     FROM cuotas_2025 c
     WHERE c.alumno_id = a.id
-    AND c.mes = 'junio'
+    AND c.mes = ?
     AND c.status = 'pagado'
 )
 AND a.id = ?
 `;
-        const [rows] = await pool.query(query1, idAlumno);
-        return rows;
+        const [rows] = await pool.query(query1, [month,idAlumno]);
+        return rows[0];
     } catch (error) {
         console.error("Error fetching alumnos:", error.message);
     }
