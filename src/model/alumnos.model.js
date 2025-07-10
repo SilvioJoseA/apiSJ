@@ -695,15 +695,15 @@ alumnosModel.getAlumnoById = async ( id , ciclo = '' ) => {
  * @param {string} ciclo 
  * @returns 
  */
-alumnosModel.getAlumnoByDni = async ( dni , ciclo ) => {
+alumnosModel.getAlumnoByDni = async (dni, ciclo) => {
     try {
-        const tableName = ciclo? `alumnos_${ciclo}`:`alumnos`
+        const tableName = ciclo ? `alumnos_${ciclo}` : `alumnos`;
         const alumno = await pool.query(`SELECT * FROM ${tableName}
                                         WHERE dni = ? 
-                            `,[dni]);
-        return alumno;
+                                        GROUP BY dni`, [dni]);
+        return alumno[0] ? alumno[0][0] : {};
     } catch (error) {
-        console.error("Error fetching dni :", error);
+        console.error("Error fetching dni:", error);
     }
 }
 /**
