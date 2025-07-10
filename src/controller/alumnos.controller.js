@@ -367,6 +367,7 @@ controller.getAlumnoByDni = async ( req , res ) => {
         const { dni } = req.body;
         const alumno = await alumnosModel.getAlumnoByDni(dni,'2025');
         console.log(alumno);
+        alumno.role = 'father';
         res.status(201).json(alumno);
     } catch (error) {
         console.error("Error getching alumno by dni : ", error);
