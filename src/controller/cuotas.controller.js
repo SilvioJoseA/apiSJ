@@ -5,6 +5,7 @@ import Joi from "joi";
 import authController from "./auth.controller.js";
 import alumnosModel from "../model/alumnos.model.js";
 import alumnoController from "./alumnos.controller.js";
+import { toGetAmountSecondTime, validateMonth } from "../helpers/helpers.js";
 const controller = {};
 const cuotaEschema = Joi.object({ 
     alumno_id: Joi.number().required(),
@@ -236,15 +237,49 @@ controller.toMakeArrayMailOptionsJunio = async ( req , res ) => {
                 const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumnos[i]));
          //       const mailOptions = controller.toMakeMailOptions(alumnos[i].email,alumnos[i].id,responsePTic.form_url);
            //     arrayMailOptions.push(mailOptions);
-                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'julio',monto:controller.toGetAmount(alumnos[i].price_month,alumnos[i].type_cuota),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
+                await cuotasModel.insertCuota({alumno_id:alumnos[i].id,mes:'julio',monto:controller.toGetAmountSecondTime(alumnos[i].price_month),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
             } 
         }
+        res.status(200).json({message:"Links created successfully!"});
        // return arrayMailOptions;
     } catch (error) {
         console.error("Error makeing array mail Options :"+error);
     }
 }
-
+controller.toMakeArrayMailOptionsAll = async ( req , res ) => {
+    try {
+        const { month , time  } = req.params;
+        if(validateMonth(month)){
+            throw new Error("Month is necesary!");
+        }
+        if(!time){
+            throw new Error("Time is necesary!");
+        }
+        const alumnos = await alumnosModel.getAllAlumnosNotPayedByMonth("2025",month);
+        const arrayObjectPayerAndAmount = [];
+        if( alumnos.length>0){
+            for( var i = 0; i < alumnos.length ; i++ ) {
+                const objectPayerAmount = controller.toMakeObjectPayerAndAmount(alumnos[i]);
+                arrayObjectPayerAndAmount.push(objectPayerAmount);
+                const responsePTic = await controller.toMakeLinkCuota(objectPayerAmount);
+                const objectToInsert = {
+                    alumno_id : alumnos[i].id,
+                    mes: month,
+                    monto: toGetAmountSecondTime(alumnos[i].price_month),
+                    status:'pending',
+                    id_pagos_tic:responsePTic.id,
+                    usuario:'tic',
+                    metodo:'pagos-tic'
+                }
+                await cuotasModel.insertCuota(objectToInsert);
+            }
+            res.status(200).json({message:"Links created successfully!"});
+        }
+    } catch (error) {
+        res.status(500).json({message:error.message});
+        console.error("Error making array mail options :",error);
+    }
+}
 
 controller.toGetAmount = ( amount , type ) => {
     try {
@@ -266,6 +301,12 @@ controller.toGetAmount = ( amount , type ) => {
         console.error("Error making amount :"+error);
     }
 }
+/**
+ * To make amount with 10% of recharger
+ * @param {number} amount 
+ * @returns 
+ */
+controller.toGetAmountSecondTime =  amount  => amount ? parseFloat(amount)*1.1: 0;
 
 /**
  * Function to make trasporter
@@ -313,7 +354,7 @@ controller.toMakeLinkCuota = async (oToSend) => {
 };
 controller. toMakeObjectPayerAndAmount = ( alumno ) => {
     try {
-        const amount = controller.toGetAmount(alumno.price_month,alumno.type_cuota);// alumno.price_month;//
+        const amount = controller.toGetAmountSecondTime(alumno.price_month);// alumno.price_month;//
         const objectPayer = {};
         const identification = {}
             objectPayer.name = (alumno.firstName || '') + ' ' + (alumno.lastName || '').trim();
@@ -343,7 +384,7 @@ controller. toMakeObjectPayerAndAmount = ( alumno ) => {
 }
 controller.getLastDayOfMarch = (currentDate) => {
     const year = currentDate.getFullYear();
-    const marchDate = new Date(year,6,16);
+    const marchDate = new Date(year,7,1);
     if (currentDate > marchDate) {
         return new Date(year + 1, 2, 31);
     }
@@ -644,6 +685,7 @@ controller.toMakeOneLink = async ( req , res ) => {
         const responsePTic = await controller.toMakeLinkCuota(controller.toMakeObjectPayerAndAmount(alumno))
         await cuotasModel.insertCuota({alumno_id:alumno.id,mes:month,monto:controller.toGetAmount(alumno.price_month,alumno.type_cuota),status:'pending',id_pagos_tic:responsePTic.id,usuario:'tic',metodo:'pagos-tic'});
         console.log(responsePTic);
+        res.status(201).json(responsePTic);
     } catch (error) {
         console.error('Error making cuota by id :',error);
     }

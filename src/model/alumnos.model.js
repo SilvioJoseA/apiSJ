@@ -271,6 +271,23 @@ alumnosModel.getAllAlumnosNotPayed = async (proximociclo='') => {
         console.error("Error fetching alumnos:", error.message);
     }
 };
+alumnosModel.getAllAlumnosNotPayedByMonth = async (ciclo,month) =>{
+    try {
+        const query = `SELECT a.* , c.price_month
+                    FROM alumnos_${ciclo} a 
+                    LEFT JOIN cursos c ON a.curso_id = c.id WHERE NOT EXISTS (
+                    SELECT 1
+                    FROM cuotas_2025 c
+                    WHERE c.alumno_id = a.id
+                    AND c.mes = ${month}
+                    AND c.status = 'pagado')
+        `;
+        const [rows] = await pool.query(query);
+        return rows;
+    } catch (error) {
+        console.error("Error fetching alumnos : "+error);
+    }
+}
 
 /**
  * Query to fetch alumnos without a payment link for March 2025
