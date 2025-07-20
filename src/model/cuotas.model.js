@@ -305,78 +305,77 @@ cuotasModel.getAllCuotasByMonth = async () => {
           a.email,
           
           -- Datos de Marzo
-          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'marzo' LIMIT 1) AS montoMarzo,
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'marzo' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS montoMarzo,
           'marzo' AS mesMarzo,
-          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'marzo' LIMIT 1) AS statusMarzo,
-          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'marzo' LIMIT 1) AS metodoMarzo,
-          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'marzo' LIMIT 1) AS id_pagos_ticMarzo,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'marzo' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS statusMarzo,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'marzo' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS metodoMarzo,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'marzo' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS id_pagos_ticMarzo,
           
           -- Datos de Abril
-          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'abril' LIMIT 1) AS montoAbril,
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'abril' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS montoAbril,
           'abril' AS mesAbril,
-          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'abril' LIMIT 1) AS statusAbril,
-          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'abril' LIMIT 1) AS metodoAbril,
-          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'abril' LIMIT 1) AS id_pagos_ticAbril,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'abril' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS statusAbril,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'abril' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS metodoAbril,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'abril' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS id_pagos_ticAbril,
           
           -- Datos de Mayo
-          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'mayo' LIMIT 1) AS montoMayo,
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'mayo' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS montoMayo,
           'mayo' AS mesMayo,
-          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'mayo' LIMIT 1) AS statusMayo,
-          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'mayo' LIMIT 1) AS metodoMayo,
-          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'mayo' LIMIT 1) AS id_pagos_ticMayo,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'mayo' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS statusMayo,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'mayo' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS metodoMayo,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'mayo' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS id_pagos_ticMayo,
           
           -- Datos de Junio
-          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'junio' LIMIT 1) AS montoJunio,
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'junio' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS montoJunio,
           'junio' AS mesJunio,
-          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'junio' LIMIT 1) AS statusJunio,
-          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'junio' LIMIT 1) AS metodoJunio,
-          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'junio' LIMIT 1) AS id_pagos_ticJunio,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'junio' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS statusJunio,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'junio' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS metodoJunio,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'junio' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS id_pagos_ticJunio,
           
           -- Datos de Julio
-          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'julio' LIMIT 1) AS montoJulio,
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'julio' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS montoJulio,
           'julio' AS mesJulio,
-          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'julio' LIMIT 1) AS statusJulio,
-          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'julio' LIMIT 1) AS metodoJulio,
-          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'julio' LIMIT 1) AS id_pagos_ticJulio,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'julio' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS statusJulio,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'julio' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS metodoJulio,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'julio' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS id_pagos_ticJulio,
           
           -- Datos de Agosto
-          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' LIMIT 1) AS montoAgosto,
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS montoAgosto,
           'agosto' AS mesAgosto,
-          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' LIMIT 1) AS statusAgosto,
-          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' LIMIT 1) AS metodoAgosto,
-          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' LIMIT 1) AS id_pagos_ticAgosto,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS statusAgosto,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS metodoAgosto,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS id_pagos_ticAgosto,
           
           -- Datos de Septiembre
-          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'septiembre' LIMIT 1) AS montoSeptiembre,
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'septiembre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS montoSeptiembre,
           'septiembre' AS mesSeptiembre,
-          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'septiembre' LIMIT 1) AS statusSeptiembre,
-          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'septiembre' LIMIT 1) AS metodoSeptiembre,
-          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'septiembre' LIMIT 1) AS id_pagos_ticSeptiembre,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'septiembre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS statusSeptiembre,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'septiembre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS metodoSeptiembre,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'septiembre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS id_pagos_ticSeptiembre,
           
           -- Datos de Octubre
-          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'octubre' LIMIT 1) AS montoOctubre,
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'octubre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS montoOctubre,
           'octubre' AS mesOctubre,
-          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'octubre' LIMIT 1) AS statusOctubre,
-          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'octubre' LIMIT 1) AS metodoOctubre,
-          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'octubre' LIMIT 1) AS id_pagos_ticOctubre,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'octubre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS statusOctubre,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'octubre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS metodoOctubre,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'octubre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS id_pagos_ticOctubre,
           
           -- Datos de Noviembre
-          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'noviembre' LIMIT 1) AS montoNoviembre,
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'noviembre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS montoNoviembre,
           'noviembre' AS mesNoviembre,
-          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'noviembre' LIMIT 1) AS statusNoviembre,
-          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'noviembre' LIMIT 1) AS metodoNoviembre,
-          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'noviembre' LIMIT 1) AS id_pagos_ticNoviembre,
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'noviembre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS statusNoviembre,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'noviembre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS metodoNoviembre,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'noviembre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS id_pagos_ticNoviembre,
           
           -- Datos de Diciembre
-          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'diciembre' LIMIT 1) AS montoDiciembre,
+          (SELECT c.monto FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'diciembre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS montoDiciembre,
           'diciembre' AS mesDiciembre,
-          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'diciembre' LIMIT 1) AS statusDiciembre,
-          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'diciembre' LIMIT 1) AS metodoDiciembre,
-          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'diciembre' LIMIT 1) AS id_pagos_ticDiciembre
+          (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'diciembre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS statusDiciembre,
+          (SELECT c.metodo FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'diciembre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS metodoDiciembre,
+          (SELECT c.id_pagos_tic FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'diciembre' AND (c.status = 'pending' OR c.status= 'pagado') LIMIT 1) AS id_pagos_ticDiciembre
           
         FROM alumnos_2025 a
-        WHERE EXISTS (SELECT 1 FROM cuotas_2025 c WHERE c.alumno_id = a.id);
-      `;
+        WHERE EXISTS (SELECT 1 FROM cuotas_2025 c WHERE c.alumno_id = a.id);`;
 
       const [rows] = await pool.query(query);
       if (Array.isArray(rows)) {
