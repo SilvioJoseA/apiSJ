@@ -566,11 +566,10 @@ cuotasModel.getCuotasByIdAlumno = async ( idAlumno ) => {
  * @param {number} idAlumno 
  * @returns 
  */
-const MESES_DEL_AÑO = [
-    "Enero", "Febrero", "Marzo", "Abril",
+const MESES_DEL_AÑO = ["Marzo", "Abril",
     "Mayo", "Junio", "Julio", "Agosto",
     "Septiembre", "Octubre", "Noviembre", "Diciembre"
-];
+]; 
 
 cuotasModel.getCuotasByMonthByIdAlumno = async (idAlumno) => {
     try {
