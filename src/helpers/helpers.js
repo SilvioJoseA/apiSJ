@@ -77,3 +77,4 @@ export const getLocalDateWithOffset = (date) => {
     const offset = `${offsetSign}${pad(offsetHours)}${pad(offsetRemainder)}`;
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${offset}`;
 }
+

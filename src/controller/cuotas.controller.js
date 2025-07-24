@@ -5,7 +5,7 @@ import Joi from "joi";
 import authController from "./auth.controller.js";
 import alumnosModel from "../model/alumnos.model.js";
 import alumnoController from "./alumnos.controller.js";
-import { toGetAmountSecondTime, validateMonth } from "../helpers/helpers.js";
+import {toGetAmountSecondTime, validateMonth } from "../helpers/helpers.js";
 const controller = {};
 const cuotaEschema = Joi.object({ 
     alumno_id: Joi.number().required(),

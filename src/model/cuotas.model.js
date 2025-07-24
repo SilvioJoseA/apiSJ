@@ -566,16 +566,52 @@ cuotasModel.getCuotasByIdAlumno = async ( idAlumno ) => {
  * @param {number} idAlumno 
  * @returns 
  */
-cuotasModel.getCuotasByMonthByIdAlumno = async ( idAlumno ) => {
+const MESES_DEL_AÑO = [
+    "Enero", "Febrero", "Marzo", "Abril",
+    "Mayo", "Junio", "Julio", "Agosto",
+    "Septiembre", "Octubre", "Noviembre", "Diciembre"
+];
+
+cuotasModel.getCuotasByMonthByIdAlumno = async (idAlumno) => {
     try {
-        const result = await pool.query(`SELECT * FROM cuotas_2025 WHERE alumno_id =? AND (status = 'pagado' OR status = 'pending')`,[idAlumno]);
-        return result[0]? result[0]:0;
-        //  (SELECT c.status FROM cuotas_2025 c WHERE c.alumno_id = a.id AND c.mes = 'agosto' LIMIT 1) AS statusAgosto,
-        
+        const result = await pool.query(
+            `SELECT * FROM cuotas_2025 WHERE alumno_id = ? AND (status = 'pagado' OR status = 'pending')`,
+            [idAlumno]
+        );
+
+        const cuotasExistentes = result[0] || [];
+
+        // Crear un mapa rápido por nombre de mes
+        const mapaCuotas = new Map(cuotasExistentes.map(cuota => [cuota.mes, cuota]));
+
+        // Completar con los 12 meses, respetando el orden
+        const cuotasCompletas = MESES_DEL_AÑO.map((mes, index) => {
+            if (mapaCuotas.has(mes)) {
+                return mapaCuotas.get(mes);
+            }
+
+            return {
+                id: 100000 + index, // ID ficticio solo para el frontend
+                alumno_id: idAlumno,
+                mes,
+                monto: null,
+                status: "pagar",
+                id_pagos_tic: null,
+                created_at: null,
+                updated_at: null,
+                usuario: null,
+                metodo: null
+            };
+        });
+
+        return cuotasCompletas;
+
     } catch (error) {
         console.error(error);
+        return [];
     }
-}
+};
+
 cuotasModel.toCancelCuotas = async () => {
     try {
         const query = `SELECT * FROM cuotas_2025 INNER JOIN alumnos_2025 AS alumnos ON alumnos.id = cuotas_2025.alumno_id WHERE cuotas_2025.mes = 'julio' AND alumnos.nivel = '5° AÑO'`;
