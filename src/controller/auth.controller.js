@@ -136,6 +136,10 @@ controller.cancelarPago = async ( req , res ) => {
         console.error("Error al cancelar pago :"+error);        
     }
 }
+/**
+ * To cancelated pay by id
+ * @param {number} id_pagos_tic 
+ */
 controller.cancelarPagoBackend = async ( id_pagos_tic ) => {
     try {
         console.log(id_pagos_tic);
@@ -148,6 +152,7 @@ controller.cancelarPagoBackend = async ( id_pagos_tic ) => {
             },
             body: JSON.stringify({"status_detail": "Pago cancelado por solicitud del pagador"}),
             }
+            // Need to update the status of cuota by id_cuota
             );
             res.status(201).json(response); 
     } catch (error) {
