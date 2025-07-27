@@ -706,6 +706,15 @@ controller.toCancelArray = async ( req , res ) => {
         console.error("Error canceling payment : ",error);
     }
 }
+controller.getCuotaById = async ( req , res ) => {
+    try {
+        const { idCuota } = req.params;
+        const cuota = await cuotasModel.getCuotaById(idCuota);
+        res.status(200).json(cuota);
+    } catch (error) {
+        console.error("Error fetching cuota by idCuota :", error);
+    }
+}
 controller.App = async ( req , res ) => {
     try {
         const transporter = controller.toMakeTransporter();

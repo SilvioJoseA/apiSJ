@@ -25,4 +25,5 @@ const router = Router();
     //New Part
     router.get('/cuotas/meses/:idAlumno', controller.getAllCuotasPayedByIdAlumno);
     router.get('/cuota/:idAlumno/:month', controller.toMakeOneLink);
+    router.get('/cuota/:idCuota', controller.getCuotaById);
 export default router;

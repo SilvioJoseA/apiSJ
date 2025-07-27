@@ -620,4 +620,17 @@ cuotasModel.toCancelCuotas = async () => {
         console.error("Error fetching cuotas to cancel :", error);
     }
 }
+/**
+ * Function to fetch cuota by idCuota
+ * @param {number} idCuota 
+ * @returns 
+ */
+cuotasModel.getCuotaById = async ( idCuota ) => {
+    try {
+        const cuota = await pool.query("SELECT * FROM cuotas_2025 WHERE id = ?",[idCuota]);
+        return cuota[0][0]?cuota[0][0]:{};
+    } catch (error) {
+        console.error("Error fetching cuota by id :", error);
+    }
+}
 export default cuotasModel;
