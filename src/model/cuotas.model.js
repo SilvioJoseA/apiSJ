@@ -303,6 +303,7 @@ cuotasModel.getAllCuotasByMonth = async () => {
     try {
       const query = `
         SELECT 
+          a.dni,
           a.firstName, 
           a.lastName, 
           a.email,
