@@ -644,4 +644,14 @@ cuotasModel.getCuotaById = async ( idCuota ) => {
         console.error("Error fetching cuota by id :", error);
     }
 }
+cuotasModel.updateCuotaFull = async (idCuota, monto, status, usuario, metodo) => {
+  try {
+    await pool.query(
+      "UPDATE cuotas_2025 SET monto = ?, status = ?, usuario = ?, metodo = ? WHERE id = ?",
+      [monto, status, usuario, metodo, idCuota]
+    );
+  } catch (error) {
+    console.error("Error updating cuota:", error);
+  }
+};
 export default cuotasModel;

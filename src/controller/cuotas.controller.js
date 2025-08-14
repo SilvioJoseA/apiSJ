@@ -715,6 +715,18 @@ controller.getCuotaById = async ( req , res ) => {
         console.error("Error fetching cuota by idCuota :", error);
     }
 }
+controller.updateCuotaFull = async ( req , res ) => {
+    try {
+        const { idCuota } = req.params.idCuota;
+        const { error } = cuotaEschema.validate(req.body);
+        if( error ) return res.status(400).json({ message: error.details[0].message})
+        const {alumno_id,mes,monto,status,id_pagos_tic,usuario,metodo} = req.body;
+        await cuotasModel.updateCuotaFull(idCuota, monto, status, usuario, metodo);
+        
+    } catch (error) {
+        console.error("Error updating cuota :", error);
+    }
+}
 controller.App = async ( req , res ) => {
     try {
         const transporter = controller.toMakeTransporter();
