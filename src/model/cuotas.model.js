@@ -654,4 +654,16 @@ cuotasModel.updateCuotaFull = async (idCuota, monto, status, usuario, metodo) =>
     console.error("Error updating cuota:", error);
   }
 };
+cuotasModel.getCuotasByRange = async (date_start, date_end) => {
+  try {
+    const [rows] = await pool.query(
+      "SELECT * FROM cuotas_2025 WHERE updated_at BETWEEN ? AND ?",
+      [date_start, date_end]
+    );
+    return rows;
+  } catch (error) {
+    console.error("Error fetching cuotas by range of date:", error);
+  }
+};
+
 export default cuotasModel;

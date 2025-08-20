@@ -23,7 +23,8 @@ const router = Router();
     router.get('/cuotas/suma/week', controller.getSumByLastWeek);
     router.get('/cuotas/suma/week-and-users', controller.getSumByLastWeekByUser);
     router.put('/cuotas/update/full/:idCuota', controller.updateCuotaFull);
-    //New Part
+    router.get('/cuotas/range/:date_start/:date_end', controller.getCuotasByRange);
+    //New Part 
     router.get('/cuotas/meses/:idAlumno', controller.getAllCuotasPayedByIdAlumno);
     router.get('/cuota/:idAlumno/:month', controller.toMakeOneLink);
     router.get('/cuota/:idCuota', controller.getCuotaById);

@@ -727,6 +727,21 @@ controller.updateCuotaFull = async ( req , res ) => {
         console.error("Error updating cuota :", error);
     }
 }
+controller.getCuotasByRange = async (req, res) => {
+    try {
+        const { date_start, date_end } = req.params;
+        if (!date_start || !date_end) {
+            return res.status(400).json({ error: "date_star and date_end are required!" });
+        }
+
+        const cuotas = await cuotasModel.getCuotasByRange(date_start, date_end);
+        res.status(200).json(cuotas);
+    } catch (error) {
+        console.error("Error fetching cuotas by range:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+    }
+};
+
 controller.App = async ( req , res ) => {
     try {
         const transporter = controller.toMakeTransporter();
