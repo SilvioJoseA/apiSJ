@@ -13,6 +13,7 @@ import pagosRouter from "./router/pagos.router.js";
 import inscripcionesRouter from "./router/inscripciones.router.js";
 import controller from "./controller/cuotas.controller.js";
 import cuotasRouter from "./router/cuotas.router.js";
+import { PORT } from "./config.js";
 
 const app = express();
 
@@ -34,6 +35,6 @@ const app = express();
         //controller.App();
     });
     ///make-array-options
-    app.listen(4008, ()=>{
-        console.log("Listening on port 4008");
+    app.listen(PORT, ()=>{
+        console.log("Listening on port ",PORT);
     });
