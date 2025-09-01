@@ -35,6 +35,7 @@ userModel.getAllUsers = async () => {
     }
 }
 
+
 /**
  * Query to fetch a specific user by username and password from the users table
  * @param {string} username 

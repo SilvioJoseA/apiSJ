@@ -657,7 +657,16 @@ cuotasModel.updateCuotaFull = async (idCuota, monto, status, usuario, metodo) =>
 cuotasModel.getCuotasByRange = async (date_start, date_end) => {
   try {
     const [rows] = await pool.query(
-      "SELECT * FROM cuotas_2025 WHERE updated_at BETWEEN ? AND ?",
+      `SELECT 
+    DATE(updated_at) AS dia,
+    metodo,
+    COUNT(*) AS cantidad,
+    SUM(monto) AS monto
+FROM cuotas_2025
+WHERE updated_at BETWEEN ? AND ?
+GROUP BY DATE(updated_at), metodo
+ORDER BY dia, metodo;
+`,
       [date_start, date_end]
     );
     return rows;
@@ -665,5 +674,23 @@ cuotasModel.getCuotasByRange = async (date_start, date_end) => {
     console.error("Error fetching cuotas by range of date:", error);
   }
 };
+cuotasModel.cuotasModelByRangeUsers = async ( date_start , date_end ) => {
+    try {
+        const [rows] = await pool.query(`
+    SELECT 
+        *,
+        COUNT(*) AS cantidad,
+        SUM(monto) AS suma
+    FROM cuotas_2025
+    WHERE updated_at BETWEEN ? AND ?
+    GROUP BY DATE(updated_at), metodo
+    ORDER BY updated_at, metodo, usuario;
+`, [date_start, date_end]);
+
+        return rows;
+    } catch (error) {
+        console.error("Error fetching cuotas :",error);
+    }
+}
 
 export default cuotasModel;

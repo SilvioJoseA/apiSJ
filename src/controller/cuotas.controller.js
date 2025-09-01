@@ -5,7 +5,7 @@ import Joi from "joi";
 import authController from "./auth.controller.js";
 import alumnosModel from "../model/alumnos.model.js";
 import alumnoController from "./alumnos.controller.js";
-import {toGetAmountSecondTime, validateMonth } from "../helpers/helpers.js";
+import {getDays, toGetAmountSecondTime, validateMonth } from "../helpers/helpers.js";
 const controller = {};
 const cuotaEschema = Joi.object({ 
     alumno_id: Joi.number().required(),
@@ -735,13 +735,46 @@ controller.getCuotasByRange = async (req, res) => {
         }
 
         const cuotas = await cuotasModel.getCuotasByRange(date_start, date_end);
-        res.status(200).json(cuotas);
+        const monto_efectivo = controller.summByMetod(cuotas,'efectivo');
+        const monto_pagos_tic = controller.summByMetod(cuotas, 'pagos-tic');
+        const monto_credito = controller.summByMetod(cuotas,'credito');
+        const monto_debito = controller.summByMetod(cuotas,'debito');
+        const monto_transferencia = controller.summByMetod(cuotas,'transferencia');
+const cuotasParsed = cuotas.map(cuota => ({
+  ...cuota,
+  dia: getDays(cuota.dia), // Reemplaza dia con la fecha sin la hora
+}));
+
+
+        const data = {
+            data: cuotasParsed.length?cuotasParsed:[],
+            monto_efectivo: monto_efectivo? monto_efectivo:0.0,
+            monto_pagos_tic: monto_pagos_tic? monto_pagos_tic:0.0,
+            monto_debito: monto_debito? monto_debito:0.0,
+            monto_credito: monto_credito? monto_credito:0.0,
+            monto_transferencia: monto_transferencia?monto_transferencia:0.0,
+            monto_total: parseFloat(monto_efectivo)+parseFloat(monto_pagos_tic)+parseFloat(monto_debito)+parseFloat(monto_credito)+parseFloat(monto_transferencia),
+
+        }
+        res.status(200).json(data);
     } catch (error) {
         console.error("Error fetching cuotas by range:", error);
         res.status(500).json({ error: "Internal Server Error" });
     }
 };
-
+controller.getCuotasByRangeUsers = async ( req , res ) => {
+    try {
+        const { date_start , date_end } = req.params;
+        if( !date_start || !date_end ) {
+            return res.status(400).json({error: "date_start and date_end are required!"});
+        }
+        const cuotas = await cuotasModel.cuotasModelByRangeUsers(date_start,date_end);
+        res.status(200).json(cuotas);
+    } catch (error) {
+        console.error("Error fetching cuotas by range users :", error);
+    }
+}
+controller.summByMetod = (cuotas, method) => cuotas.reduce((acc, type) => type.metodo === method ? acc + parseFloat(type.monto) : acc, 0);
 controller.App = async ( req , res ) => {
     try {
         const transporter = controller.toMakeTransporter();
